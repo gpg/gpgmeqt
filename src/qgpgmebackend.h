@@ -2,7 +2,7 @@
     qgpgmebackend.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -55,14 +55,20 @@ namespace Kleo {
     QString displayName() const;
 
     CryptoConfig * config() const;
+
     Protocol * openpgp() const;
     Protocol * smime() const;
+    Protocol * protocol( const char * name ) const;
 
     bool checkForOpenPGP( QString * reason=0 ) const;
     bool checkForSMIME( QString * reason=0 ) const;
+    bool checkForProtocol( const char * name, QString * reason ) const;
 
     bool supportsOpenPGP() const { return true; }
     bool supportsSMIME() const { return true; }
+    bool supportsProtocol( const char * name ) const;
+
+    const char * enumerateProtocols( int i ) const;
 
   private:
     mutable QGpgMECryptoConfig * mCryptoConfig;
