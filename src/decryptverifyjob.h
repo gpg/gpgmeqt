@@ -66,9 +66,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     DecryptVerifyJob( QObject * parent, const char * name );
+  public:
     ~DecryptVerifyJob();
 
-  public:
     /**
        Starts the combined decryption and verification operation.
        \a cipherText is the data to decrypt and later verify.
