@@ -58,6 +58,9 @@ namespace Kleo {
 
     bool closeStatus();
 
+  signals:
+    void receivedStatus( Kleo::GnuPGProcessBase * proc, char * buffer, int buflen );
+
   protected:
     /* !\reimp */
     int setupCommunication( Communication comm );
