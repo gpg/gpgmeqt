@@ -54,9 +54,13 @@ namespace Kleo {
      After result() is emitted, the SpecialJob will schedule its own
      destruction by calling QObject::deleteLater().
 
-     Parameters are set using the Qt property system, more general, or
+     Parameters are set using the Qt property system. More general, or
      constructor parameters are given in the call to
      Kleo::CryptoBackend::Protocol::specialJob().
+
+     The result is made available through the result signal, and
+     through the read-only result property, the latter of which needs
+     to be defined in each SpecialJob subclass.
   */
   class SpecialJob : public Job {
     Q_OBJECT
@@ -71,7 +75,7 @@ namespace Kleo {
     */
     virtual GpgME::Error start() = 0;
 
-    virtual GpgME::Error exec( QVariant * result ) = 0;
+    virtual GpgME::Error exec() = 0;
 
   signals:
     void result( const GpgME::Error & result, const QVariant & data );
