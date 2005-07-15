@@ -55,7 +55,6 @@
 #include <string.h>
 #include <assert.h>
 
-
 Kleo::QGpgMEKeyListJob::QGpgMEKeyListJob( GpgME::Context * context )
   : KeyListJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEKeyListJob" ),
     QGpgMEJob( this, context ),
