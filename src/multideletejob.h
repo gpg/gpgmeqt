@@ -37,7 +37,7 @@
 #include <kleo/cryptobackend.h>
 
 #include <kdepimmacros.h>
-#include <qguardedptr.h>
+#include <qpointer.h>
 
 #include <vector>
 
@@ -90,7 +90,7 @@ namespace Kleo {
 
   private:
     const CryptoBackend::Protocol * mProtocol;
-    QGuardedPtr<DeleteJob> mJob;
+    QPointer<DeleteJob> mJob;
     std::vector<GpgME::Key> mKeys;
     std::vector<GpgME::Key>::const_iterator mIt;
     bool mAllowSecretKeyDeletion;

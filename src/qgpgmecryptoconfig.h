@@ -34,10 +34,12 @@
 #define KLEO_QGPGMECRYPTOCONFIG_H
 
 #include <kleo/cryptoconfig.h>
-#include <qdict.h>
+#include <q3dict.h>
 #include <qstringlist.h>
 #include <qobject.h>
 #include <qvariant.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 class KProcIO;
 
 class QGpgMECryptoConfigComponent;
@@ -70,7 +72,7 @@ private:
   void runGpgConf( bool showErrors );
 
 private:
-  QDict<QGpgMECryptoConfigComponent> mComponents;
+  Q3Dict<QGpgMECryptoConfigComponent> mComponents;
   bool mParsed;
 };
 
@@ -98,7 +100,7 @@ private:
   void runGpgConf();
 
 private:
-  QDict<QGpgMECryptoConfigGroup> mGroups;
+  Q3Dict<QGpgMECryptoConfigGroup> mGroups;
   QString mName;
   QString mDescription;
   QGpgMECryptoConfigGroup* mCurrentGroup; // during parsing
@@ -120,7 +122,7 @@ public:
 
 private:
   friend class QGpgMECryptoConfigComponent; // it adds the entries
-  QDict<QGpgMECryptoConfigEntry> mEntries;
+  Q3Dict<QGpgMECryptoConfigEntry> mEntries;
   QString mName;
   QString mDescription;
   Kleo::CryptoConfigEntry::Level mLevel;
@@ -146,8 +148,8 @@ public:
   KURL urlValue() const;
   unsigned int numberOfTimesSet() const;
   QStringList stringValueList() const;
-  QValueList<int> intValueList() const;
-  QValueList<unsigned int> uintValueList() const;
+  Q3ValueList<int> intValueList() const;
+  Q3ValueList<unsigned int> uintValueList() const;
   KURL::List urlValueList() const;
   void resetToDefault();
   void setBoolValue( bool );
@@ -157,8 +159,8 @@ public:
   void setURLValue( const KURL& );
   void setNumberOfTimesSet( unsigned int );
   void setStringValueList( const QStringList& );
-  void setIntValueList( const QValueList<int>& );
-  void setUIntValueList( const QValueList<unsigned int>& );
+  void setIntValueList( const Q3ValueList<int>& );
+  void setUIntValueList( const Q3ValueList<unsigned int>& );
   void setURLValueList( const KURL::List& );
   bool isDirty() const { return mDirty; }
 

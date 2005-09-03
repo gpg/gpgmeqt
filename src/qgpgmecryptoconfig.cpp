@@ -31,6 +31,9 @@
 */
 
 #include "qgpgmecryptoconfig.h"
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 #include <kdebug.h>
 #include <kprocio.h>
 #include <errno.h>
@@ -119,7 +122,7 @@ QStringList QGpgMECryptoConfig::componentList() const
 {
   if ( !mParsed )
     const_cast<QGpgMECryptoConfig*>( this )->runGpgConf( true );
-  QDictIterator<QGpgMECryptoConfigComponent> it( mComponents );
+  Q3DictIterator<QGpgMECryptoConfigComponent> it( mComponents );
   QStringList names;
   for( ; it.current(); ++it )
     names.push_back( it.currentKey() );
@@ -135,7 +138,7 @@ Kleo::CryptoConfigComponent* QGpgMECryptoConfig::component( const QString& name 
 
 void QGpgMECryptoConfig::sync( bool runtime )
 {
-  QDictIterator<QGpgMECryptoConfigComponent> it( mComponents );
+  Q3DictIterator<QGpgMECryptoConfigComponent> it( mComponents );
   for( ; it.current(); ++it )
     it.current()->sync( runtime );
 }
@@ -230,7 +233,7 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
 
 QStringList QGpgMECryptoConfigComponent::groupList() const
 {
-  QDictIterator<QGpgMECryptoConfigGroup> it( mGroups );
+  Q3DictIterator<QGpgMECryptoConfigGroup> it( mGroups );
   QStringList names;
   for( ; it.current(); ++it )
     names.push_back( it.currentKey() );
@@ -247,12 +250,12 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   KTempFile tmpFile;
   tmpFile.setAutoDelete( true );
 
-  QValueList<QGpgMECryptoConfigEntry *> dirtyEntries;
+  Q3ValueList<QGpgMECryptoConfigEntry *> dirtyEntries;
 
   // Collect all dirty entries
-  QDictIterator<QGpgMECryptoConfigGroup> groupit( mGroups );
+  Q3DictIterator<QGpgMECryptoConfigGroup> groupit( mGroups );
   for( ; groupit.current(); ++groupit ) {
-    QDictIterator<QGpgMECryptoConfigEntry> it( groupit.current()->mEntries );
+    Q3DictIterator<QGpgMECryptoConfigEntry> it( groupit.current()->mEntries );
     for( ; it.current(); ++it ) {
       if ( it.current()->isDirty() ) {
         // OK, we can set it.currentKey() to it.current()->outputString()
@@ -264,7 +267,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
           line += ":16:";
         }
         line += '\n';
-        QCString line8bit = line.utf8(); // encode with utf8, and KProcIO uses utf8 when reading.
+        Q3CString line8bit = line.utf8(); // encode with utf8, and KProcIO uses utf8 when reading.
         tmpFile.file()->writeBlock( line8bit.data(), line8bit.size()-1 /*no 0*/ );
         dirtyEntries.append( it.current() );
       }
@@ -311,7 +314,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   }
   else
   {
-    QValueList<QGpgMECryptoConfigEntry *>::Iterator it = dirtyEntries.begin();
+    Q3ValueList<QGpgMECryptoConfigEntry *>::Iterator it = dirtyEntries.begin();
     for( ; it != dirtyEntries.end(); ++it ) {
       (*it)->setDirty( false );
     }
@@ -331,7 +334,7 @@ QGpgMECryptoConfigGroup::QGpgMECryptoConfigGroup( const QString & name, const QS
 
 QStringList QGpgMECryptoConfigGroup::entryList() const
 {
-  QDictIterator<QGpgMECryptoConfigEntry> it( mEntries );
+  Q3DictIterator<QGpgMECryptoConfigEntry> it( mEntries );
   QStringList names;
   for( ; it.current(); ++it )
     names.push_back( it.currentKey() );
@@ -446,7 +449,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
   bool isString = isStringType();
 
   if ( isList() ) {
-    QValueList<QVariant> lst;
+    Q3ValueList<QVariant> lst;
     QStringList items = QStringList::split( ',', str );
     for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
       QString val = *valit;
@@ -601,25 +604,25 @@ QStringList QGpgMECryptoConfigEntry::stringValueList() const
   return mValue.toStringList();
 }
 
-QValueList<int> QGpgMECryptoConfigEntry::intValueList() const
+Q3ValueList<int> QGpgMECryptoConfigEntry::intValueList() const
 {
   Q_ASSERT( mArgType == ArgType_Int );
   Q_ASSERT( isList() );
-  QValueList<int> ret;
-  QValueList<QVariant> lst = mValue.toList();
-  for( QValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  Q3ValueList<int> ret;
+  Q3ValueList<QVariant> lst = mValue.toList();
+  for( Q3ValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret.append( (*it).toInt() );
   }
   return ret;
 }
 
-QValueList<unsigned int> QGpgMECryptoConfigEntry::uintValueList() const
+Q3ValueList<unsigned int> QGpgMECryptoConfigEntry::uintValueList() const
 {
   Q_ASSERT( mArgType == ArgType_UInt );
   Q_ASSERT( isList() );
-  QValueList<unsigned int> ret;
-  QValueList<QVariant> lst = mValue.toList();
-  for( QValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  Q3ValueList<unsigned int> ret;
+  Q3ValueList<QVariant> lst = mValue.toList();
+  for( Q3ValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret.append( (*it).toUInt() );
   }
   return ret;
@@ -722,10 +725,10 @@ void QGpgMECryptoConfigEntry::setStringValueList( const QStringList& lst )
   mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setIntValueList( const QValueList<int>& lst )
+void QGpgMECryptoConfigEntry::setIntValueList( const Q3ValueList<int>& lst )
 {
-  QValueList<QVariant> ret;
-  for( QValueList<int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  Q3ValueList<QVariant> ret;
+  for( Q3ValueList<int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret << QVariant( *it );
   }
   mValue = ret;
@@ -736,10 +739,10 @@ void QGpgMECryptoConfigEntry::setIntValueList( const QValueList<int>& lst )
   mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setUIntValueList( const QValueList<unsigned int>& lst )
+void QGpgMECryptoConfigEntry::setUIntValueList( const Q3ValueList<unsigned int>& lst )
 {
-  QValueList<QVariant> ret;
-  for( QValueList<unsigned int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  Q3ValueList<QVariant> ret;
+  for( Q3ValueList<unsigned int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret << QVariant( *it );
   }
   if ( ret.isEmpty() && !isOptional() )
@@ -802,8 +805,8 @@ QString QGpgMECryptoConfigEntry::toString( bool escape ) const
   if ( mArgType == ArgType_None )
     return QString::number( numberOfTimesSet() );
   QStringList ret;
-  QValueList<QVariant> lst = mValue.toList();
-  for( QValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  Q3ValueList<QVariant> lst = mValue.toList();
+  for( Q3ValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
       ret << (*it).toString(); // QVariant does the conversion
   }
   return ret.join( "," );

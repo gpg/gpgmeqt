@@ -41,7 +41,7 @@
 #include <klocale.h>
 
 #include <qstringlist.h>
-#include <qtl.h>
+#include <q3tl.h>
 
 #include <gpgmepp/key.h>
 #include <gpgmepp/context.h>

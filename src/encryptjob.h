@@ -35,7 +35,7 @@
 
 #include "job.h"
 
-#include <qcstring.h>
+#include <q3cstring.h>
 
 #include <vector>
 

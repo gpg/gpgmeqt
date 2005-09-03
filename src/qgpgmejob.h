@@ -38,7 +38,7 @@
 
 #include <gpgmepp/key.h>
 
-#include <qcstring.h>
+#include <q3cstring.h>
 
 #include <vector>
 #include <kdepimmacros.h>
