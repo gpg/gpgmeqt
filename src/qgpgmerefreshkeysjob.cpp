@@ -2,7 +2,7 @@
     qgpgmerefreshkeysjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -85,7 +85,8 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
   if ( mPatternsToDo.empty() )
     return 0;
   // create and start gpgsm process:
-  mProcess = new GnuPGProcessBase( this, "gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks" );
+  mProcess = new GnuPGProcessBase( this );
+  mProcess->setObjectName( "gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks" );
 
   // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
   *mProcess << "gpgsm" << "-k" << "--with-validation" << "--force-crl-refresh"

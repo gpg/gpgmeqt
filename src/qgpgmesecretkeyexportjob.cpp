@@ -2,7 +2,7 @@
     qgpgmesecretexportjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -75,7 +75,8 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
   }
 
   // create and start gpgsm process:
-  mProcess = new GnuPGProcessBase( this, "gpgsm --export-secret-key-p12" );
+  mProcess = new GnuPGProcessBase( this );
+  mProcess->setObjectName( "gpgsm --export-secret-key-p12" );
 
   // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
   *mProcess << "gpgsm" << "--export-secret-key-p12";
