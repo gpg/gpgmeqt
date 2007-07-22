@@ -1,5 +1,5 @@
 /*
-    multideletejob.h
+    deletejob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,16 +30,10 @@
     your version.
 */
 
-#ifndef __KLEO_MULTIDELETEJOB_H__
-#define __KLEO_MULTIDELETEJOB_H__
+#ifndef __KLEO_DELETEJOB_H__
+#define __KLEO_DELETEJOB_H__
 
-#include "libkleo/kleo_export.h"
-#include "libkleo/kleo/job.h"
-#include "libkleo/kleo/cryptobackend.h"
-
-#include <QtCore/QPointer>
-
-#include <vector>
+#include "job.h"
 
 namespace GpgME {
   class Error;
@@ -47,55 +41,38 @@ namespace GpgME {
 }
 
 namespace Kleo {
-  class DeleteJob;
-}
-
-namespace Kleo {
 
   /**
-     @short A convenience class bundling together multiple DeleteJobs.
+     @short An abstract base class for asynchronous deleters
 
-     To use a MultiDeleteJob, pass it a CryptoBackend implementation,
-     connect the progress() and result() signals to suitable slots and
-     then start the delete with a call to start(). This call might
-     fail, in which case the MultiDeleteJob instance will have scheduled
-     it's own destruction with a call to QObject::deleteLater().
+     To use a DeleteJob, first obtain an instance from the
+     CryptoBackend implementation, connect the progress() and result()
+     signals to suitable slots and then start the delete with a call
+     to start(). This call might fail, in which case the DeleteJob
+     instance will have scheduled it's own destruction with a call to
+     QObject::deleteLater().
 
-     After result() is emitted, the MultiDeleteJob will schedule it's own
+     After result() is emitted, the DeleteJob will schedule it's own
      destruction by calling QObject::deleteLater().
   */
-  class KLEO_EXPORT MultiDeleteJob : public Job {
+  class DeleteJob : public Job {
     Q_OBJECT
+  protected:
+    DeleteJob( QObject * parent, const char * name );
   public:
-    MultiDeleteJob( const CryptoBackend::Protocol * protocol );
-    ~MultiDeleteJob();
+    ~DeleteJob();
 
     /**
-       Starts the delete operation. \a keys is the list of keys to
+       Starts the delete operation. \a key represents the key to
        delete, \a allowSecretKeyDeletion specifies if a key may also
        be deleted if the secret key part is available, too.
     */
-    GpgME::Error start( const std::vector<GpgME::Key> & keys, bool allowSecretKeyDeletion=false );
+    virtual GpgME::Error start( const GpgME::Key & key, bool allowSecretKeyDeletion=false ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::Error & result, const GpgME::Key & errorKey );
-
-  private Q_SLOTS:
-    void slotResult( const GpgME::Error & );
-    /*! \reimp from Job */
-    void slotCancel();
-
-  private:
-    GpgME::Error startAJob();
-
-  private:
-    const CryptoBackend::Protocol * mProtocol;
-    QPointer<DeleteJob> mJob;
-    std::vector<GpgME::Key> mKeys;
-    std::vector<GpgME::Key>::const_iterator mIt;
-    bool mAllowSecretKeyDeletion;
+    void result( const GpgME::Error & result );
   };
 
 }
 
-#endif // __KLEO_MULTIDELETEJOB_H__
+#endif // __KLEO_DELETEJOB_H__

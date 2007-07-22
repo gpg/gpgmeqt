@@ -1,8 +1,8 @@
-/*
-    qgpgmekeygenerationjob.h
+/*  -*- mode: C++; c-file-style: "gnu" -*-
+    qgpgmebackend.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,48 +30,53 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEKEYGENERATIONJOB_H__
-#define __KLEO_QGPGMEKEYGENERATIONJOB_H__
 
-#include "libkleo/kleo_export.h"
-#include "libkleo/kleo/keygenerationjob.h"
-#include "qgpgmejob.h"
+#ifndef __KLEO_QGPGMEBACKEND_H__
+#define __KLEO_QGPGMEBACKEND_H__
 
-namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
-  class Data;
+#include "libkleo/kleo/cryptobackend.h"
+
+class CryptPlugWrapper;
+
+namespace Kleo {
+  class CryptoConfig;
 }
-
-namespace QGpgME {
-  class QByteArrayDataProvider;
-}
+class QGpgMECryptoConfig;
+class QString;
 
 namespace Kleo {
 
-  class KLEO_EXPORT QGpgMEKeyGenerationJob : public KeyGenerationJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMEBackend : public Kleo::CryptoBackend {
   public:
-    QGpgMEKeyGenerationJob( GpgME::Context * context );
-    ~QGpgMEKeyGenerationJob();
-    
-    /*! \reimp from KeygenerationJob */
-    GpgME::Error start( const QString & parameters );
-    
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & error ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, error );
-    }
+    QGpgMEBackend();
+    ~QGpgMEBackend();
+
+    QString name() const;
+    QString displayName() const;
+
+    CryptoConfig * config() const;
+
+    Protocol * openpgp() const;
+    Protocol * smime() const;
+    Protocol * protocol( const char * name ) const;
+
+    bool checkForOpenPGP( QString * reason=0 ) const;
+    bool checkForSMIME( QString * reason=0 ) const;
+    bool checkForProtocol( const char * name, QString * reason ) const;
+
+    bool supportsOpenPGP() const { return true; }
+    bool supportsSMIME() const { return true; }
+    bool supportsProtocol( const char * name ) const;
+
+    const char * enumerateProtocols( int i ) const;
 
   private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-
-  private:
-    QGpgME::QByteArrayDataProvider * mPubKeyDataProvider;
-    GpgME::Data * mPubKey;
+    mutable QGpgMECryptoConfig * mCryptoConfig;
+    mutable CryptPlugWrapper * mOpenPGPProtocol;
+    mutable CryptPlugWrapper * mSMIMEProtocol;
   };
 
 }
 
-#endif // __KLEO_QGPGMEKEYGENERATIONJOB_H__
+
+#endif // __KLEO_QGPGMEBACKEND_H__

@@ -1,5 +1,5 @@
 /*
-    qgpgmesignencryptjob.h
+    qgpgmedownloadjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,61 +30,38 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
-#define __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#ifndef __KLEO_QGPGMEDOWNLOADJOB_H__
+#define __KLEO_QGPGMEDOWNLOADJOB_H__
 
-#include "libkleo/kleo_export.h"
-#include "libkleo/kleo/signencryptjob.h"
+#include "libkleo/kleo/downloadjob.h"
+
 #include "qgpgmejob.h"
-
-#include <gpgmepp/signingresult.h>
-#include <gpgmepp/encryptionresult.h>
-
-#include <q3cstring.h>
-
-#include <utility>
 
 namespace GpgME {
   class Error;
   class Context;
-  class Key;
 }
 
 namespace Kleo {
 
-  class KLEO_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
+  class QGpgMEDownloadJob : public DownloadJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
   public:
-    QGpgMESignEncryptJob( GpgME::Context * context );
-    ~QGpgMESignEncryptJob();
+    QGpgMEDownloadJob( GpgME::Context * context );
+    ~QGpgMEDownloadJob();
 
-    /*! \reimp from SignEncryptJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & signers,
-			const std::vector<GpgME::Key> & recipients,
-			const QByteArray & plainText, bool alwaysTrust );
+    /*! \reimp from DownloadJob */
+    GpgME::Error start( const QStringList & fingerprints );
 
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
-      exec( const std::vector<GpgME::Key> & signers,
-	    const std::vector<GpgME::Key> & recipients,
-	    const QByteArray & plainText, bool alwaysTrust,
-	    QByteArray & cipherText );
-
-    /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
 
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    GpgME::Error setup( const std::vector<GpgME::Key> &,
-			const QByteArray & );
-  private:
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
   };
 
 }
 
-#endif // __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#endif // __KLEO_QGPGMEDOWNLOADJOB_H__

@@ -1,5 +1,5 @@
 /*
-    qgpgmesignencryptjob.h
+    qgpgmerefreshkeysjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,61 +30,51 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
-#define __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#ifndef __KLEO_QGPGMEREFRESHKEYSJOB_H__
+#define __KLEO_QGPGMEREFRESHKEYSJOB_H__
 
-#include "libkleo/kleo_export.h"
-#include "libkleo/kleo/signencryptjob.h"
-#include "qgpgmejob.h"
+#include "libkleo/kleo/refreshkeysjob.h"
 
-#include <gpgmepp/signingresult.h>
-#include <gpgmepp/encryptionresult.h>
+#include <QStringList>
 
-#include <q3cstring.h>
-
-#include <utility>
+namespace Kleo {
+  class GnuPGProcessBase;
+}
 
 namespace GpgME {
   class Error;
-  class Context;
-  class Key;
 }
+
+class K3Process;
 
 namespace Kleo {
 
-  class KLEO_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMERefreshKeysJob : public RefreshKeysJob {
+    Q_OBJECT
   public:
-    QGpgMESignEncryptJob( GpgME::Context * context );
-    ~QGpgMESignEncryptJob();
+    QGpgMERefreshKeysJob();
+    ~QGpgMERefreshKeysJob();
 
-    /*! \reimp from SignEncryptJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & signers,
-			const std::vector<GpgME::Key> & recipients,
-			const QByteArray & plainText, bool alwaysTrust );
-
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
-      exec( const std::vector<GpgME::Key> & signers,
-	    const std::vector<GpgME::Key> & recipients,
-	    const QByteArray & plainText, bool alwaysTrust,
-	    QByteArray & cipherText );
-
-    /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    /*! \reimp from RefreshKeysJob */
+    GpgME::Error start( const QStringList & patterns );
 
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
+    /*! \reimp from Job */
+    void slotCancel();
+
+    void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
+    void slotStderr( K3Process *, char *, int );
+    void slotProcessExited( K3Process * );
 
   private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    GpgME::Error setup( const std::vector<GpgME::Key> &,
-			const QByteArray & );
+    GpgME::Error startAProcess();
+
   private:
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
+    GnuPGProcessBase * mProcess;
+    int mError;
+    QStringList mPatternsToDo;
   };
 
 }
 
-#endif // __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#endif // __KLEO_QGPGMEREFRESHKEYSJOB_H__

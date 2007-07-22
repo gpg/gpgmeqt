@@ -1,5 +1,5 @@
 /*
-    qgpgmesignencryptjob.h
+    qgpgmeverifyopaquejob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,47 +30,33 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
-#define __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#ifndef __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
+#define __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
 
-#include "libkleo/kleo_export.h"
-#include "libkleo/kleo/signencryptjob.h"
+#include "libkleo/kleo/verifyopaquejob.h"
+
 #include "qgpgmejob.h"
 
-#include <gpgmepp/signingresult.h>
-#include <gpgmepp/encryptionresult.h>
-
 #include <q3cstring.h>
-
-#include <utility>
 
 namespace GpgME {
   class Error;
   class Context;
-  class Key;
 }
 
 namespace Kleo {
 
-  class KLEO_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
+  class QGpgMEVerifyOpaqueJob : public VerifyOpaqueJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
   public:
-    QGpgMESignEncryptJob( GpgME::Context * context );
-    ~QGpgMESignEncryptJob();
+    QGpgMEVerifyOpaqueJob( GpgME::Context * context );
+    ~QGpgMEVerifyOpaqueJob();
 
-    /*! \reimp from SignEncryptJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & signers,
-			const std::vector<GpgME::Key> & recipients,
-			const QByteArray & plainText, bool alwaysTrust );
+    /*! \reimp from VerifyOpaqueJob */
+    GpgME::Error start( const QByteArray & signedData );
 
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
-      exec( const std::vector<GpgME::Key> & signers,
-	    const std::vector<GpgME::Key> & recipients,
-	    const QByteArray & plainText, bool alwaysTrust,
-	    QByteArray & cipherText );
-
-    /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    /*! \reimp form VerifyOpaqueJob */
+    GpgME::VerificationResult exec( const QByteArray & signedData, QByteArray & plainData );
 
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
@@ -79,12 +65,9 @@ namespace Kleo {
 
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
-    GpgME::Error setup( const std::vector<GpgME::Key> &,
-			const QByteArray & );
-  private:
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
+    void setup( const QByteArray & );
   };
 
 }
 
-#endif // __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#endif // __KLEO_QGPGMEVERIFYOPAQUEJOB_H__

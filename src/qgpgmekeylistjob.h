@@ -1,5 +1,5 @@
 /*
-    qgpgmesignencryptjob.h
+    qgpgmekeylistjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,19 +30,14 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
-#define __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#ifndef __KLEO_QGPGMEKEYLISTJOB_H__
+#define __KLEO_QGPGMEKEYLISTJOB_H__
 
-#include "libkleo/kleo_export.h"
-#include "libkleo/kleo/signencryptjob.h"
+#include "libkleo/kleo/keylistjob.h"
+
+#include <gpgmepp/keylistresult.h>
+
 #include "qgpgmejob.h"
-
-#include <gpgmepp/signingresult.h>
-#include <gpgmepp/encryptionresult.h>
-
-#include <q3cstring.h>
-
-#include <utility>
 
 namespace GpgME {
   class Error;
@@ -52,39 +47,35 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class KLEO_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
+  class QGpgMEKeyListJob : public KeyListJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
   public:
-    QGpgMESignEncryptJob( GpgME::Context * context );
-    ~QGpgMESignEncryptJob();
+    QGpgMEKeyListJob( GpgME::Context * context );
+    ~QGpgMEKeyListJob();
 
-    /*! \reimp from SignEncryptJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & signers,
-			const std::vector<GpgME::Key> & recipients,
-			const QByteArray & plainText, bool alwaysTrust );
+    /*! \reimp from KeyListJob */
+    GpgME::Error start( const QStringList & patterns, bool secretOnly );
 
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
-      exec( const std::vector<GpgME::Key> & signers,
-	    const std::vector<GpgME::Key> & recipients,
-	    const QByteArray & plainText, bool alwaysTrust,
-	    QByteArray & cipherText );
+    /*! \reimp from KeyListJob */
+    GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys );
 
     /*! \reimp from Job */
     void showErrorDialog( QWidget * parent, const QString & caption ) const;
 
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
+    void slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
 
   private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    GpgME::Error setup( const std::vector<GpgME::Key> &,
-			const QByteArray & );
+    void doOperationDoneEvent( const GpgME::Error &) {} // unused, we implement slotOperationDoneEvent ourselves.
+    void setup( const QStringList &, bool );
+    GpgME::KeyListResult attemptSyncKeyListing( std::vector<GpgME::Key> & );
+
   private:
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
+    GpgME::KeyListResult mResult;
+    bool mSecretOnly;
   };
 
 }
 
-#endif // __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#endif // __KLEO_QGPGMEKEYLISTJOB_H__

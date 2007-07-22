@@ -1,5 +1,5 @@
 /*
-    qgpgmesignencryptjob.h
+    downloadjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,61 +30,54 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
-#define __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#ifndef __KLEO_DOWNLOADJOB_H__
+#define __KLEO_DOWNLOADJOB_H__
 
-#include "libkleo/kleo_export.h"
-#include "libkleo/kleo/signencryptjob.h"
-#include "qgpgmejob.h"
+#include "job.h"
 
-#include <gpgmepp/signingresult.h>
-#include <gpgmepp/encryptionresult.h>
-
-#include <q3cstring.h>
-
-#include <utility>
+#include <QtCore/QByteArray>
 
 namespace GpgME {
   class Error;
-  class Context;
-  class Key;
 }
+
+class QStringList;
 
 namespace Kleo {
 
-  class KLEO_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  /**
+     @short An abstract base class for asynchronous downloaders
+
+     To use a DownloadJob, first obtain an instance from the
+     CryptoBackend implementation, connect the progress() and result()
+     signals to suitable slots and then start the download with a call
+     to start(). This call might fail, in which case the DownloadJob
+     instance will have scheduled it's own destruction with a call to
+     QObject::deleteLater().
+
+     After result() is emitted, the DownloadJob will schedule it's own
+     destruction by calling QObject::deleteLater().
+  */
+  class DownloadJob : public Job {
+    Q_OBJECT
+  protected:
+    DownloadJob( QObject * parent, const char * name );
   public:
-    QGpgMESignEncryptJob( GpgME::Context * context );
-    ~QGpgMESignEncryptJob();
+    ~DownloadJob();
 
-    /*! \reimp from SignEncryptJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & signers,
-			const std::vector<GpgME::Key> & recipients,
-			const QByteArray & plainText, bool alwaysTrust );
+    /**
+       Starts the download operation. \a fingerprints is a list of
+       fingerprints used to specify the list of keys downloaded. Empty
+       patterns are ignored. If \a fingerprints is empty, contains
+       only empty strings or anything other than fingerprints, the
+       result is undefined.
+    */
+    virtual GpgME::Error start( const QStringList & fingerprints ) = 0;
 
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
-      exec( const std::vector<GpgME::Key> & signers,
-	    const std::vector<GpgME::Key> & recipients,
-	    const QByteArray & plainText, bool alwaysTrust,
-	    QByteArray & cipherText );
-
-    /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
-
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    GpgME::Error setup( const std::vector<GpgME::Key> &,
-			const QByteArray & );
-  private:
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
+  Q_SIGNALS:
+    void result( const GpgME::Error & result, const QByteArray & keyData );
   };
 
 }
 
-#endif // __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#endif // __KLEO_DOWNLOADJOB_H__
