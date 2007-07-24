@@ -1,5 +1,5 @@
 /*
-    qgpgmeverifyopaquejob.h
+    cryptplugfactory.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,44 +30,53 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
-#define __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
+#ifndef __KLEO_CRYPTPLUGFACTORY_H__
+#define __KLEO_CRYPTPLUGFACTORY_H__
 
-#include "kleo/verifyopaquejob.h"
+#include "kleo/kleo_export.h"
+#include "kleo/cryptobackendfactory.h"
 
-#include "qgpgmejob.h"
-
-#include <q3cstring.h>
-
-namespace GpgME {
-  class Error;
-  class Context;
+#ifndef LIBKLEOPATRA_NO_COMPAT
+namespace Kleo {
+  //typedef CryptoBackendFactory CryptPlugFactory KDE_DEPRECATED;
 }
 
-namespace Kleo {
+class CryptPlugWrapper;
+class CryptPlugWrapperList;
 
-  class QGpgMEVerifyOpaqueJob : public VerifyOpaqueJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+namespace KMail {
+
+  class KLEO_EXPORT CryptPlugFactory : public Kleo::CryptoBackendFactory {
+    Q_OBJECT
+  protected:
+    CryptPlugFactory();
+    ~CryptPlugFactory();
+
   public:
-    QGpgMEVerifyOpaqueJob( GpgME::Context * context );
-    ~QGpgMEVerifyOpaqueJob();
+    static CryptPlugFactory * instance();
 
-    /*! \reimp from VerifyOpaqueJob */
-    GpgME::Error start( const QByteArray & signedData );
+    CryptPlugWrapper * active() const;
+    CryptPlugWrapper * smime() const;
+    CryptPlugWrapper * openpgp() const;
 
-    /*! \reimp form VerifyOpaqueJob */
-    GpgME::VerificationResult exec( const QByteArray & signedData, QByteArray & plainData );
+    CryptPlugWrapperList & list() const { return *mCryptPlugWrapperList; }
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
+    CryptPlugWrapper * createForProtocol( const QString & proto ) const;
+
+    void scanForBackends( QStringList * reason );
 
   private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QByteArray & );
+    void updateCryptPlugWrapperList();
+
+  private:
+    CryptPlugFactory( const CryptPlugFactory & );
+    void operator=( const CryptPlugFactory & );
+    CryptPlugWrapperList * mCryptPlugWrapperList;
+
+    static CryptPlugFactory * mSelf;
   };
 
 }
+#endif
 
-#endif // __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
+#endif // __KLEO_CRYPTPLUGFACTORY_H__
