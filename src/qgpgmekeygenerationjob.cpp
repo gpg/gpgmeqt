@@ -1,5 +1,5 @@
 /*
-    qgpgmedecryptverifyjob.cpp
+    qgpgmekeygenerationjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -34,64 +34,56 @@
 #include <config.h>
 #endif
 
-#include "qgpgmedecryptverifyjob.h"
+#include "qgpgmekeygenerationjob.h"
 
-#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
+#include <qgpgme/eventloopinteractor.h>
 
 #include <gpgmepp/context.h>
-#include <gpgmepp/decryptionresult.h>
-#include <gpgmepp/verificationresult.h>
+#include <gpgmepp/keygenerationresult.h>
 #include <gpgmepp/data.h>
 
 #include <assert.h>
 
-Kleo::QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob( GpgME::Context * context )
-  : DecryptVerifyJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDecryptVerifyJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEKeyGenerationJob::QGpgMEKeyGenerationJob( GpgME::Context * context )
+  : KeyGenerationJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEKeyGenerationJob" ),
+    QGpgMEJob( this, context ),
+    mPubKeyDataProvider( 0 ),
+    mPubKey( 0 )
 {
   assert( context );
 }
 
-Kleo::QGpgMEDecryptVerifyJob::~QGpgMEDecryptVerifyJob() {
+Kleo::QGpgMEKeyGenerationJob::~QGpgMEKeyGenerationJob() {
+  delete mPubKey; mPubKey = 0;
+  delete mPubKeyDataProvider; mPubKeyDataProvider = 0;
 }
 
-void Kleo::QGpgMEDecryptVerifyJob::setup( const QByteArray & cipherText ) {
-  assert( !mInData );
-  assert( !mOutData );
+GpgME::Error Kleo::QGpgMEKeyGenerationJob::start( const QString & parameters ) {
+  assert( !mPubKey );
 
-  createInData( cipherText );
-  createOutData();
-}
-
-GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText ) {
-  setup( cipherText );
+  // set up empty data object for the public key data
+  if ( mCtx->protocol() == GpgME::Context::CMS ) {
+    mPubKeyDataProvider = new QGpgME::QByteArrayDataProvider();
+    mPubKey = new GpgME::Data( mPubKeyDataProvider );
+    assert( !mPubKey->isNull() );
+  }
 
   hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData );
+  const GpgME::Error err =
+    mCtx->startKeyGeneration( parameters.utf8().data(), mPubKey ? *mPubKey : GpgME::Data::null );
 						  
   if ( err )
     deleteLater();
   return err;
 }
 
-std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-Kleo::QGpgMEDecryptVerifyJob::exec( const QByteArray & cipherText, QByteArray & plainText ) {
-  setup( cipherText );
-  const std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> result =
-    mCtx->decryptAndVerify( *mInData, *mOutData );
-  plainText = mOutDataDataProvider->data();
-  getAuditLog();
-  return result;
+void Kleo::QGpgMEKeyGenerationJob::doOperationDoneEvent( const GpgME::Error & ) {
+    const GpgME::KeyGenerationResult res = mCtx->keyGenerationResult();
+    const QByteArray data = mPubKeyDataProvider ? mPubKeyDataProvider->data() : QByteArray() ;
+    getAuditLog();
+    emit result( res, data );
 }
 
-void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) {
-  const GpgME::DecryptionResult dr = mCtx->decryptionResult();
-  const GpgME::VerificationResult vr = mCtx->verificationResult();
-  const QByteArray plainText = mOutDataDataProvider->data();
-  getAuditLog();
-  emit result( dr, vr, plainText );
-}
-
-#include "qgpgmedecryptverifyjob.moc"
+#include "qgpgmekeygenerationjob.moc"

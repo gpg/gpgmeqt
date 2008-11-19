@@ -1,5 +1,5 @@
 /*
-    qgpgmedecryptverifyjob.cpp
+    qgpgmeimportjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -34,64 +34,57 @@
 #include <config.h>
 #endif
 
-#include "qgpgmedecryptverifyjob.h"
+#include "qgpgmeimportjob.h"
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgmepp/context.h>
-#include <gpgmepp/decryptionresult.h>
-#include <gpgmepp/verificationresult.h>
+#include <gpgmepp/importresult.h>
 #include <gpgmepp/data.h>
 
 #include <assert.h>
 
-Kleo::QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob( GpgME::Context * context )
-  : DecryptVerifyJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDecryptVerifyJob" ),
+Kleo::QGpgMEImportJob::QGpgMEImportJob( GpgME::Context * context )
+  : ImportJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEImportJob" ),
     QGpgMEJob( this, context )
 {
   assert( context );
 }
 
-Kleo::QGpgMEDecryptVerifyJob::~QGpgMEDecryptVerifyJob() {
+Kleo::QGpgMEImportJob::~QGpgMEImportJob() {
 }
 
-void Kleo::QGpgMEDecryptVerifyJob::setup( const QByteArray & cipherText ) {
+void Kleo::QGpgMEImportJob::setup( const QByteArray & keyData ) {
   assert( !mInData );
-  assert( !mOutData );
 
-  createInData( cipherText );
-  createOutData();
+  createInData( keyData );
 }
 
-GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText ) {
-  setup( cipherText );
+GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
+  setup( keyData );
 
   hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData );
+  const GpgME::Error err = mCtx->startKeyImport( *mInData );
 						  
   if ( err )
     deleteLater();
   return err;
 }
 
-std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-Kleo::QGpgMEDecryptVerifyJob::exec( const QByteArray & cipherText, QByteArray & plainText ) {
-  setup( cipherText );
-  const std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> result =
-    mCtx->decryptAndVerify( *mInData, *mOutData );
-  plainText = mOutDataDataProvider->data();
+GpgME::ImportResult Kleo::QGpgMEImportJob::exec( const QByteArray & keyData ) {
+  setup( keyData );
+  const GpgME::ImportResult res = mCtx->importKeys( *mInData );
   getAuditLog();
-  return result;
+  return res;
 }
 
-void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) {
-  const GpgME::DecryptionResult dr = mCtx->decryptionResult();
-  const GpgME::VerificationResult vr = mCtx->verificationResult();
-  const QByteArray plainText = mOutDataDataProvider->data();
+void Kleo::QGpgMEImportJob::doOperationDoneEvent( const GpgME::Error & ) {
+  const GpgME::ImportResult res = mCtx->importResult();
   getAuditLog();
-  emit result( dr, vr, plainText );
+  emit result( res );
 }
 
-#include "qgpgmedecryptverifyjob.moc"
+
+#include "qgpgmeimportjob.moc"
