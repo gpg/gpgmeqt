@@ -101,5 +101,4 @@ private:
 
 } // namespace QGpgME
 
-#endif // __QGPGME_EVENTLOOPINTERACTOR_H__
-
+#endif
