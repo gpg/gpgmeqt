@@ -1,8 +1,9 @@
 /*
     hierarchicalkeylistjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -33,11 +34,15 @@
 #ifndef __KLEO_HIERARCHICALKEYLISTJOB_H__
 #define __KLEO_HIERARCHICALKEYLISTJOB_H__
 
-#include "kleo_export.h"
-#include "libkleo/keylistjob.h"
-#include "libkleo/cryptobackend.h"
+#include "qgpgme_export.h"
+#include "keylistjob.h"
+#include "cryptobackend.h"
 
+#ifdef BUILDING_QGPGME
+# include "keylistresult.h"
+#else
 #include <gpgme++/keylistresult.h>
+#endif
 
 #include <QPointer>
 
@@ -49,12 +54,12 @@ class Error;
 class Key;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 class KeyListJob;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -70,11 +75,11 @@ namespace Kleo
    After result() is emitted, the HierarchicalKeyListJob will
    schedule its own destruction by calling QObject::deleteLater().
 */
-class KLEO_EXPORT HierarchicalKeyListJob : public KeyListJob
+class QGPGME_EXPORT HierarchicalKeyListJob : public KeyListJob
 {
     Q_OBJECT
 public:
-    explicit HierarchicalKeyListJob(const CryptoBackend::Protocol *protocol,
+    explicit HierarchicalKeyListJob(const Protocol *protocol,
                                     bool remote = false, bool includeSigs = false,
                                     bool validating = false);
     ~HierarchicalKeyListJob();
@@ -103,7 +108,7 @@ private:
     GpgME::Error startAJob();
 
 private:
-    const CryptoBackend::Protocol *const mProtocol;
+    const Protocol *const mProtocol;
     const bool mRemote;
     const bool mIncludeSigs;
     const bool mValidating;

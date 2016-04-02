@@ -1,8 +1,9 @@
 /*
     job.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -55,14 +56,12 @@
 #include "adduseridjob.h"
 #include "specialjob.h"
 
-#include <gpgme++/error.h>
-
 #include <QCoreApplication>
-#include <qdebug.h>
+#include <QDebug>
 
 #include <gpg-error.h>
 
-Kleo::Job::Job(QObject *parent)
+QGpgME::Job::Job(QObject *parent)
     : QObject(parent)
 {
     if (QCoreApplication *app = QCoreApplication::instance()) {
@@ -70,36 +69,31 @@ Kleo::Job::Job(QObject *parent)
     }
 }
 
-Kleo::Job::~Job()
+QGpgME::Job::~Job()
 {
 
 }
 
-void Kleo::Job::showErrorDialog(QWidget *, const QString &) const
+QString QGpgME::Job::auditLogAsHtml() const
 {
-    qDebug() << "Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!";
-}
-
-QString Kleo::Job::auditLogAsHtml() const
-{
-    qDebug() << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!";
+    qDebug() << "QGpgME::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!";
     return QString();
 }
 
-GpgME::Error Kleo::Job::auditLogError() const
+GpgME::Error QGpgME::Job::auditLogError() const
 {
-    qDebug() << "Kleo::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!";
+    qDebug() << "QGpgME::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!";
     return GpgME::Error::fromCode(GPG_ERR_NOT_IMPLEMENTED);
 }
 
-bool Kleo::Job::isAuditLogSupported() const
+bool QGpgME::Job::isAuditLogSupported() const
 {
     return auditLogError().code() != GPG_ERR_NOT_IMPLEMENTED;
 }
 
 #define make_job_subclass_ext(x,y)                \
-    Kleo::x::x( QObject * parent ) : y( parent ) {} \
-    Kleo::x::~x() {}
+    QGpgME::x::x( QObject * parent ) : y( parent ) {} \
+    QGpgME::x::~x() {}
 
 #define make_job_subclass(x) make_job_subclass_ext(x,Job)
 
@@ -129,28 +123,28 @@ make_job_subclass(SpecialJob)
 
 #undef make_job_subclass
 
-#include "moc_job.cpp"
+#include "job.moc"
 
-#include "moc_keylistjob.cpp"
-#include "moc_listallkeysjob.cpp"
-#include "moc_encryptjob.cpp"
-#include "moc_decryptjob.cpp"
-#include "moc_decryptverifyjob.cpp"
-#include "moc_signjob.cpp"
-#include "moc_signencryptjob.cpp"
-#include "moc_signkeyjob.cpp"
-#include "moc_verifydetachedjob.cpp"
-#include "moc_verifyopaquejob.cpp"
-#include "moc_keygenerationjob.cpp"
-#include "moc_abstractimportjob.cpp"
-#include "moc_importjob.cpp"
-#include "moc_importfromkeyserverjob.cpp"
-#include "moc_exportjob.cpp"
-#include "moc_changeexpiryjob.cpp"
-#include "moc_changeownertrustjob.cpp"
-#include "moc_changepasswdjob.cpp"
-#include "moc_downloadjob.cpp"
-#include "moc_deletejob.cpp"
-#include "moc_refreshkeysjob.cpp"
-#include "moc_adduseridjob.cpp"
-#include "moc_specialjob.cpp"
+#include "keylistjob.moc"
+#include "listallkeysjob.moc"
+#include "encryptjob.moc"
+#include "decryptjob.moc"
+#include "decryptverifyjob.moc"
+#include "signjob.moc"
+#include "signencryptjob.moc"
+#include "signkeyjob.moc"
+#include "verifydetachedjob.moc"
+#include "verifyopaquejob.moc"
+#include "keygenerationjob.moc"
+#include "abstractimportjob.moc"
+#include "importjob.moc"
+#include "importfromkeyserverjob.moc"
+#include "exportjob.moc"
+#include "changeexpiryjob.moc"
+#include "changeownertrustjob.moc"
+#include "changepasswdjob.moc"
+#include "downloadjob.moc"
+#include "deletejob.moc"
+#include "refreshkeysjob.moc"
+#include "adduseridjob.moc"
+#include "specialjob.moc"

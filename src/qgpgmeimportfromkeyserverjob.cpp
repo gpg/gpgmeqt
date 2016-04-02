@@ -1,8 +1,9 @@
 /*
     qgpgmeimportfromkeyserverjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,15 +33,15 @@
 
 #include "qgpgmeimportfromkeyserverjob.h"
 
-#include <qgpgme/dataprovider.h>
+#include "dataprovider.h"
 
-#include <gpgme++/context.h>
-#include <gpgme++/data.h>
-#include <gpgme++/key.h>
+#include "context.h"
+#include "data.h"
+#include "key.h"
 
 #include <cassert>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -66,7 +67,7 @@ Error QGpgMEImportFromKeyserverJob::start(const std::vector<Key> &keys)
     return Error();
 }
 
-GpgME::ImportResult Kleo::QGpgMEImportFromKeyserverJob::exec(const std::vector<Key> &keys)
+GpgME::ImportResult QGpgME::QGpgMEImportFromKeyserverJob::exec(const std::vector<Key> &keys)
 {
     const result_type r = importfromkeyserver(context(), keys);
     resultHook(r);
@@ -75,8 +76,7 @@ GpgME::ImportResult Kleo::QGpgMEImportFromKeyserverJob::exec(const std::vector<K
 
 // PENDING(marc) implement showErrorDialog()
 
-void Kleo::QGpgMEImportFromKeyserverJob::resultHook(const result_type &tuple)
+void QGpgME::QGpgMEImportFromKeyserverJob::resultHook(const result_type &tuple)
 {
     mResult = get<0>(tuple);
 }
-

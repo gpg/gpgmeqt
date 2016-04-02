@@ -1,8 +1,9 @@
 /*
     qgpgmesignencryptjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,14 +33,12 @@
 
 #include "qgpgmesignencryptjob.h"
 
-#include "ui/messagebox.h"
+#include "dataprovider.h"
 
-#include <qgpgme/dataprovider.h>
-
-#include <gpgme++/context.h>
-#include <gpgme++/data.h>
-#include <gpgme++/key.h>
-#include <gpgme++/exception.h>
+#include "context.h"
+#include "data.h"
+#include "key.h"
+#include "exception.h"
 
 #include <QBuffer>
 
@@ -47,7 +46,7 @@
 
 #include <cassert>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -143,6 +142,9 @@ std::pair<SigningResult, EncryptionResult> QGpgMESignEncryptJob::exec(const std:
     return mResult;
 }
 
+#if 0
+
+TODO port?
 void QGpgMESignEncryptJob::showErrorDialog(QWidget *parent, const QString &caption) const
 {
     if ((mResult.first.error()  && !mResult.first.error().isCanceled()) ||
@@ -150,9 +152,9 @@ void QGpgMESignEncryptJob::showErrorDialog(QWidget *parent, const QString &capti
         MessageBox::error(parent, mResult.first, mResult.second, this, caption);
     }
 }
+#endif
 
 void QGpgMESignEncryptJob::resultHook(const result_type &tuple)
 {
     mResult = std::make_pair(get<0>(tuple), get<1>(tuple));
 }
-

@@ -1,8 +1,9 @@
 /*
     qgpgmedecryptjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,11 +33,11 @@
 
 #include "qgpgmedecryptjob.h"
 
-#include <qgpgme/dataprovider.h>
+#include "dataprovider.h"
 
-#include <gpgme++/context.h>
-#include <gpgme++/decryptionresult.h>
-#include <gpgme++/data.h>
+#include "context.h"
+#include "decryptionresult.h"
+#include "data.h"
 
 #include <QBuffer>
 
@@ -44,7 +45,7 @@
 
 #include <cassert>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -109,7 +110,7 @@ void QGpgMEDecryptJob::start(const shared_ptr<QIODevice> &cipherText, const shar
     run(bind(&decrypt, _1, _2, _3, _4), cipherText, plainText);
 }
 
-GpgME::DecryptionResult Kleo::QGpgMEDecryptJob::exec(const QByteArray &cipherText,
+GpgME::DecryptionResult QGpgME::QGpgMEDecryptJob::exec(const QByteArray &cipherText,
         QByteArray &plainText)
 {
     const result_type r = decrypt_qba(context(), cipherText);
@@ -124,4 +125,3 @@ void QGpgMEDecryptJob::resultHook(const result_type &tuple)
 {
     mResult = get<0>(tuple);
 }
-

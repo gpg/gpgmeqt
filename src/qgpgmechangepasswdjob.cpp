@@ -1,8 +1,9 @@
 /*
     qgpgmechangepasswdjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2010 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,16 +33,16 @@
 
 #include "qgpgmechangepasswdjob.h"
 
-#include <qgpgme/dataprovider.h>
+#include "dataprovider.h"
 
-#include <gpgme++/context.h>
-#include <gpgme++/data.h>
-#include <gpgme++/key.h>
+#include "context.h"
+#include "data.h"
+#include "key.h"
 
 #include <cassert>
 #include <memory>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -75,4 +76,3 @@ Error QGpgMEChangePasswdJob::start(const Key &key)
     run(bind(&change_passwd, _1, key));
     return Error();
 }
-

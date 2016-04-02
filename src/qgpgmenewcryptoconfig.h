@@ -1,8 +1,9 @@
 /*
     qgpgmenewcryptoconfig.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2010 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,17 +31,21 @@
     your version.
 */
 
-#ifndef KLEO_QGPGMENEWCRYPTOCONFIG_H
-#define KLEO_QGPGMENEWCRYPTOCONFIG_H
+#ifndef QGPGME_QGPGMENEWCRYPTOCONFIG_H
+#define QGPGME_QGPGMENEWCRYPTOCONFIG_H
 
-#include "kleo_export.h"
-#include "libkleo/cryptoconfig.h"
+#include "qgpgme_export.h"
+#include "cryptoconfig.h"
 
 #include <QHash>
 #include <QStringList>
 #include <QVariant>
 
-#include <gpgme++/configuration.h>
+#ifdef BUILDING_QGPGME
+# include "configuration.h"
+#else
+# include <gpgme++/configuration.h>
+#endif
 
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -54,7 +59,7 @@ class QGpgMENewCryptoConfigComponent;
 class QGpgMENewCryptoConfigGroup;
 class QGpgMENewCryptoConfigEntry;
 
-class QGpgMENewCryptoConfigEntry : public Kleo::CryptoConfigEntry
+class QGpgMENewCryptoConfigEntry : public QGpgME::CryptoConfigEntry
 {
 public:
     QGpgMENewCryptoConfigEntry(const boost::shared_ptr<QGpgMENewCryptoConfigGroup> &group, const GpgME::Configuration::Option &option);
@@ -105,7 +110,7 @@ private:
     GpgME::Configuration::Option m_option;
 };
 
-class QGpgMENewCryptoConfigGroup : public Kleo::CryptoConfigGroup
+class QGpgMENewCryptoConfigGroup : public QGpgME::CryptoConfigGroup
 {
 public:
     QGpgMENewCryptoConfigGroup(const boost::shared_ptr<QGpgMENewCryptoConfigComponent> &parent, const GpgME::Configuration::Option &option);
@@ -118,7 +123,7 @@ public:
     }
     QString description() const Q_DECL_OVERRIDE;
     QString path() const Q_DECL_OVERRIDE;
-    Kleo::CryptoConfigEntry::Level level() const Q_DECL_OVERRIDE;
+    QGpgME::CryptoConfigEntry::Level level() const Q_DECL_OVERRIDE;
     QStringList entryList() const Q_DECL_OVERRIDE;
     QGpgMENewCryptoConfigEntry *entry(const QString &name) const Q_DECL_OVERRIDE;
 
@@ -131,7 +136,7 @@ private:
 };
 
 /// For docu, see kleo/cryptoconfig.h
-class QGpgMENewCryptoConfigComponent : public Kleo::CryptoConfigComponent, public boost::enable_shared_from_this<QGpgMENewCryptoConfigComponent>
+class QGpgMENewCryptoConfigComponent : public QGpgME::CryptoConfigComponent, public boost::enable_shared_from_this<QGpgMENewCryptoConfigComponent>
 {
 public:
     QGpgMENewCryptoConfigComponent();
@@ -159,7 +164,7 @@ private:
  * CryptoConfig implementation around the gpgconf command-line tool
  * For method docu, see kleo/cryptoconfig.h
  */
-class KLEO_EXPORT QGpgMENewCryptoConfig : public Kleo::CryptoConfig
+class QGPGME_EXPORT QGpgMENewCryptoConfig : public QGpgME::CryptoConfig
 {
 public:
     /**
@@ -184,4 +189,4 @@ private:
     bool m_parsed;
 };
 
-#endif /* KLEO_QGPGMENEWCRYPTOCONFIG_H */
+#endif /* QGPGME_QGPGMENEWCRYPTOCONFIG_H */

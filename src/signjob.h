@@ -1,8 +1,9 @@
 /*
     signjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,7 +36,11 @@
 
 #include "job.h"
 
-#include <gpgme++/global.h>
+#ifdef BUILDING_QGPGME
+# include "global.h"
+#else
+# include <gpgme++/global.h>
+#endif
 
 #include <boost/shared_ptr.hpp>
 
@@ -51,7 +56,7 @@ class Key;
 class SigningResult;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -67,7 +72,7 @@ namespace Kleo
    After result() is emitted, the SignJob will schedule it's own
    destruction by calling QObject::deleteLater().
 */
-class KLEO_EXPORT SignJob : public Job
+class QGPGME_EXPORT SignJob : public Job
 {
     Q_OBJECT
 protected:
@@ -79,7 +84,7 @@ public:
        Starts the signing operation. \a signers is the list of keys to
        sign \a plainText with. Empty (null) keys are ignored.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const std::vector<GpgME::Key> &signers,
+    virtual QGPGME_DEPRECATED_EXPORT GpgME::Error start(const std::vector<GpgME::Key> &signers,
             const QByteArray &plainText,
             GpgME::SignatureMode mode) = 0;
 

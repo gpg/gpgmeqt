@@ -1,8 +1,9 @@
 /*
     qgpgmeverifydetachedjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,17 +33,17 @@
 
 #include "qgpgmeverifydetachedjob.h"
 
-#include <qgpgme/dataprovider.h>
+#include "dataprovider.h"
 
-#include <gpgme++/context.h>
-#include <gpgme++/verificationresult.h>
-#include <gpgme++/data.h>
+#include "context.h"
+#include "verificationresult.h"
+#include "data.h"
 
 #include <cassert>
 
 #include <boost/weak_ptr.hpp>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -102,7 +103,7 @@ void QGpgMEVerifyDetachedJob::start(const shared_ptr<QIODevice> &signature, cons
     run(bind(&verify_detached, _1, _2, _3, _4), signature, signedData);
 }
 
-GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec(const QByteArray &signature,
+GpgME::VerificationResult QGpgME::QGpgMEVerifyDetachedJob::exec(const QByteArray &signature,
         const QByteArray &signedData)
 {
     const result_type r = verify_detached_qba(context(), signature, signedData);
@@ -112,8 +113,7 @@ GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec(const QByteArray &
 
 //PENDING(marc) implement showErrorDialog()
 
-void Kleo::QGpgMEVerifyDetachedJob::resultHook(const result_type &tuple)
+void QGpgME::QGpgMEVerifyDetachedJob::resultHook(const result_type &tuple)
 {
     mResult = get<0>(tuple);
 }
-

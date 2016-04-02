@@ -1,8 +1,9 @@
 /*
     specialjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -40,7 +41,7 @@ namespace GpgME
 class Error;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -58,7 +59,7 @@ namespace Kleo
 
    Parameters are set using the Qt property system. More general, or
    constructor parameters are given in the call to
-   Kleo::CryptoBackend::Protocol::specialJob().
+   QGpgME::Protocol::specialJob().
 
    The result is made available through the result signal, and
    through the read-only result property, the latter of which needs

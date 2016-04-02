@@ -1,8 +1,9 @@
 /*
     threadedjobmixin.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,10 +31,8 @@
     your version.
 */
 
-#ifndef __KLEO_THREADEDJOBMIXING_H__
-#define __KLEO_THREADEDJOBMIXING_H__
-
-#include "qgpgmeprogresstokenmapper.h"
+#ifndef __QGPGME_THREADEDJOBMIXING_H__
+#define __QGPGME_THREADEDJOBMIXING_H__
 
 #include <QMutex>
 #include <QMutexLocker>
@@ -41,8 +40,13 @@
 #include <QString>
 #include <QIODevice>
 
-#include <gpgme++/context.h>
-#include <gpgme++/interfaces/progressprovider.h>
+#ifdef BUILDING_QGPGME
+# include "context.h"
+# include "interfaces/progressprovider.h"
+#else
+# include <gpgme++/context.h>
+# include <gpgme++/interfaces/progressprovider.h>
+#endif
 
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -54,7 +58,7 @@
 
 #include <cassert>
 
-namespace Kleo
+namespace QGpgME
 {
 namespace _detail
 {
@@ -233,7 +237,8 @@ protected:
         // ### hope this is thread-safe (meta obj is const, and
         // ### portEvent is thread-safe, so should be ok)
         QMetaObject::invokeMethod(this, "progress", Qt::QueuedConnection,
-        Q_ARG(QString, QGpgMEProgressTokenMapper::map(what, type)),
+        // TODO port
+        Q_ARG(QString, QString()),
         Q_ARG(int, current),
         Q_ARG(int, total));
     }
@@ -272,5 +277,4 @@ private:
 }
 }
 
-#endif /* __KLEO_THREADEDJOBMIXING_H__ */
-
+#endif /* __QGPGME_THREADEDJOBMIXING_H__ */

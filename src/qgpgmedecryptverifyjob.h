@@ -1,8 +1,9 @@
 /*
     qgpgmedecryptverifyjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,17 +31,25 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
-#define __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
+#ifndef __QGPGME_QGPGMEDECRYPTVERIFYJOB_H__
+#define __QGPGME_QGPGMEDECRYPTVERIFYJOB_H__
 
-#include "libkleo/decryptverifyjob.h"
+#include "decryptverifyjob.h"
 
 #include "threadedjobmixin.h"
 
+#ifdef BUILDING_QGPGME
+# include "decryptionresult.h"
+#else
 #include <gpgme++/decryptionresult.h>
+#endif
+#ifdef BUILDING_QGPGME
+# include "verificationresult.h"
+#else
 #include <gpgme++/verificationresult.h>
+#endif
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMEDecryptVerifyJob
@@ -77,4 +86,4 @@ private:
 };
 
 }
-#endif // __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
+#endif // __QGPGME_QGPGMEDECRYPTVERIFYJOB_H__

@@ -1,8 +1,9 @@
 /*
     qgpgmechangeexpiryjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,12 +33,12 @@
 
 #include "qgpgmechangeexpiryjob.h"
 
-#include <qgpgme/dataprovider.h>
+#include "dataprovider.h"
 
-#include <gpgme++/context.h>
-#include <gpgme++/data.h>
-#include <gpgme++/gpgsetexpirytimeeditinteractor.h>
-#include <gpgme++/key.h>
+#include "context.h"
+#include "data.h"
+#include "gpgsetexpirytimeeditinteractor.h"
+#include "key.h"
 
 #include <QDateTime>
 
@@ -45,7 +46,7 @@
 #include <memory>
 #include <string>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -78,4 +79,3 @@ Error QGpgMEChangeExpiryJob::start(const Key &key, const QDateTime &expiry)
     run(bind(&change_expiry, _1, key, expiry));
     return Error();
 }
-

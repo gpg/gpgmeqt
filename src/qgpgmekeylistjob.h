@@ -1,8 +1,9 @@
 /*
     qgpgmekeylistjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,17 +31,25 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEKEYLISTJOB_H__
-#define __KLEO_QGPGMEKEYLISTJOB_H__
+#ifndef __QGPGME_QGPGMEKEYLISTJOB_H__
+#define __QGPGME_QGPGMEKEYLISTJOB_H__
 
-#include "libkleo/keylistjob.h"
+#include "keylistjob.h"
 
 #include "threadedjobmixin.h"
 
+#ifdef BUILDING_QGPGME
+# include "keylistresult.h"
+#else
 #include <gpgme++/keylistresult.h>
+#endif
+#ifdef BUILDING_QGPGME
+# include "key.h"
+#else
 #include <gpgme++/key.h>
+#endif
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMEKeyListJob
@@ -78,4 +87,4 @@ private:
 
 }
 
-#endif // __KLEO_QGPGMEKEYLISTJOB_H__
+#endif // __QGPGME_QGPGMEKEYLISTJOB_H__

@@ -1,8 +1,9 @@
 /*
     cryptoconfig.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -43,7 +44,7 @@
 
 /* Start reading this file from the bottom up :) */
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -369,8 +370,8 @@ public:
      */
     CryptoConfigEntry *entry(const QString &componentName, const QString &groupName, const QString &entryName) const
     {
-        const Kleo::CryptoConfigComponent *comp = component(componentName);
-        const Kleo::CryptoConfigGroup *group = comp ? comp->group(groupName) : 0;
+        const QGpgME::CryptoConfigComponent *comp = component(componentName);
+        const QGpgME::CryptoConfigGroup *group = comp ? comp->group(groupName) : 0;
         return group ? group->entry(entryName) : 0;
     }
 

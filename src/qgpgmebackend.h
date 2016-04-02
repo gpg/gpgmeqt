@@ -1,8 +1,9 @@
 /*
     qgpgmebackend.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,57 +31,122 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEBACKEND_H__
-#define __KLEO_QGPGMEBACKEND_H__
+#ifndef __QGPGME_QGPGMEBACKEND_H__
+#define __QGPGME_QGPGMEBACKEND_H__
 
-#include "libkleo/cryptobackend.h"
+#include <QString>
 
-namespace Kleo
+namespace QGpgME
 {
 class CryptoConfig;
+class KeyListJob;
+class ListAllKeysJob;
+class KeyGenerationJob;
+class ImportJob;
+class ImportFromKeyserverJob;
+class ExportJob;
+class DownloadJob;
+class DeleteJob;
+class EncryptJob;
+class DecryptJob;
+class SignJob;
+class SignKeyJob;
+class VerifyDetachedJob;
+class VerifyOpaqueJob;
+class SignEncryptJob;
+class DecryptVerifyJob;
+class RefreshKeysJob;
+class ChangeExpiryJob;
+class ChangeOwnerTrustJob;
+class ChangePasswdJob;
+class AddUserIDJob;
+class SpecialJob;
 }
+
 class QString;
+class QVariant;
+template <typename T_Key, typename T_Value> class QMap;
 
-namespace Kleo
+namespace QGpgME
 {
+class CryptoConfig;
+class Protocol;
 
-class QGpgMEBackend : public Kleo::CryptoBackend
+class QGpgMEBackend
 {
 public:
     QGpgMEBackend();
     ~QGpgMEBackend();
 
-    QString name() const Q_DECL_OVERRIDE;
-    QString displayName() const Q_DECL_OVERRIDE;
+    QString name() const;
+    QString displayName() const;
 
-    CryptoConfig *config() const Q_DECL_OVERRIDE;
+    CryptoConfig *config() const;
 
-    Protocol *openpgp() const Q_DECL_OVERRIDE;
-    Protocol *smime() const Q_DECL_OVERRIDE;
-    Protocol *protocol(const char *name) const Q_DECL_OVERRIDE;
+    Protocol *openpgp() const;
+    Protocol *smime() const;
+    Protocol *protocol(const char *name) const;
 
-    bool checkForOpenPGP(QString *reason = Q_NULLPTR) const Q_DECL_OVERRIDE;
-    bool checkForSMIME(QString *reason = Q_NULLPTR) const Q_DECL_OVERRIDE;
-    bool checkForProtocol(const char *name, QString *reason) const Q_DECL_OVERRIDE;
+    static const char OpenPGP[];
+    static const char SMIME[];
 
-    bool supportsOpenPGP() const Q_DECL_OVERRIDE
+    bool checkForOpenPGP(QString *reason = Q_NULLPTR) const;
+    bool checkForSMIME(QString *reason = Q_NULLPTR) const;
+    bool checkForProtocol(const char *name, QString *reason) const;
+
+    bool supportsOpenPGP() const
     {
         return true;
     }
-    bool supportsSMIME() const Q_DECL_OVERRIDE
+    bool supportsSMIME() const
     {
         return true;
     }
-    bool supportsProtocol(const char *name) const Q_DECL_OVERRIDE;
+    bool supportsProtocol(const char *name) const;
 
-    const char *enumerateProtocols(int i) const Q_DECL_OVERRIDE;
+    const char *enumerateProtocols(int i) const;
 
 private:
-    mutable Kleo::CryptoConfig *mCryptoConfig;
+    mutable QGpgME::CryptoConfig *mCryptoConfig;
     mutable Protocol *mOpenPGPProtocol;
     mutable Protocol *mSMIMEProtocol;
 };
 
+class Protocol
+{
+public:
+    virtual ~Protocol() {}
+
+    virtual QString name() const = 0;
+
+    virtual QString displayName() const = 0;
+
+    virtual KeyListJob           *keyListJob(bool remote = false, bool includeSigs = false, bool validate = false) const = 0;
+    virtual ListAllKeysJob       *listAllKeysJob(bool includeSigs = false, bool validate = false) const = 0;
+    virtual EncryptJob           *encryptJob(bool armor = false, bool textmode = false) const = 0;
+    virtual DecryptJob           *decryptJob() const = 0;
+    virtual SignJob              *signJob(bool armor = false, bool textMode = false) const = 0;
+    virtual VerifyDetachedJob    *verifyDetachedJob(bool textmode = false) const = 0;
+    virtual VerifyOpaqueJob      *verifyOpaqueJob(bool textmode = false) const = 0;
+    virtual KeyGenerationJob     *keyGenerationJob() const = 0;
+    virtual ImportJob            *importJob() const = 0;
+    virtual ImportFromKeyserverJob *importFromKeyserverJob() const = 0;
+    virtual ExportJob            *publicKeyExportJob(bool armor = false) const = 0;
+    // @param charset the encoding of the passphrase in the exported file
+    virtual ExportJob            *secretKeyExportJob(bool armor = false, const QString &charset = QString()) const = 0;
+    virtual DownloadJob          *downloadJob(bool armor = false) const = 0;
+    virtual DeleteJob            *deleteJob() const = 0;
+    virtual SignEncryptJob       *signEncryptJob(bool armor = false, bool textMode = false) const = 0;
+    virtual DecryptVerifyJob     *decryptVerifyJob(bool textmode = false) const = 0;
+    virtual RefreshKeysJob       *refreshKeysJob() const = 0;
+    virtual ChangeExpiryJob      *changeExpiryJob() const;
+    virtual ChangeOwnerTrustJob *changeOwnerTrustJob() const;
+    virtual ChangePasswdJob      *changePasswdJob() const;
+    virtual SignKeyJob           *signKeyJob() const;
+    virtual AddUserIDJob         *addUserIDJob() const;
+    virtual SpecialJob           *specialJob(const char *type, const QMap<QString, QVariant> &args) const = 0;
+};
+
 }
 
-#endif // __KLEO_QGPGMEBACKEND_H__
+#endif // __QGPGME_QGPGMEBACKEND_H__

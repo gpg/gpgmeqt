@@ -1,8 +1,9 @@
 /*
     qgpgmedecryptverifyjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,12 +33,12 @@
 
 #include "qgpgmedecryptverifyjob.h"
 
-#include <qgpgme/dataprovider.h>
+#include "dataprovider.h"
 
-#include <gpgme++/context.h>
-#include <gpgme++/decryptionresult.h>
-#include <gpgme++/verificationresult.h>
-#include <gpgme++/data.h>
+#include "context.h"
+#include "decryptionresult.h"
+#include "verificationresult.h"
+#include "data.h"
 
 #include <QDebug>
 #include "gpgme_backend_debug.h"
@@ -48,7 +49,7 @@
 
 #include <cassert>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -118,7 +119,7 @@ void QGpgMEDecryptVerifyJob::start(const shared_ptr<QIODevice> &cipherText, cons
 }
 
 std::pair<GpgME::DecryptionResult, GpgME::VerificationResult>
-Kleo::QGpgMEDecryptVerifyJob::exec(const QByteArray &cipherText, QByteArray &plainText)
+QGpgME::QGpgMEDecryptVerifyJob::exec(const QByteArray &cipherText, QByteArray &plainText)
 {
     const result_type r = decrypt_verify_qba(context(), cipherText);
     plainText = get<2>(r);
@@ -132,4 +133,3 @@ void QGpgMEDecryptVerifyJob::resultHook(const result_type &tuple)
 {
     mResult = std::make_pair(get<0>(tuple), get<1>(tuple));
 }
-

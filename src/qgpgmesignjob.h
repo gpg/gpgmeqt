@@ -1,8 +1,9 @@
 /*
     qgpgmesignjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,17 +31,25 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMESIGNJOB_H__
-#define __KLEO_QGPGMESIGNJOB_H__
+#ifndef __QGPGME_QGPGMESIGNJOB_H__
+#define __QGPGME_QGPGMESIGNJOB_H__
 
-#include "libkleo/signjob.h"
+#include "signjob.h"
 
 #include "threadedjobmixin.h"
 
+#ifdef BUILDING_QGPGME
+# include "signingresult.h"
+#else
 #include <gpgme++/signingresult.h>
+#endif
+#ifdef BUILDING_QGPGME
+# include "key.h"
+#else
 #include <gpgme++/key.h>
+#endif
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMESignJob
@@ -76,9 +85,6 @@ public:
                               GpgME::SignatureMode mode,
                               QByteArray &signature) Q_DECL_OVERRIDE;
 
-    /*! \reimp from Job */
-    void showErrorDialog(QWidget *parent, const QString &caption) const Q_DECL_OVERRIDE;
-
     /*! \reimp from SignJob */
     void setOutputIsBase64Encoded(bool on) Q_DECL_OVERRIDE;
 
@@ -92,4 +98,4 @@ private:
 
 }
 
-#endif // __KLEO_QGPGMESIGNJOB_H__
+#endif // __QGPGME_QGPGMESIGNJOB_H__

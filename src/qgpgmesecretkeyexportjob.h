@@ -1,8 +1,9 @@
 /*
     qgpgmesecretkeyexportjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,24 +31,23 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMESECRETKEYEXPORTJOB_H__
-#define __KLEO_QGPGMESECRETKEYEXPORTJOB_H__
+#ifndef __QGPGME_QGPGMESECRETKEYEXPORTJOB_H__
+#define __QGPGME_QGPGMESECRETKEYEXPORTJOB_H__
 
-#include "libkleo/exportjob.h"
+#include "exportjob.h"
+#ifdef BUILDING_QGPGME
+# include "context.h"
+#else
 #include "gpgme++/context.h"
+#endif
 #include <QProcess>
-
-namespace Kleo
-{
-class GnuPGProcessBase;
-}
 
 namespace GpgME
 {
 class Data;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMESecretKeyExportJob : public ExportJob
@@ -64,13 +64,12 @@ private Q_SLOTS:
     /*! \reimp from Job */
     void slotCancel() Q_DECL_OVERRIDE;
 
-    void slotStatus(Kleo::GnuPGProcessBase *, const QString &, const QStringList &);
     void slotStdout();
     void slotStderr();
     void slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
-    GnuPGProcessBase *mProcess;
+    QProcess *mProcess;
     QByteArray mKeyData;
     GpgME::Error mError;
     bool mArmour;
@@ -79,4 +78,4 @@ private:
 
 }
 
-#endif // __KLEO_QGPGMESECRETKEYEXPORTJOB_H__
+#endif // __QGPGME_QGPGMESECRETKEYEXPORTJOB_H__

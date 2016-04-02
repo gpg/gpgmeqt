@@ -1,8 +1,9 @@
 /*
     qgpgmekeygenerationjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,14 +33,14 @@
 
 #include "qgpgmekeygenerationjob.h"
 
-#include <qgpgme/dataprovider.h>
+#include "dataprovider.h"
 
-#include <gpgme++/context.h>
-#include <gpgme++/data.h>
+#include "context.h"
+#include "data.h"
 
 #include <cassert>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -68,4 +69,3 @@ Error QGpgMEKeyGenerationJob::start(const QString &parameters)
     run(bind(&generate_key, _1, parameters));
     return Error();
 }
-

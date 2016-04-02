@@ -1,8 +1,9 @@
 /*
     qgpgmekeylistjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,13 +33,10 @@
 
 #include "qgpgmekeylistjob.h"
 
-#include <gpgme++/key.h>
-#include <gpgme++/context.h>
-#include <gpgme++/keylistresult.h>
+#include "key.h"
+#include "context.h"
+#include "keylistresult.h"
 #include <gpg-error.h>
-
-#include <kmessagebox.h>
-#include <KLocalizedString>
 
 #include <QStringList>
 
@@ -48,7 +46,7 @@
 #include <cstring>
 #include <cassert>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -154,7 +152,7 @@ void QGpgMEKeyListJob::resultHook(const result_type &tuple)
         Q_EMIT nextKey(key);
     }
 }
-
+#if 0
 void QGpgMEKeyListJob::showErrorDialog(QWidget *parent, const QString &caption) const
 {
     if (!mResult.error() || mResult.error().isCanceled()) {
@@ -166,4 +164,4 @@ void QGpgMEKeyListJob::showErrorDialog(QWidget *parent, const QString &caption) 
                              QString::fromLocal8Bit(mResult.error().asString()));
     KMessageBox::error(parent, msg, caption);
 }
-
+#endif

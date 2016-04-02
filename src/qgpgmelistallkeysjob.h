@@ -1,8 +1,9 @@
 /*
     qgpgmelistallkeysjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,17 +31,25 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMELISTALLKEYSJOB_H__
-#define __KLEO_QGPGMELISTALLKEYSJOB_H__
+#ifndef __QGPGME_QGPGMELISTALLKEYSJOB_H__
+#define __QGPGME_QGPGMELISTALLKEYSJOB_H__
 
-#include "libkleo/listallkeysjob.h"
+#include "listallkeysjob.h"
 
 #include "threadedjobmixin.h"
 
+#ifdef BUILDING_QGPGME
+# include "keylistresult.h"
+#else
 #include <gpgme++/keylistresult.h>
+#endif
+#ifdef BUILDING_QGPGME
+# include "key.h"
+#else
 #include <gpgme++/key.h>
+#endif
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMEListAllKeysJob
@@ -65,9 +74,6 @@ public:
     /*! \reimp from ListAllKeysJob */
     GpgME::KeyListResult exec(std::vector<GpgME::Key> &pub, std::vector<GpgME::Key> &sec, bool mergeKeys) Q_DECL_OVERRIDE;
 
-    /*! \reimp from Job */
-    void showErrorDialog(QWidget *parent, const QString &caption) const Q_DECL_OVERRIDE;
-
     /*! \reimp from ThreadedJobMixin */
     void resultHook(const result_type &result) Q_DECL_OVERRIDE;
 
@@ -77,4 +83,4 @@ private:
 
 }
 
-#endif // __KLEO_QGPGMELISTALLKEYSJOB_H__
+#endif // __QGPGME_QGPGMELISTALLKEYSJOB_H__

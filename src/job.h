@@ -1,8 +1,9 @@
 /*
     job.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -33,16 +34,20 @@
 #ifndef __KLEO_JOB_H__
 #define __KLEO_JOB_H__
 
-#include "kleo_export.h"
+#include "qgpgme_export.h"
 
 #include <QObject>
 #include <QString>
 
-#include <gpgme++/error.h>
+#ifdef BUILDING_QGPGME
+# include "error.h"
+#else
+# include <gpgme++/error.h>
+#endif
 
 class QWidget;
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -62,7 +67,7 @@ namespace Kleo
    signal of subclasses will still be emitted, though, and will
    carry the information that the operation was canceled.
 */
-class KLEO_EXPORT Job : public QObject
+class QGPGME_EXPORT Job : public QObject
 {
     Q_OBJECT
 protected:

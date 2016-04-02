@@ -1,8 +1,9 @@
 /*
     qgpgmerefreshkeysjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klar�vdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -34,13 +35,10 @@
 
 #include "qgpgmerefreshkeysjob.h"
 
-#include "gnupgprocessbase.h"
-#include "qgpgmeprogresstokenmapper.h"
-
 #include <QDebug>
 #include "gpgme_backend_debug.h"
 
-#include <gpgme++/context.h>
+#include "context.h"
 
 #include <QByteArray>
 #include <QStringList>
@@ -49,7 +47,7 @@
 
 #include <assert.h>
 
-Kleo::QGpgMERefreshKeysJob::QGpgMERefreshKeysJob()
+QGpgME::QGpgMERefreshKeysJob::QGpgMERefreshKeysJob()
     : RefreshKeysJob(0),
       mProcess(0),
       mError(0)
@@ -57,12 +55,12 @@ Kleo::QGpgMERefreshKeysJob::QGpgMERefreshKeysJob()
 
 }
 
-Kleo::QGpgMERefreshKeysJob::~QGpgMERefreshKeysJob()
+QGpgME::QGpgMERefreshKeysJob::~QGpgMERefreshKeysJob()
 {
 
 }
 
-GpgME::Error Kleo::QGpgMERefreshKeysJob::start(const QStringList &patterns)
+GpgME::Error QGpgME::QGpgMERefreshKeysJob::start(const QStringList &patterns)
 {
     assert(mPatternsToDo.empty());
 
@@ -80,17 +78,21 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::start(const QStringList &patterns)
 #error MAX_CMD_LENGTH is too low
 #endif
 
-GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess()
+GpgME::Error QGpgME::QGpgMERefreshKeysJob::startAProcess()
 {
     if (mPatternsToDo.empty()) {
         return GpgME::Error();
     }
     // create and start gpgsm process:
-    mProcess = new GnuPGProcessBase(this);
+    mProcess = new QProcess(this);
     mProcess->setObjectName(QStringLiteral("gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks"));
 
     // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
-    *mProcess << QStringLiteral("gpgsm") << QStringLiteral("-k") << QStringLiteral("--with-validation") << QStringLiteral("--force-crl-refresh")
+    mProcess->setProgram(QStringLiteral("gpgsm"));
+    QStringList arguments;
+    arguments << QStringLiteral("-k")
+              << QStringLiteral("--with-validation")
+              << QStringLiteral("--force-crl-refresh")
               << QStringLiteral("--enable-crl-checks");
     unsigned int commandLineLength = MAX_CMD_LENGTH;
     commandLineLength -=
@@ -107,11 +109,11 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess()
         if (pat.isEmpty()) {
             continue;
         }
-        *mProcess << QLatin1String(pat);
+        arguments << QLatin1String(pat);
         commandLineLength -= patLength + 1;
     }
 
-    mProcess->setUseStatusFD(true);
+    mProcess->setArguments(arguments);
 
     connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
             SLOT(slotProcessExited(int,QProcess::ExitStatus)));
@@ -120,10 +122,6 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess()
     connect(mProcess, &QProcess::readyReadStandardError,
             this, &QGpgMERefreshKeysJob::slotStderr);
 
-    connect(mProcess, &GnuPGProcessBase::status,
-            this, &QGpgMERefreshKeysJob::slotStatus);
-
-    mProcess->setOutputChannelMode(KProcess::SeparateChannels);
     mProcess->start();
     if (!mProcess->waitForStarted()) {
         mError = GpgME::Error::fromCode(GPG_ERR_ENOENT, GPG_ERR_SOURCE_GPGSM);   // what else?
@@ -134,7 +132,7 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess()
     }
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotCancel()
+void QGpgME::QGpgMERefreshKeysJob::slotCancel()
 {
     if (mProcess) {
         mProcess->kill();
@@ -143,7 +141,7 @@ void Kleo::QGpgMERefreshKeysJob::slotCancel()
     mError = GpgME::Error::fromCode(GPG_ERR_CANCELED, GPG_ERR_SOURCE_GPGSM);
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotStatus(GnuPGProcessBase *proc, const QString &type, const QStringList &args)
+void QGpgME::QGpgMERefreshKeysJob::slotStatus(QProcess *proc, const QString &type, const QStringList &args)
 {
     if (proc != mProcess) {
         return;
@@ -195,17 +193,18 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus(GnuPGProcessBase *proc, const QStrin
             qCDebug(GPGPME_BACKEND_LOG) << "expected number for \"total\", got something else";
             return;
         }
-        Q_EMIT progress(QGpgMEProgressTokenMapper::map(what, typ), cur, total);
+        // TODO port
+        Q_EMIT progress(QString(), cur, total);
 
     }
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotStderr()
+void QGpgME::QGpgMERefreshKeysJob::slotStderr()
 {
     // implement? or not?
 }
 
-void Kleo::QGpgMERefreshKeysJob::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus)
+void QGpgME::QGpgMERefreshKeysJob::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus)
 {
     if (!mError && !mPatternsToDo.empty()) {
         if (const GpgME::Error err = startAProcess()) {
@@ -223,4 +222,3 @@ void Kleo::QGpgMERefreshKeysJob::slotProcessExited(int exitCode, QProcess::ExitS
     Q_EMIT result(mError);
     deleteLater();
 }
-

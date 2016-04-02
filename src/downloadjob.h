@@ -1,8 +1,9 @@
 /*
     downloadjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -51,7 +52,7 @@ class QStringList;
 class QIODevice;
 class QByteArray;
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -67,7 +68,7 @@ namespace Kleo
    After result() is emitted, the DownloadJob will schedule it's own
    destruction by calling QObject::deleteLater().
 */
-class KLEO_EXPORT DownloadJob : public Job
+class QGPGME_EXPORT DownloadJob : public Job
 {
     Q_OBJECT
 protected:
@@ -94,7 +95,7 @@ public:
        only empty strings or anything other than fingerprints, the
        result is undefined.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const QStringList &fingerprints) = 0;
+    virtual QGPGME_DEPRECATED_EXPORT GpgME::Error start(const QStringList &fingerprints) = 0;
 
 Q_SIGNALS:
     void result(const GpgME::Error &result, const QByteArray &keyData, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());

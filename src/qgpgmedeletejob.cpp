@@ -1,8 +1,9 @@
 /*
     qgpgmedeletejob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,12 +33,12 @@
 
 #include "qgpgmedeletejob.h"
 
-#include <gpgme++/context.h>
-#include <gpgme++/key.h>
+#include "context.h"
+#include "key.h"
 
 #include <cassert>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -62,4 +63,3 @@ Error QGpgMEDeleteJob::start(const Key &key, bool allowSecretKeyDeletion)
     run(bind(&delete_key, _1, key, allowSecretKeyDeletion));
     return Error();
 }
-

@@ -1,8 +1,9 @@
 /*
     qgpgmekeygenerationjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,16 +31,20 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEKEYGENERATIONJOB_H__
-#define __KLEO_QGPGMEKEYGENERATIONJOB_H__
+#ifndef __QGPGME_QGPGMEKEYGENERATIONJOB_H__
+#define __QGPGME_QGPGMEKEYGENERATIONJOB_H__
 
-#include "libkleo/keygenerationjob.h"
+#include "keygenerationjob.h"
 
 #include "threadedjobmixin.h"
 
+#ifdef BUILDING_QGPGME
+# include "keygenerationresult.h"
+#else
 #include <gpgme++/keygenerationresult.h>
+#endif
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMEKeyGenerationJob
@@ -64,4 +69,4 @@ public:
 
 }
 
-#endif // __KLEO_QGPGMEKEYGENERATIONJOB_H__
+#endif // __QGPGME_QGPGMEKEYGENERATIONJOB_H__

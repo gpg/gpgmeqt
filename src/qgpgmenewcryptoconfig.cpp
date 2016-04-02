@@ -1,8 +1,9 @@
 /*
     qgpgmenewcryptoconfig.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2010 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,15 +33,13 @@
 
 #include "qgpgmenewcryptoconfig.h"
 
-#include <KLocalizedString>
-#include <KMessageBox>
 #include <QDebug>
 #include "gpgme_backend_debug.h"
 
 #include <QFile>
 
-#include <gpgme++/global.h>
-#include <gpgme++/error.h>
+#include "global.h"
+#include "error.h"
 
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
@@ -51,7 +50,7 @@
 #include <cassert>
 
 using namespace boost;
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace GpgME::Configuration;
 
@@ -101,11 +100,14 @@ void QGpgMENewCryptoConfig::reloadConfiguration(bool showErrors)
         qCDebug(GPGPME_BACKEND_LOG) << ss.str().c_str();
     }
 #endif
+#if 0
+    TODO port?
     if (error && showErrors) {
         const QString wmsg = i18n("<qt>Failed to execute gpgconf:<p>%1</p></qt>", QString::fromLocal8Bit(error.asString()));
         qCWarning(GPGPME_BACKEND_LOG) << wmsg; // to see it from test_cryptoconfig.cpp
         KMessageBox::error(0, wmsg);
     }
+#endif
     BOOST_FOREACH(const Component & c, components) {
         const shared_ptr<QGpgMENewCryptoConfigComponent> comp(new QGpgMENewCryptoConfigComponent);
         comp->setComponent(c);
@@ -217,9 +219,12 @@ void QGpgMENewCryptoConfigComponent::sync(bool runtime)
     Q_UNUSED(runtime)
     // ### how to pass --runtime to gpgconf? -> marcus: not yet supported (2010-11-20)
     if (const Error err = m_component.save()) {
+#if 0
+        TODO port
         const QString wmsg = i18n("Error from gpgconf while saving configuration: %1", QString::fromLocal8Bit(err.asString()));
         qCWarning(GPGPME_BACKEND_LOG) << ":" << wmsg;
         KMessageBox::error(0, wmsg);
+#endif
     }
     // ### unset dirty state again
 }
@@ -285,25 +290,25 @@ static QString urlpart_decode(const QString &str)
 }
 
 // gpgconf arg type number -> NewCryptoConfigEntry arg type enum mapping
-static Kleo::CryptoConfigEntry::ArgType knownArgType(int argType, bool &ok)
+static QGpgME::CryptoConfigEntry::ArgType knownArgType(int argType, bool &ok)
 {
     ok = true;
     switch (argType) {
     case 0: // none
-        return Kleo::CryptoConfigEntry::ArgType_None;
+        return QGpgME::CryptoConfigEntry::ArgType_None;
     case 1: // string
-        return Kleo::CryptoConfigEntry::ArgType_String;
+        return QGpgME::CryptoConfigEntry::ArgType_String;
     case 2: // int32
-        return Kleo::CryptoConfigEntry::ArgType_Int;
+        return QGpgME::CryptoConfigEntry::ArgType_Int;
     case 3: // uint32
-        return Kleo::CryptoConfigEntry::ArgType_UInt;
+        return QGpgME::CryptoConfigEntry::ArgType_UInt;
     case 32: // pathname
-        return Kleo::CryptoConfigEntry::ArgType_Path;
+        return QGpgME::CryptoConfigEntry::ArgType_Path;
     case 33: // ldap server
-        return Kleo::CryptoConfigEntry::ArgType_LDAPURL;
+        return QGpgME::CryptoConfigEntry::ArgType_LDAPURL;
     default:
         ok = false;
-        return Kleo::CryptoConfigEntry::ArgType_None;
+        return QGpgME::CryptoConfigEntry::ArgType_None;
     }
 }
 
@@ -724,10 +729,10 @@ QString QGpgMENewCryptoConfigEntry::outputString() const
 
 bool QGpgMENewCryptoConfigEntry::isStringType() const
 {
-    return (mArgType == Kleo::NewCryptoConfigEntry::ArgType_String
-            || mArgType == Kleo::NewCryptoConfigEntry::ArgType_Path
-            || mArgType == Kleo::NewCryptoConfigEntry::ArgType_URL
-            || mArgType == Kleo::NewCryptoConfigEntry::ArgType_LDAPURL);
+    return (mArgType == QGpgME::NewCryptoConfigEntry::ArgType_String
+            || mArgType == QGpgME::NewCryptoConfigEntry::ArgType_Path
+            || mArgType == QGpgME::NewCryptoConfigEntry::ArgType_URL
+            || mArgType == QGpgME::NewCryptoConfigEntry::ArgType_LDAPURL);
 }
 
 void QGpgMENewCryptoConfigEntry::setDirty(bool b)
@@ -735,4 +740,3 @@ void QGpgMENewCryptoConfigEntry::setDirty(bool b)
     mDirty = b;
 }
 #endif
-

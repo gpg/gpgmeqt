@@ -1,8 +1,9 @@
 /*
     qgpgmeverifyopaquejob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,11 +33,11 @@
 
 #include "qgpgmeverifyopaquejob.h"
 
-#include <qgpgme/dataprovider.h>
+#include "dataprovider.h"
 
-#include <gpgme++/context.h>
-#include <gpgme++/verificationresult.h>
-#include <gpgme++/data.h>
+#include "context.h"
+#include "verificationresult.h"
+#include "data.h"
 
 #include <QBuffer>
 
@@ -44,7 +45,7 @@
 
 #include <cassert>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -109,7 +110,7 @@ void QGpgMEVerifyOpaqueJob::start(const shared_ptr<QIODevice> &signedData, const
     run(bind(&verify_opaque, _1, _2, _3, _4), signedData, plainText);
 }
 
-GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec(const QByteArray &signedData, QByteArray &plainText)
+GpgME::VerificationResult QGpgME::QGpgMEVerifyOpaqueJob::exec(const QByteArray &signedData, QByteArray &plainText)
 {
     const result_type r = verify_opaque_qba(context(), signedData);
     plainText = get<1>(r);
@@ -119,8 +120,7 @@ GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec(const QByteArray &si
 
 //PENDING(marc) implement showErrorDialog()
 
-void Kleo::QGpgMEVerifyOpaqueJob::resultHook(const result_type &tuple)
+void QGpgME::QGpgMEVerifyOpaqueJob::resultHook(const result_type &tuple)
 {
     mResult = get<0>(tuple);
 }
-

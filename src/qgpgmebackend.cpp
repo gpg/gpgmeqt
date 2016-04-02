@@ -1,8 +1,9 @@
 /*
     qgpgmebackend.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -58,18 +59,19 @@
 #include "qgpgmechangepasswdjob.h"
 #include "qgpgmeadduseridjob.h"
 
-#include <gpgme++/error.h>
-#include <gpgme++/engineinfo.h>
-
-#include <KLocalizedString>
+#include "error.h"
+#include "engineinfo.h"
 
 #include <QFile>
 #include <QString>
 
+const char QGpgME::QGpgMEBackend::OpenPGP[] = "OpenPGP";
+const char QGpgME::QGpgMEBackend::SMIME[] = "SMIME";
+
 namespace
 {
 
-class Protocol : public Kleo::CryptoBackend::Protocol
+class Protocol : public QGpgME::Protocol
 {
     GpgME::Protocol mProtocol;
 public:
@@ -86,19 +88,21 @@ public:
 
     QString displayName() const Q_DECL_OVERRIDE
     {
+        // ah (2.4.16): Where is this used and isn't this inverted
+        // with name
         switch (mProtocol) {
         case GpgME::OpenPGP: return QStringLiteral("gpg");
         case GpgME::CMS:     return QStringLiteral("gpgsm");
-        default:             return i18n("unknown");
+        default:             return QStringLiteral("unknown");
         }
     }
 
-    Kleo::SpecialJob *specialJob(const char *, const QMap<QString, QVariant> &) const Q_DECL_OVERRIDE
+    QGpgME::SpecialJob *specialJob(const char *, const QMap<QString, QVariant> &) const Q_DECL_OVERRIDE
     {
         return 0;
     }
 
-    Kleo::KeyListJob *keyListJob(bool remote, bool includeSigs, bool validate) const Q_DECL_OVERRIDE
+    QGpgME::KeyListJob *keyListJob(bool remote, bool includeSigs, bool validate) const Q_DECL_OVERRIDE
     {
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
@@ -120,10 +124,10 @@ public:
             mode |= GpgME::Validate;
         }
         context->setKeyListMode(mode);
-        return new Kleo::QGpgMEKeyListJob(context);
+        return new QGpgME::QGpgMEKeyListJob(context);
     }
 
-    Kleo::ListAllKeysJob *listAllKeysJob(bool includeSigs, bool validate) const Q_DECL_OVERRIDE
+    QGpgME::ListAllKeysJob *listAllKeysJob(bool includeSigs, bool validate) const Q_DECL_OVERRIDE
     {
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
@@ -147,10 +151,10 @@ public:
             context->setOffline(true);
         }
         context->setKeyListMode(mode);
-        return new Kleo::QGpgMEListAllKeysJob(context);
+        return new QGpgME::QGpgMEListAllKeysJob(context);
     }
 
-    Kleo::EncryptJob *encryptJob(bool armor, bool textmode) const Q_DECL_OVERRIDE
+    QGpgME::EncryptJob *encryptJob(bool armor, bool textmode) const Q_DECL_OVERRIDE
     {
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
@@ -159,80 +163,19 @@ public:
 
         context->setArmor(armor);
         context->setTextMode(textmode);
-        return new Kleo::QGpgMEEncryptJob(context);
+        return new QGpgME::QGpgMEEncryptJob(context);
     }
 
-    Kleo::DecryptJob *decryptJob() const Q_DECL_OVERRIDE
+    QGpgME::DecryptJob *decryptJob() const Q_DECL_OVERRIDE
     {
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
             return 0;
         }
-        return new Kleo::QGpgMEDecryptJob(context);
+        return new QGpgME::QGpgMEDecryptJob(context);
     }
 
-    Kleo::SignJob *signJob(bool armor, bool textMode) const Q_DECL_OVERRIDE
-    {
-        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
-        if (!context) {
-            return 0;
-        }
-
-        context->setArmor(armor);
-        context->setTextMode(textMode);
-        return new Kleo::QGpgMESignJob(context);
-    }
-
-    Kleo::VerifyDetachedJob *verifyDetachedJob(bool textMode) const Q_DECL_OVERRIDE
-    {
-        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
-        if (!context) {
-            return 0;
-        }
-
-        context->setTextMode(textMode);
-        return new Kleo::QGpgMEVerifyDetachedJob(context);
-    }
-
-    Kleo::VerifyOpaqueJob *verifyOpaqueJob(bool textMode) const Q_DECL_OVERRIDE
-    {
-        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
-        if (!context) {
-            return 0;
-        }
-
-        context->setTextMode(textMode);
-        return new Kleo::QGpgMEVerifyOpaqueJob(context);
-    }
-
-    Kleo::KeyGenerationJob *keyGenerationJob() const Q_DECL_OVERRIDE
-    {
-        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
-        if (!context) {
-            return 0;
-        }
-        return new Kleo::QGpgMEKeyGenerationJob(context);
-    }
-
-    Kleo::ImportJob *importJob() const Q_DECL_OVERRIDE
-    {
-        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
-        if (!context) {
-            return 0;
-        }
-        return new Kleo::QGpgMEImportJob(context);
-    }
-
-    Kleo::ImportFromKeyserverJob *importFromKeyserverJob() const Q_DECL_OVERRIDE
-    {
-        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
-        if (!context) {
-            return 0;
-        }
-        return new Kleo::QGpgMEImportFromKeyserverJob(context);
-    }
-
-    Kleo::ExportJob *publicKeyExportJob(bool armor) const Q_DECL_OVERRIDE
+    QGpgME::SignJob *signJob(bool armor, bool textMode) const Q_DECL_OVERRIDE
     {
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
@@ -240,30 +183,91 @@ public:
         }
 
         context->setArmor(armor);
-        return new Kleo::QGpgMEExportJob(context);
+        context->setTextMode(textMode);
+        return new QGpgME::QGpgMESignJob(context);
     }
 
-    Kleo::ExportJob *secretKeyExportJob(bool armor, const QString &charset) const Q_DECL_OVERRIDE
+    QGpgME::VerifyDetachedJob *verifyDetachedJob(bool textMode) const Q_DECL_OVERRIDE
+    {
+        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
+        if (!context) {
+            return 0;
+        }
+
+        context->setTextMode(textMode);
+        return new QGpgME::QGpgMEVerifyDetachedJob(context);
+    }
+
+    QGpgME::VerifyOpaqueJob *verifyOpaqueJob(bool textMode) const Q_DECL_OVERRIDE
+    {
+        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
+        if (!context) {
+            return 0;
+        }
+
+        context->setTextMode(textMode);
+        return new QGpgME::QGpgMEVerifyOpaqueJob(context);
+    }
+
+    QGpgME::KeyGenerationJob *keyGenerationJob() const Q_DECL_OVERRIDE
+    {
+        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
+        if (!context) {
+            return 0;
+        }
+        return new QGpgME::QGpgMEKeyGenerationJob(context);
+    }
+
+    QGpgME::ImportJob *importJob() const Q_DECL_OVERRIDE
+    {
+        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
+        if (!context) {
+            return 0;
+        }
+        return new QGpgME::QGpgMEImportJob(context);
+    }
+
+    QGpgME::ImportFromKeyserverJob *importFromKeyserverJob() const Q_DECL_OVERRIDE
+    {
+        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
+        if (!context) {
+            return 0;
+        }
+        return new QGpgME::QGpgMEImportFromKeyserverJob(context);
+    }
+
+    QGpgME::ExportJob *publicKeyExportJob(bool armor) const Q_DECL_OVERRIDE
+    {
+        GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
+        if (!context) {
+            return 0;
+        }
+
+        context->setArmor(armor);
+        return new QGpgME::QGpgMEExportJob(context);
+    }
+
+    QGpgME::ExportJob *secretKeyExportJob(bool armor, const QString &charset) const Q_DECL_OVERRIDE
     {
         if (mProtocol != GpgME::CMS) { // fixme: add support for gpg, too
             return 0;
         }
 
         // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
-        return new Kleo::QGpgMESecretKeyExportJob(armor, charset);
+        return new QGpgME::QGpgMESecretKeyExportJob(armor, charset);
     }
 
-    Kleo::RefreshKeysJob *refreshKeysJob() const Q_DECL_OVERRIDE
+    QGpgME::RefreshKeysJob *refreshKeysJob() const Q_DECL_OVERRIDE
     {
         if (mProtocol != GpgME::CMS) { // fixme: add support for gpg, too
             return 0;
         }
 
         // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
-        return new Kleo::QGpgMERefreshKeysJob();
+        return new QGpgME::QGpgMERefreshKeysJob();
     }
 
-    Kleo::DownloadJob *downloadJob(bool armor) const Q_DECL_OVERRIDE
+    QGpgME::DownloadJob *downloadJob(bool armor) const Q_DECL_OVERRIDE
     {
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
@@ -273,19 +277,19 @@ public:
         context->setArmor(armor);
         // this is the hackish interface for downloading from keyserers currently:
         context->setKeyListMode(GpgME::Extern);
-        return new Kleo::QGpgMEDownloadJob(context);
+        return new QGpgME::QGpgMEDownloadJob(context);
     }
 
-    Kleo::DeleteJob *deleteJob() const Q_DECL_OVERRIDE
+    QGpgME::DeleteJob *deleteJob() const Q_DECL_OVERRIDE
     {
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
             return 0;
         }
-        return new Kleo::QGpgMEDeleteJob(context);
+        return new QGpgME::QGpgMEDeleteJob(context);
     }
 
-    Kleo::SignEncryptJob *signEncryptJob(bool armor, bool textMode) const Q_DECL_OVERRIDE
+    QGpgME::SignEncryptJob *signEncryptJob(bool armor, bool textMode) const Q_DECL_OVERRIDE
     {
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
@@ -294,10 +298,10 @@ public:
 
         context->setArmor(armor);
         context->setTextMode(textMode);
-        return new Kleo::QGpgMESignEncryptJob(context);
+        return new QGpgME::QGpgMESignEncryptJob(context);
     }
 
-    Kleo::DecryptVerifyJob *decryptVerifyJob(bool textMode) const Q_DECL_OVERRIDE
+    QGpgME::DecryptVerifyJob *decryptVerifyJob(bool textMode) const Q_DECL_OVERRIDE
     {
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
@@ -305,10 +309,10 @@ public:
         }
 
         context->setTextMode(textMode);
-        return new Kleo::QGpgMEDecryptVerifyJob(context);
+        return new QGpgME::QGpgMEDecryptVerifyJob(context);
     }
 
-    Kleo::ChangeExpiryJob *changeExpiryJob() const Q_DECL_OVERRIDE
+    QGpgME::ChangeExpiryJob *changeExpiryJob() const Q_DECL_OVERRIDE
     {
         if (mProtocol != GpgME::OpenPGP) {
             return 0;    // only supported by gpg
@@ -318,10 +322,10 @@ public:
         if (!context) {
             return 0;
         }
-        return new Kleo::QGpgMEChangeExpiryJob(context);
+        return new QGpgME::QGpgMEChangeExpiryJob(context);
     }
 
-    Kleo::ChangePasswdJob *changePasswdJob() const Q_DECL_OVERRIDE
+    QGpgME::ChangePasswdJob *changePasswdJob() const Q_DECL_OVERRIDE
     {
         if (!GpgME::hasFeature(GpgME::PasswdFeature, 0)) {
             return 0;
@@ -330,10 +334,10 @@ public:
         if (!context) {
             return 0;
         }
-        return new Kleo::QGpgMEChangePasswdJob(context);
+        return new QGpgME::QGpgMEChangePasswdJob(context);
     }
 
-    Kleo::SignKeyJob *signKeyJob() const Q_DECL_OVERRIDE
+    QGpgME::SignKeyJob *signKeyJob() const Q_DECL_OVERRIDE
     {
         if (mProtocol != GpgME::OpenPGP) {
             return 0;    // only supported by gpg
@@ -343,10 +347,10 @@ public:
         if (!context) {
             return 0;
         }
-        return new Kleo::QGpgMESignKeyJob(context);
+        return new QGpgME::QGpgMESignKeyJob(context);
     }
 
-    Kleo::ChangeOwnerTrustJob *changeOwnerTrustJob() const Q_DECL_OVERRIDE
+    QGpgME::ChangeOwnerTrustJob *changeOwnerTrustJob() const Q_DECL_OVERRIDE
     {
         if (mProtocol != GpgME::OpenPGP) {
             return 0;    // only supported by gpg
@@ -356,10 +360,10 @@ public:
         if (!context) {
             return 0;
         }
-        return new Kleo::QGpgMEChangeOwnerTrustJob(context);
+        return new QGpgME::QGpgMEChangeOwnerTrustJob(context);
     }
 
-    Kleo::AddUserIDJob *addUserIDJob() const Q_DECL_OVERRIDE
+    QGpgME::AddUserIDJob *addUserIDJob() const Q_DECL_OVERRIDE
     {
         if (mProtocol != GpgME::OpenPGP) {
             return 0;    // only supported by gpg
@@ -369,40 +373,39 @@ public:
         if (!context) {
             return 0;
         }
-        return new Kleo::QGpgMEAddUserIDJob(context);
+        return new QGpgME::QGpgMEAddUserIDJob(context);
     }
 
 };
 
 }
 
-Kleo::QGpgMEBackend::QGpgMEBackend()
-    : Kleo::CryptoBackend(),
-      mCryptoConfig(0),
+QGpgME::QGpgMEBackend::QGpgMEBackend()
+    : mCryptoConfig(0),
       mOpenPGPProtocol(0),
       mSMIMEProtocol(0)
 {
     GpgME::initializeLibrary();
 }
 
-Kleo::QGpgMEBackend::~QGpgMEBackend()
+QGpgME::QGpgMEBackend::~QGpgMEBackend()
 {
     delete mCryptoConfig; mCryptoConfig = 0;
     delete mOpenPGPProtocol; mOpenPGPProtocol = 0;
     delete mSMIMEProtocol; mSMIMEProtocol = 0;
 }
 
-QString Kleo::QGpgMEBackend::name() const
+QString QGpgME::QGpgMEBackend::name() const
 {
     return QStringLiteral("gpgme");
 }
 
-QString Kleo::QGpgMEBackend::displayName() const
+QString QGpgME::QGpgMEBackend::displayName() const
 {
-    return i18n("GpgME");
+    return QStringLiteral("GpgME");
 }
 
-Kleo::CryptoConfig *Kleo::QGpgMEBackend::config() const
+QGpgME::CryptoConfig *QGpgME::QGpgMEBackend::config() const
 {
     if (!mCryptoConfig) {
 #ifdef _WIN32_WCE // for now...
@@ -426,6 +429,8 @@ static bool check(GpgME::Protocol proto, QString *reason)
         return false;
     }
     // error, check why:
+#if 0
+Port away from localised string or delete.
     const GpgME::EngineInfo ei = GpgME::engineInfo(proto);
     if (ei.isNull()) {
         *reason = i18n("GPGME was compiled without support for %1.", proto == GpgME::CMS ? QLatin1String("S/MIME") : QLatin1String("OpenPGP"));
@@ -438,20 +443,21 @@ static bool check(GpgME::Protocol proto, QString *reason)
     else {
         *reason = i18n("Unknown problem with engine for protocol %1.", proto == GpgME::CMS ? QLatin1String("S/MIME") : QLatin1String("OpenPGP"));
     }
+#endif
     return false;
 }
 
-bool Kleo::QGpgMEBackend::checkForOpenPGP(QString *reason) const
+bool QGpgME::QGpgMEBackend::checkForOpenPGP(QString *reason) const
 {
     return check(GpgME::OpenPGP, reason);
 }
 
-bool Kleo::QGpgMEBackend::checkForSMIME(QString *reason) const
+bool QGpgME::QGpgMEBackend::checkForSMIME(QString *reason) const
 {
     return check(GpgME::CMS, reason);
 }
 
-bool Kleo::QGpgMEBackend::checkForProtocol(const char *name, QString *reason) const
+bool QGpgME::QGpgMEBackend::checkForProtocol(const char *name, QString *reason) const
 {
     if (qstricmp(name, OpenPGP) == 0) {
         return check(GpgME::OpenPGP, reason);
@@ -460,12 +466,12 @@ bool Kleo::QGpgMEBackend::checkForProtocol(const char *name, QString *reason) co
         return check(GpgME::CMS, reason);
     }
     if (reason) {
-        *reason = i18n("Unsupported protocol \"%1\"", QLatin1String(name));
+        *reason = QStringLiteral("Unsupported protocol \"%1\"").arg(QLatin1String(name));
     }
     return false;
 }
 
-Kleo::CryptoBackend::Protocol *Kleo::QGpgMEBackend::openpgp() const
+QGpgME::Protocol *QGpgME::QGpgMEBackend::openpgp() const
 {
     if (!mOpenPGPProtocol)
         if (checkForOpenPGP()) {
@@ -474,7 +480,7 @@ Kleo::CryptoBackend::Protocol *Kleo::QGpgMEBackend::openpgp() const
     return mOpenPGPProtocol;
 }
 
-Kleo::CryptoBackend::Protocol *Kleo::QGpgMEBackend::smime() const
+QGpgME::Protocol *QGpgME::QGpgMEBackend::smime() const
 {
     if (!mSMIMEProtocol)
         if (checkForSMIME()) {
@@ -483,7 +489,7 @@ Kleo::CryptoBackend::Protocol *Kleo::QGpgMEBackend::smime() const
     return mSMIMEProtocol;
 }
 
-Kleo::CryptoBackend::Protocol *Kleo::QGpgMEBackend::protocol(const char *name) const
+QGpgME::Protocol *QGpgME::QGpgMEBackend::protocol(const char *name) const
 {
     if (qstricmp(name, OpenPGP) == 0) {
         return openpgp();
@@ -494,12 +500,12 @@ Kleo::CryptoBackend::Protocol *Kleo::QGpgMEBackend::protocol(const char *name) c
     return 0;
 }
 
-bool Kleo::QGpgMEBackend::supportsProtocol(const char *name) const
+bool QGpgME::QGpgMEBackend::supportsProtocol(const char *name) const
 {
     return qstricmp(name, OpenPGP) == 0 || qstricmp(name, SMIME) == 0;
 }
 
-const char *Kleo::QGpgMEBackend::enumerateProtocols(int i) const
+const char *QGpgME::QGpgMEBackend::enumerateProtocols(int i) const
 {
     switch (i) {
     case 0: return OpenPGP;

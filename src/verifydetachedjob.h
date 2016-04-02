@@ -1,8 +1,9 @@
 /*
     verifydetachedjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -46,7 +47,7 @@ class Error;
 class VerificationResult;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -75,7 +76,7 @@ public:
        signature data, while \a signedData contains the data over
        which the signature was made.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const QByteArray &signature,
+    virtual QGPGME_DEPRECATED_EXPORT GpgME::Error start(const QByteArray &signature,
             const QByteArray &signedData) = 0;
 
     /*!

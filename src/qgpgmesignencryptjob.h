@@ -1,8 +1,9 @@
 /*
     qgpgmesignencryptjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,20 +31,32 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
-#define __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#ifndef __QGPGME_QGPGMESIGNENCRYPTJOB_H__
+#define __QGPGME_QGPGMESIGNENCRYPTJOB_H__
 
-#include "libkleo/signencryptjob.h"
+#include "signencryptjob.h"
 
 #include "threadedjobmixin.h"
 
+#ifdef BUILDING_QGPGME
+# include "signingresult.h"
+#else
 #include <gpgme++/signingresult.h>
+#endif
+#ifdef BUILDING_QGPGME
+# include "encryptionresult.h"
+#else
 #include <gpgme++/encryptionresult.h>
+#endif
+#ifdef BUILDING_QGPGME
+# include "key.h"
+#else
 #include <gpgme++/key.h>
+#endif
 
 #include <utility>
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMESignEncryptJob
@@ -80,9 +93,6 @@ public:
          const QByteArray &plainText, bool alwaysTrust,
          QByteArray &cipherText) Q_DECL_OVERRIDE;
 
-    /*! \reimp from Job */
-    void showErrorDialog(QWidget *parent, const QString &caption) const Q_DECL_OVERRIDE;
-
     /*! \reimp from SignEncryptJob */
     void setOutputIsBase64Encoded(bool on) Q_DECL_OVERRIDE;
 
@@ -96,4 +106,4 @@ private:
 
 }
 
-#endif // __KLEO_QGPGMESIGNENCRYPTJOB_H__
+#endif // __QGPGME_QGPGMESIGNENCRYPTJOB_H__

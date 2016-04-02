@@ -1,8 +1,9 @@
 /*
     qgpgmeverifyopaquejob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,16 +31,20 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
-#define __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
+#ifndef __QGPGME_QGPGMEVERIFYOPAQUEJOB_H__
+#define __QGPGME_QGPGMEVERIFYOPAQUEJOB_H__
 
-#include "libkleo/verifyopaquejob.h"
+#include "verifyopaquejob.h"
 
 #include "threadedjobmixin.h"
 
+#ifdef BUILDING_QGPGME
+# include "verificationresult.h"
+#else
 #include <gpgme++/verificationresult.h>
+#endif
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMEVerifyOpaqueJob
@@ -76,4 +81,4 @@ private:
 
 }
 
-#endif // __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
+#endif // __QGPGME_QGPGMEVERIFYOPAQUEJOB_H__

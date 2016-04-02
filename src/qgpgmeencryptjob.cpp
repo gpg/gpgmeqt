@@ -1,8 +1,9 @@
 /*
     qgpgmeencryptjob.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,13 +33,11 @@
 
 #include "qgpgmeencryptjob.h"
 
-#include "ui/messagebox.h"
+#include "dataprovider.h"
 
-#include <qgpgme/dataprovider.h>
-
-#include <gpgme++/context.h>
-#include <gpgme++/encryptionresult.h>
-#include <gpgme++/data.h>
+#include "context.h"
+#include "encryptionresult.h"
+#include "data.h"
 
 #include <QBuffer>
 
@@ -46,7 +45,7 @@
 
 #include <cassert>
 
-using namespace Kleo;
+using namespace QGpgME;
 using namespace GpgME;
 using namespace boost;
 
@@ -152,10 +151,11 @@ void QGpgMEEncryptJob::resultHook(const result_type &tuple)
     mResult = get<0>(tuple);
 }
 
+#if 0
 void QGpgMEEncryptJob::showErrorDialog(QWidget *parent, const QString &caption) const
 {
     if (mResult.error() && !mResult.error().isCanceled()) {
         MessageBox::error(parent, mResult, this, caption);
     }
 }
-
+#endif

@@ -1,8 +1,9 @@
 /*
     qgpgmechangepasswdjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2010 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,14 +31,14 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMECHANGEPASSWDJOB_H__
-#define __KLEO_QGPGMECHANGEPASSWDJOB_H__
+#ifndef __QGPGME_QGPGMECHANGEPASSWDJOB_H__
+#define __QGPGME_QGPGMECHANGEPASSWDJOB_H__
 
-#include "libkleo/changepasswdjob.h"
+#include "changepasswdjob.h"
 
 #include "threadedjobmixin.h"
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMEChangePasswdJob
@@ -62,4 +63,4 @@ public:
 
 }
 
-#endif // __KLEO_QGPGMECHANGEPASSWDJOB_H__
+#endif // __QGPGME_QGPGMECHANGEPASSWDJOB_H__

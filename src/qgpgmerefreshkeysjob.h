@@ -1,8 +1,9 @@
 /*
     qgpgmerefreshkeysjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,21 +31,20 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEREFRESHKEYSJOB_H__
-#define __KLEO_QGPGMEREFRESHKEYSJOB_H__
+#ifndef __QGPGME_QGPGMEREFRESHKEYSJOB_H__
+#define __QGPGME_QGPGMEREFRESHKEYSJOB_H__
 
-#include "kleo/refreshkeysjob.h"
+#include "refreshkeysjob.h"
+#ifdef BUILDING_QGPGME
+# include "context.h"
+#else
 #include "gpgme++/context.h"
+#endif
 
 #include <QStringList>
 #include <QProcess>
 
-namespace Kleo
-{
-class GnuPGProcessBase;
-}
-
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMERefreshKeysJob : public RefreshKeysJob
@@ -61,7 +61,7 @@ private Q_SLOTS:
     /*! \reimp from Job */
     void slotCancel() Q_DECL_OVERRIDE;
 
-    void slotStatus(Kleo::GnuPGProcessBase *, const QString &, const QStringList &);
+    void slotStatus(QProcess *, const QString &, const QStringList &);
     void slotStderr();
     void slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus);
 
@@ -69,11 +69,11 @@ private:
     GpgME::Error startAProcess();
 
 private:
-    GnuPGProcessBase *mProcess;
+    QProcess *mProcess;
     GpgME::Error mError;
     QStringList mPatternsToDo;
 };
 
 }
 
-#endif // __KLEO_QGPGMEREFRESHKEYSJOB_H__
+#endif // __QGPGME_QGPGMEREFRESHKEYSJOB_H__

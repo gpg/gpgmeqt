@@ -1,8 +1,9 @@
 /*
     multideletejob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -33,9 +34,9 @@
 #ifndef __KLEO_MULTIDELETEJOB_H__
 #define __KLEO_MULTIDELETEJOB_H__
 
-#include "kleo_export.h"
-#include "libkleo/job.h"
-#include "libkleo/cryptobackend.h"
+#include "qgpgme_export.h"
+#include "job.h"
+#include "cryptobackend.h"
 
 #include <QPointer>
 
@@ -47,12 +48,12 @@ class Error;
 class Key;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 class DeleteJob;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -67,11 +68,11 @@ namespace Kleo
    After result() is emitted, the MultiDeleteJob will schedule it's own
    destruction by calling QObject::deleteLater().
 */
-class KLEO_EXPORT MultiDeleteJob : public Job
+class QGPGME_EXPORT MultiDeleteJob : public Job
 {
     Q_OBJECT
 public:
-    explicit MultiDeleteJob(const CryptoBackend::Protocol *protocol);
+    explicit MultiDeleteJob(const Protocol *protocol);
     ~MultiDeleteJob();
 
     /**
@@ -94,7 +95,7 @@ private:
     GpgME::Error startAJob();
 
 private:
-    const CryptoBackend::Protocol *mProtocol;
+    const Protocol *mProtocol;
     QPointer<DeleteJob> mJob;
     std::vector<GpgME::Key> mKeys;
     std::vector<GpgME::Key>::const_iterator mIt;

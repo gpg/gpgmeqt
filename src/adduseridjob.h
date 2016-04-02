@@ -1,8 +1,9 @@
 /*
     adduseridjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -43,7 +44,7 @@ class Error;
 class Key;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -59,7 +60,7 @@ namespace Kleo
    After result() is emitted, the AddUserIDJob will schedule it's own
    destruction by calling QObject::deleteLater().
 */
-class KLEO_EXPORT AddUserIDJob : public Job
+class QGPGME_EXPORT AddUserIDJob : public Job
 {
     Q_OBJECT
 protected:

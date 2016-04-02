@@ -1,8 +1,9 @@
 /*
     signencryptjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,7 +36,11 @@
 
 #include "job.h"
 
-#include <gpgme++/global.h>
+#ifdef BUILDING_QGPGME
+# include "global.h"
+#else
+# include <gpgme++/global.h>
+#endif
 
 #include <boost/shared_ptr.hpp>
 
@@ -53,7 +58,7 @@ class SigningResult;
 class EncryptionResult;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -87,7 +92,7 @@ public:
        \em recipient keys will not be performed, but full validity
        assumed for all \em recipient keys without further checks.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const std::vector<GpgME::Key> &signers,
+    virtual QGPGME_DEPRECATED_EXPORT GpgME::Error start(const std::vector<GpgME::Key> &signers,
             const std::vector<GpgME::Key> &recipients,
             const QByteArray &plainText,
             bool alwaysTrust = false) = 0;

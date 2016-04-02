@@ -1,8 +1,9 @@
 /*
     qgpgmecryptoconfig.cpp
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -34,15 +35,11 @@
 
 #include <QList>
 #include <QByteArray>
-#include <kprocess.h>
 #include <errno.h>
-#include <kmessagebox.h>
-#include <KLocalizedString>
-#include <kshell.h>
 #include "gpgme_backend_debug.h"
 
-#include <gpgme++/engineinfo.h>
-#include <gpgme++/global.h>
+#include "engineinfo.h"
+#include "global.h"
 
 #include <cassert>
 #include <QTemporaryFile>
@@ -172,7 +169,7 @@ QStringList QGpgMECryptoConfig::componentList() const
     return result;
 }
 
-Kleo::CryptoConfigComponent *QGpgMECryptoConfig::component(const QString &name) const
+QGpgME::CryptoConfigComponent *QGpgMECryptoConfig::component(const QString &name) const
 {
     if (!mParsed) {
         const_cast<QGpgMECryptoConfig *>(this)->runGpgConf(false);
@@ -311,7 +308,7 @@ QStringList QGpgMECryptoConfigComponent::groupList() const
     return result;
 }
 
-Kleo::CryptoConfigGroup *QGpgMECryptoConfigComponent::group(const QString &name) const
+QGpgME::CryptoConfigGroup *QGpgMECryptoConfigComponent::group(const QString &name) const
 {
     return mGroupsByName.value(name);
 }
@@ -400,7 +397,7 @@ QGpgMECryptoConfigGroup::QGpgMECryptoConfigGroup(QGpgMECryptoConfigComponent *co
     mComponent(comp),
     mName(name),
     mDescription(description),
-    mLevel(static_cast<Kleo::CryptoConfigEntry::Level>(level))
+    mLevel(static_cast<QGpgME::CryptoConfigEntry::Level>(level))
 {
 }
 
@@ -419,7 +416,7 @@ QStringList QGpgMECryptoConfigGroup::entryList() const
     return result;
 }
 
-Kleo::CryptoConfigEntry *QGpgMECryptoConfigGroup::entry(const QString &name) const
+QGpgME::CryptoConfigEntry *QGpgMECryptoConfigGroup::entry(const QString &name) const
 {
     return mEntriesByName.value(name);
 }
@@ -473,25 +470,25 @@ static QString urlpart_unescape(const QString &str)
 }
 
 // gpgconf arg type number -> CryptoConfigEntry arg type enum mapping
-static Kleo::CryptoConfigEntry::ArgType knownArgType(int argType, bool &ok)
+static QGpgME::CryptoConfigEntry::ArgType knownArgType(int argType, bool &ok)
 {
     ok = true;
     switch (argType) {
     case 0: // none
-        return Kleo::CryptoConfigEntry::ArgType_None;
+        return QGpgME::CryptoConfigEntry::ArgType_None;
     case 1: // string
-        return Kleo::CryptoConfigEntry::ArgType_String;
+        return QGpgME::CryptoConfigEntry::ArgType_String;
     case 2: // int32
-        return Kleo::CryptoConfigEntry::ArgType_Int;
+        return QGpgME::CryptoConfigEntry::ArgType_Int;
     case 3: // uint32
-        return Kleo::CryptoConfigEntry::ArgType_UInt;
+        return QGpgME::CryptoConfigEntry::ArgType_UInt;
     case 32: // pathname
-        return Kleo::CryptoConfigEntry::ArgType_Path;
+        return QGpgME::CryptoConfigEntry::ArgType_Path;
     case 33: // ldap server
-        return Kleo::CryptoConfigEntry::ArgType_LDAPURL;
+        return QGpgME::CryptoConfigEntry::ArgType_LDAPURL;
     default:
         ok = false;
-        return Kleo::CryptoConfigEntry::ArgType_None;
+        return QGpgME::CryptoConfigEntry::ArgType_None;
     }
 }
 
@@ -940,13 +937,12 @@ QString QGpgMECryptoConfigEntry::outputString() const
 
 bool QGpgMECryptoConfigEntry::isStringType() const
 {
-    return (mArgType == Kleo::CryptoConfigEntry::ArgType_String
-            || mArgType == Kleo::CryptoConfigEntry::ArgType_Path
-            || mArgType == Kleo::CryptoConfigEntry::ArgType_LDAPURL);
+    return (mArgType == QGpgME::CryptoConfigEntry::ArgType_String
+            || mArgType == QGpgME::CryptoConfigEntry::ArgType_Path
+            || mArgType == QGpgME::CryptoConfigEntry::ArgType_LDAPURL);
 }
 
 void QGpgMECryptoConfigEntry::setDirty(bool b)
 {
     mDirty = b;
 }
-

@@ -1,8 +1,9 @@
 /*
     qgpgmecryptoconfig.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,11 +31,11 @@
     your version.
 */
 
-#ifndef KLEO_QGPGMECRYPTOCONFIG_H
-#define KLEO_QGPGMECRYPTOCONFIG_H
+#ifndef QGPGME_QGPGMECRYPTOCONFIG_H
+#define QGPGME_QGPGMECRYPTOCONFIG_H
 
-#include "kleo_export.h"
-#include "libkleo/cryptoconfig.h"
+#include "qgpgme_export.h"
+#include "cryptoconfig.h"
 
 #include <QHash>
 #include <QStringList>
@@ -51,7 +52,7 @@ class QGpgMECryptoConfigEntry;
  * CryptoConfig implementation around the gpgconf command-line tool
  * For method docu, see kleo/cryptoconfig.h
  */
-class KLEO_EXPORT QGpgMECryptoConfig : public QObject, public Kleo::CryptoConfig
+class QGPGME_EXPORT QGpgMECryptoConfig : public QObject, public QGpgME::CryptoConfig
 {
 
     Q_OBJECT
@@ -66,7 +67,7 @@ public:
 
     QStringList componentList() const Q_DECL_OVERRIDE;
 
-    Kleo::CryptoConfigComponent *component(const QString &name) const Q_DECL_OVERRIDE;
+    QGpgME::CryptoConfigComponent *component(const QString &name) const Q_DECL_OVERRIDE;
 
     void clear() Q_DECL_OVERRIDE;
     void sync(bool runtime) Q_DECL_OVERRIDE;
@@ -86,7 +87,7 @@ private:
 class QGpgMECryptoConfigGroup;
 
 /// For docu, see kleo/cryptoconfig.h
-class QGpgMECryptoConfigComponent : public QObject, public Kleo::CryptoConfigComponent
+class QGpgMECryptoConfigComponent : public QObject, public QGpgME::CryptoConfigComponent
 {
 
     Q_OBJECT
@@ -107,7 +108,7 @@ public:
         return mDescription;
     }
     QStringList groupList() const Q_DECL_OVERRIDE;
-    Kleo::CryptoConfigGroup *group(const QString &name) const Q_DECL_OVERRIDE;
+    QGpgME::CryptoConfigGroup *group(const QString &name) const Q_DECL_OVERRIDE;
 
     void sync(bool runtime);
 
@@ -125,7 +126,7 @@ private:
     QString mCurrentGroupName; // during parsing
 };
 
-class QGpgMECryptoConfigGroup : public Kleo::CryptoConfigGroup
+class QGpgMECryptoConfigGroup : public QGpgME::CryptoConfigGroup
 {
 
 public:
@@ -148,12 +149,12 @@ public:
     {
         return mComponent->name() + QLatin1Char('/') + mName;
     }
-    Kleo::CryptoConfigEntry::Level level() const Q_DECL_OVERRIDE
+    QGpgME::CryptoConfigEntry::Level level() const Q_DECL_OVERRIDE
     {
         return mLevel;
     }
     QStringList entryList() const Q_DECL_OVERRIDE;
-    Kleo::CryptoConfigEntry *entry(const QString &name) const Q_DECL_OVERRIDE;
+    QGpgME::CryptoConfigEntry *entry(const QString &name) const Q_DECL_OVERRIDE;
 
 private:
     friend class QGpgMECryptoConfigComponent; // it adds the entries
@@ -162,10 +163,10 @@ private:
     QHash<QString, QGpgMECryptoConfigEntry *> mEntriesByName;
     QString mName;
     QString mDescription;
-    Kleo::CryptoConfigEntry::Level mLevel;
+    QGpgME::CryptoConfigEntry::Level mLevel;
 };
 
-class QGpgMECryptoConfigEntry : public Kleo::CryptoConfigEntry
+class QGpgMECryptoConfigEntry : public QGpgME::CryptoConfigEntry
 {
 public:
     QGpgMECryptoConfigEntry(QGpgMECryptoConfigGroup *group, const QStringList &parsedLine);
@@ -241,4 +242,4 @@ private:
     uint mSet : 1;
 };
 
-#endif /* KLEO_QGPGMECRYPTOCONFIG_H */
+#endif /* QGPGME_QGPGMECRYPTOCONFIG_H */

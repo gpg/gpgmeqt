@@ -1,8 +1,9 @@
 /*
     encryptjob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -49,7 +50,7 @@ class Key;
 class EncryptionResult;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 /**
@@ -65,7 +66,7 @@ namespace Kleo
    After result() is emitted, the EncryptJob will schedule it's own
    destruction by calling QObject::deleteLater().
 */
-class KLEO_EXPORT EncryptJob : public Job
+class QGPGME_EXPORT EncryptJob : public Job
 {
     Q_OBJECT
 protected:
@@ -83,7 +84,7 @@ public:
        not be performed, but full validity assumed for all keys
        without further checks.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const std::vector<GpgME::Key> &recipients,
+    virtual QGPGME_DEPRECATED_EXPORT GpgME::Error start(const std::vector<GpgME::Key> &recipients,
             const QByteArray &plainText, bool alwaysTrust = false) = 0;
 
     /*!

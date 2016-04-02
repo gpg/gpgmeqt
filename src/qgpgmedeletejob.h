@@ -1,8 +1,9 @@
 /*
     qgpgmedeletejob.h
 
-    This file is part of libkleopatra, the KDE keymanagement library
+    This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,10 +31,10 @@
     your version.
 */
 
-#ifndef __KLEO_QGPGMEDELETEJOB_H__
-#define __KLEO_QGPGMEDELETEJOB_H__
+#ifndef __QGPGME_QGPGMEDELETEJOB_H__
+#define __QGPGME_QGPGMEDELETEJOB_H__
 
-#include "libkleo/deletejob.h"
+#include "deletejob.h"
 
 #include "threadedjobmixin.h"
 
@@ -42,7 +43,7 @@ namespace GpgME
 class Key;
 }
 
-namespace Kleo
+namespace QGpgME
 {
 
 class QGpgMEDeleteJob
@@ -67,4 +68,4 @@ public:
 
 }
 
-#endif // __KLEO_QGPGMEDELETEJOB_H__
+#endif // __QGPGME_QGPGMEDELETEJOB_H__
