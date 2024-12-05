@@ -20,6 +20,8 @@
 
 ## Process this file with automake to produce Makefile.in
 
+EXTRA_DIST = DCO HACKING
+
 if HAVE_DOXYGEN
 doxyfile.stamp:
 	$(DOXYGEN) Doxyfile

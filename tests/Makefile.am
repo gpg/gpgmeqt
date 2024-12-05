@@ -25,7 +25,9 @@ GPG = gpg
 GNUPGHOME=$(abs_builddir)
 TESTS_ENVIRONMENT = GNUPGHOME=$(GNUPGHOME)
 
-EXTRA_DIST = initial.test final.test
+EXTRA_DIST = initial.test final.test \
+	start-stop-agent \
+	pubdemo.asc secdemo.asc
 
 if WANT_QT5
 the_tests5 = \
@@ -153,26 +155,24 @@ endif
 AM_LDFLAGS = -no-install
 
 if WANT_QT5
-ldadd_qt5 = ../../cpp/src/libgpgmepp.la ../src/libqgpgme.la \
-        ../../../src/libgpgme.la @GPGME_QT5_LIBS@ @GPG_ERROR_LIBS@ \
+ldadd_qt5 = ../src/libqgpgme.la @GPGMEPP_LIBS@ \
+        @GPGME_LIBS@ @GPGME_QT5_LIBS@ @GPG_ERROR_LIBS@ \
         @GPGME_QT5TEST_LIBS@ @LDADD_FOR_TESTS_KLUDGE@ -lstdc++
 
-cppflags_qt5 = -I$(moc5_dir) -I$(top_srcdir)/lang/qt/src -I$(top_builddir)/lang/cpp/src \
-              -I$(top_builddir)/src \
-              @GPG_ERROR_CFLAGS@ @GPGME_QT5_CFLAGS@ @GPG_ERROR_CFLAGS@ \
-              @LIBASSUAN_CFLAGS@ @GPGME_QT5TEST_CFLAGS@ -DBUILDING_QGPGME \
-              -DTOP_SRCDIR="$(top_srcdir)"
+cppflags_qt5 = -I$(moc5_dir) -I$(top_srcdir)/src \
+              @GPGMEPP_CFLAGS@ @GPGME_CFLAGS@ \
+              @GPG_ERROR_CFLAGS@ @GPGME_QT5_CFLAGS@ \
+              @GPGME_QT5TEST_CFLAGS@ -DBUILDING_QGPGME
 endif
 if WANT_QT6
-ldadd_qt6 = ../../cpp/src/libgpgmepp.la ../src/libqgpgmeqt6.la \
-        ../../../src/libgpgme.la @GPGME_QT6_LIBS@ @GPG_ERROR_LIBS@ \
+ldadd_qt6 = ../src/libqgpgmeqt6.la @GPGMEPP_LIBS@ \
+        @GPGME_LIBS@ @GPGME_QT6_LIBS@ @GPG_ERROR_LIBS@ \
         @GPGME_QT6TEST_LIBS@ @LDADD_FOR_TESTS_KLUDGE@ -lstdc++
 
-cppflags_qt6 = -I$(moc6_dir) -I$(top_srcdir)/lang/qt/src -I$(top_builddir)/lang/cpp/src \
-              -I$(top_builddir)/src \
-              @GPG_ERROR_CFLAGS@ @GPGME_QT6_CFLAGS@ @GPG_ERROR_CFLAGS@ \
-              @LIBASSUAN_CFLAGS@ @GPGME_QT6TEST_CFLAGS@ -DBUILDING_QGPGME \
-              -DTOP_SRCDIR="$(top_srcdir)"
+cppflags_qt6 = -I$(moc6_dir) -I$(top_srcdir)/src \
+              @GPGMEPP_CFLAGS@ @GPGME_CFLAGS@ \
+              @GPG_ERROR_CFLAGS@ @GPGME_QT6_CFLAGS@ \
+              @GPGME_QT6TEST_CFLAGS@ -DBUILDING_QGPGME
 endif
 
 support_src = t-support.h t-support.cpp
@@ -408,17 +408,17 @@ clean-keyring:
 	-rm -fR private-keys-v1.d crls.d pubring.gpg pubring.kbx secring.gpg \
 		trustdb.gpg pubring-stamp
 
-pubring-stamp: $(top_srcdir)/tests/gpg/pubdemo.asc \
-	             $(top_srcdir)/tests/gpg/secdemo.asc
+pubring-stamp: $(top_srcdir)/tests/pubdemo.asc \
+	             $(top_srcdir)/tests/secdemo.asc
 	-$(TESTS_ENVIRONMENT) gpgconf --kill all
 	echo "ignore-invalid-option allow-loopback-pinentry" > $(abs_builddir)/gpg-agent.conf
 	echo "allow-loopback-pinentry" >> gpg-agent.conf
 	echo "ignore-invalid-option pinentry-mode" > gpg.conf
 	echo "pinentry-mode loopback" >> gpg.conf
 	$(TESTS_ENVIRONMENT) $(GPG) --no-permission-warning \
-           --import $(top_srcdir)/tests/gpg/pubdemo.asc
+		--import $(top_srcdir)/tests/pubdemo.asc
 	$(TESTS_ENVIRONMENT) $(GPG) --no-permission-warning \
-		   --passphrase "abc" \
-           --import $(top_srcdir)/tests/gpg/secdemo.asc
+		--passphrase "abc" \
+		--import $(top_srcdir)/tests/secdemo.asc
 	-$(TESTS_ENVIRONMENT) gpgconf --kill all
 	touch pubring-stamp
