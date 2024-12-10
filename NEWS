@@ -3,6 +3,11 @@ Noteworthy changes in version 2.0.0 (unreleased)
 
  * First separate release of QGpgME.
 
+ * cmake: The qgpgme folder containing the header files is no longer exported
+   as include directory. All headers have to be included with the prefix
+   qgpgme/ now. The camel-case headers are still included with the prefix
+   QGpgME/.
+
 
 Noteworthy changes in earlier versions can be found in the NEWS file of
 gpgme.

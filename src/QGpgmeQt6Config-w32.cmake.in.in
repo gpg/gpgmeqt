@@ -63,7 +63,7 @@ add_library(QGpgmeQt6 SHARED IMPORTED)
 
 set_target_properties(QGpgmeQt6 PROPERTIES
   IMPORTED_IMPLIB_RELEASE "@resolved_libdir@/libqgpgmeqt6.dll.a"
-  INTERFACE_INCLUDE_DIRECTORIES "@resolved_includedir@/qgpgme;@resolved_includedir@"
+  INTERFACE_INCLUDE_DIRECTORIES "@resolved_includedir@"
   INTERFACE_LINK_LIBRARIES "Gpgmepp;Qt6::Core"
   IMPORTED_LOCATION "@resolved_bindir@/libqgpgmeqt6-15.dll"
 )
