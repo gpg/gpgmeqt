@@ -38,12 +38,19 @@
 
 #include "dn.h"
 
+#include <QByteArray>
+
 #include <gpg-error.h>
 
-static const struct {
+#include <vector>
+
+namespace
+{
+struct NameAndOID {
     const char *name;
     const char *oid;
-} oidmap[] = {
+};
+static const std::vector<NameAndOID> oidmap = {
     // keep them ordered by oid:
     { "SP", "ST" }, // hack to show the Sphinx-required/desired SP for
     // StateOrProvince, otherwise known as ST or even S
@@ -59,7 +66,18 @@ static const struct {
     { "GN", "2.5.4.42" },
     { "Pseudo", "2.5.4.65" },
 };
-static const unsigned int numOidMaps = sizeof oidmap / sizeof * oidmap;
+}
+
+static const char *attributeNameForOID(const char *oid)
+{
+    for (const auto &m : oidmap) {
+        if (qstricmp(oid, m.oid) == 0) {
+            return m.name;
+        }
+    }
+    return nullptr;
+}
+
 
 class QGpgME::DN::Private
 {
@@ -165,12 +183,10 @@ parse_dn_part(DnPair *array, const unsigned char *string)
     p[n] = 0;
     trim_trailing_spaces((char *)p);
     // map OIDs to their names:
-    for (unsigned int i = 0; i < numOidMaps; ++i)
-        if (!strcasecmp((char *)p, oidmap[i].oid)) {
-            free(p);
-            gpgrt_asprintf(&p, "%s", oidmap[i].name);
-            break;
-        }
+    if (const char *name = attributeNameForOID(p)) {
+        free(p);
+        gpgrt_asprintf(&p, "%s", name);
+    }
     array->key = p;
     string = s + 1;
 
