@@ -93,7 +93,6 @@ qgpgme_headers= \
     encryptjob.h \
     exportjob.h \
     filelistdataprovider.h \
-    hierarchicalkeylistjob.h \
     job.h \
     keyformailboxjob.h \
     multideletejob.h \
@@ -147,7 +146,6 @@ camelcase_headers= \
     EncryptJob \
     ExportJob \
     FileListDataProvider \
-    HierarchicalKeyListJob \
     Job \
     MultiDeleteJob \
     Protocol \
@@ -257,7 +255,6 @@ qgpgme_moc_sources = \
     encryptarchivejob.moc \
     encryptjob.moc \
     exportjob.moc \
-    hierarchicalkeylistjob.moc \
     importfromkeyserverjob.moc \
     importjob.moc \
     job.moc \
