@@ -83,4 +83,4 @@ QString VerifyOpaqueJob::outputFile() const
     return d->m_outputFilePath;
 }
 
-#include "verifyopaquejob.moc"
+#include "moc_verifyopaquejob.cpp"

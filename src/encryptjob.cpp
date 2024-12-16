@@ -119,4 +119,4 @@ GpgME::Context::EncryptionFlags EncryptJob::encryptionFlags() const
     return d->m_encryptionFlags;
 }
 
-#include "encryptjob.moc"
+#include "moc_encryptjob.cpp"

@@ -156,4 +156,4 @@ GpgME::Error QGpgMEWKDRefreshJobPrivate::startIt()
     return {};
 }
 
-#include "qgpgmewkdrefreshjob.moc"
+#include "moc_qgpgmewkdrefreshjob.cpp"

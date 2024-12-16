@@ -166,4 +166,4 @@ GpgME::Error QGpgMEDecryptVerifyArchiveJobPrivate::startIt()
     return {};
 }
 
-#include "qgpgmedecryptverifyarchivejob.moc"
+#include "moc_qgpgmedecryptverifyarchivejob.cpp"

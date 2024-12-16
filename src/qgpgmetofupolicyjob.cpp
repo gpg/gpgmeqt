@@ -67,4 +67,4 @@ Error QGpgMETofuPolicyJob::exec(const Key &key, TofuInfo::Policy policy)
     return std::get<0>(policy_worker(context(), key, policy));
 }
 
-#include "qgpgmetofupolicyjob.moc"
+#include "moc_qgpgmetofupolicyjob.cpp"

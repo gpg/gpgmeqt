@@ -277,4 +277,4 @@ GpgME::Error QGpgMESignJobPrivate::startIt()
     return {};
 }
 
-#include "qgpgmesignjob.moc"
+#include "moc_qgpgmesignjob.cpp"

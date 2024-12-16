@@ -49,4 +49,4 @@ GpgME::Error QuickJob::startSetKeyEnabled(const GpgME::Key &key, bool enabled)
     return d->startSetKeyEnabled(key, enabled);
 }
 
-#include "quickjob.moc"
+#include "moc_quickjob.cpp"

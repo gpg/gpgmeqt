@@ -213,4 +213,4 @@ GpgME::Error QGpgMEVerifyOpaqueJobPrivate::startIt()
     return {};
 }
 
-#include "qgpgmeverifyopaquejob.moc"
+#include "moc_qgpgmeverifyopaquejob.cpp"

@@ -131,4 +131,4 @@ bool DefaultKeyGenerationJob::eventFilter(QObject *watched, QEvent *event)
     return Job::eventFilter(watched, event);
 }
 
-#include "defaultkeygenerationjob.moc"
+#include "moc_defaultkeygenerationjob.cpp"

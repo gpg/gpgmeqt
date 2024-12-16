@@ -96,4 +96,4 @@ Cleaner::~Cleaner()
     }
 }
 
-#include "cleaner.moc"
+#include "moc_cleaner.cpp"

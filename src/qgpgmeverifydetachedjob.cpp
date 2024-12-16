@@ -198,4 +198,4 @@ GpgME::Error QGpgMEVerifyDetachedJobPrivate::startIt()
     return {};
 }
 
-#include "qgpgmeverifydetachedjob.moc"
+#include "moc_qgpgmeverifydetachedjob.cpp"

@@ -167,4 +167,4 @@ bool loopbackSupported()
     return true;
 }
 
-#include "t-support.hmoc"
+#include "moc_t-support.cpp"

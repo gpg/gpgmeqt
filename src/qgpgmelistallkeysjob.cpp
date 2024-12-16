@@ -238,4 +238,4 @@ KeyListResult QGpgMEListAllKeysJob::exec(std::vector<Key> &pub, std::vector<Key>
     return std::get<0>(r);
 }
 
-#include "qgpgmelistallkeysjob.moc"
+#include "moc_qgpgmelistallkeysjob.cpp"

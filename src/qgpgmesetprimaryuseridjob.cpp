@@ -72,4 +72,4 @@ GpgME::Error QGpgMESetPrimaryUserIDJob::start(const GpgME::UserID &userId)
     return {};
 }
 
-#include "qgpgmesetprimaryuseridjob.moc"
+#include "moc_qgpgmesetprimaryuseridjob.cpp"

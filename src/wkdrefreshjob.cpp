@@ -61,4 +61,4 @@ GpgME::Error WKDRefreshJob::start(const std::vector<GpgME::UserID> &userIDs)
     return d->startIt();
 }
 
-#include "wkdrefreshjob.moc"
+#include "moc_wkdrefreshjob.cpp"

@@ -107,4 +107,4 @@ bool SignJob::appendSignatureEnabled() const
     return d->m_appendSignature;
 }
 
-#include "signjob.moc"
+#include "moc_signjob.cpp"

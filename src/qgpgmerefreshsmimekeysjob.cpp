@@ -253,4 +253,4 @@ void QGpgMERefreshSMIMEKeysJob::slotProcessExited(int exitCode, QProcess::ExitSt
     Q_EMIT result(mError);
     deleteLater();
 }
-#include "qgpgmerefreshsmimekeysjob.moc"
+#include "moc_qgpgmerefreshsmimekeysjob.cpp"

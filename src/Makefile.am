@@ -346,7 +346,7 @@ endif
 if WANT_QT5
 moc5_dir = moc5
 qgpgme_moc5_sources = $(qgpgme_moc_sources:%.moc=%.moc5)
-qgpgme_moc5_forward_headers = $(qgpgme_moc_sources:%=$(moc5_dir)/%)
+qgpgme_moc5_forward_headers = $(qgpgme_moc_sources:%.moc=$(moc5_dir)/moc_%.cpp)
 
 .h.moc5:
 	$(MOC5) `test -f '$<' || echo '$(srcdir)/'`$< -o $@
@@ -355,12 +355,13 @@ $(moc5_dir):
 	mkdir $(moc5_dir)
 
 $(qgpgme_moc5_forward_headers): Makefile.am | $(moc5_dir)
-	echo "#include \"../$(notdir $@)5\"" > "$@"
+	echo "#include \"../$(notdir $@)\"" | \
+	sed -e "s/moc_//" -e "s/\.cpp/.moc5/" > "$@"
 endif
 if WANT_QT6
 moc6_dir = moc6
 qgpgme_moc6_sources = $(qgpgme_moc_sources:%.moc=%.moc6)
-qgpgme_moc6_forward_headers = $(qgpgme_moc_sources:%=$(moc6_dir)/%)
+qgpgme_moc6_forward_headers = $(qgpgme_moc_sources:%.moc=$(moc6_dir)/moc_%.cpp)
 
 .h.moc6:
 	$(MOC6) `test -f '$<' || echo '$(srcdir)/'`$< -o $@
@@ -369,7 +370,8 @@ $(moc6_dir):
 	mkdir $(moc6_dir)
 
 $(qgpgme_moc6_forward_headers): Makefile.am | $(moc6_dir)
-	echo "#include \"../$(notdir $@)6\"" > "$@"
+	echo "#include \"../$(notdir $@)\"" | \
+	sed -e "s/moc_//" -e "s/\.cpp/.moc6/" > "$@"
 endif
 
 if WANT_QT5

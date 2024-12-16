@@ -192,4 +192,4 @@ void QGpgMEWKSPublishJob::startReceive(const QByteArray &response)
     run(std::bind(&receive_worker, response));
 }
 
-#include "qgpgmewkspublishjob.moc"
+#include "moc_qgpgmewkspublishjob.cpp"

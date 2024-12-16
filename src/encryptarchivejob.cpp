@@ -116,4 +116,4 @@ QString EncryptArchiveJob::baseDirectory() const
     return d->m_baseDirectory;
 }
 
-#include "encryptarchivejob.moc"
+#include "moc_encryptarchivejob.cpp"

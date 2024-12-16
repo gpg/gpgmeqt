@@ -102,4 +102,4 @@ Error QGpgMEDownloadJob::start(const QByteArray &fpr, const std::shared_ptr<QIOD
     run(std::bind(&download, std::placeholders::_1, std::placeholders::_2, fpr, std::placeholders::_3), keyData);
     return Error();
 }
-#include "qgpgmedownloadjob.moc"
+#include "moc_qgpgmedownloadjob.cpp"

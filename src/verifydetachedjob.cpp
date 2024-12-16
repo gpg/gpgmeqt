@@ -83,4 +83,4 @@ QString VerifyDetachedJob::signedFile() const
     return d->m_signedFilePath;
 }
 
-#include "verifydetachedjob.moc"
+#include "moc_verifydetachedjob.cpp"

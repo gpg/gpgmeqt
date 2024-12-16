@@ -119,10 +119,10 @@ TESTS = initial.test $(the_tests5) $(the_tests6) final.test
 # GNU make's pattern rules would make this easier, but we don't want to use them
 if WANT_QT5
 moc5_dir = moc5
-moc5_files = $(moc5_dir)/t-support.hmoc $(the_tests5:%5=%.moc5)
+moc5_files = $(moc5_dir)/moc_t-support.cpp $(the_tests5:%5=%.moc5)
 moc5_forward_headers = $(the_tests5:%5=$(moc5_dir)/%.moc)
 
-$(moc5_dir)/t-support.hmoc: t-support.h | $(moc5_dir)
+$(moc5_dir)/moc_t-support.cpp: t-support.h | $(moc5_dir)
 	$(MOC5) `test -f '$<' || echo '$(srcdir)/'`$< -o $@
 
 .cpp.moc5:
@@ -136,10 +136,10 @@ $(moc5_forward_headers): Makefile.am | $(moc5_dir)
 endif
 if WANT_QT6
 moc6_dir = moc6
-moc6_files = $(moc6_dir)/t-support.hmoc $(the_tests6:%6=%.moc6)
+moc6_files = $(moc6_dir)/moc_t-support.cpp $(the_tests6:%6=%.moc6)
 moc6_forward_headers = $(the_tests6:%6=$(moc6_dir)/%.moc)
 
-$(moc6_dir)/t-support.hmoc: t-support.h | $(moc6_dir)
+$(moc6_dir)/moc_t-support.cpp: t-support.h | $(moc6_dir)
 	$(MOC6) `test -f '$<' || echo '$(srcdir)/'`$< -o $@
 
 .cpp.moc6:

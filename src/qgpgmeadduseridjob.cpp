@@ -82,4 +82,4 @@ Error QGpgMEAddUserIDJob::start(const Key &key, const QString &name, const QStri
     run(std::bind(&add_user_id, std::placeholders::_1, key, name, email, comment));
     return Error();
 }
-#include "qgpgmeadduseridjob.moc"
+#include "moc_qgpgmeadduseridjob.cpp"

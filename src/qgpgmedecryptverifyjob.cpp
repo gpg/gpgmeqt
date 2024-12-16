@@ -225,4 +225,4 @@ GpgME::Error QGpgMEDecryptVerifyJobPrivate::startIt()
     return {};
 }
 
-#include "qgpgmedecryptverifyjob.moc"
+#include "moc_qgpgmedecryptverifyjob.cpp"

@@ -125,4 +125,4 @@ GpgME::DecryptionResult QGpgME::QGpgMEDecryptJob::exec(const QByteArray &cipherT
     return std::get<0>(r);
 }
 
-#include "qgpgmedecryptjob.moc"
+#include "moc_qgpgmedecryptjob.cpp"

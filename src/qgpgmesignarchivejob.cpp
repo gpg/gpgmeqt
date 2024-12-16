@@ -193,4 +193,4 @@ GpgME::Error QGpgMESignArchiveJobPrivate::startIt()
     return {};
 }
 
-#include "qgpgmesignarchivejob.moc"
+#include "moc_qgpgmesignarchivejob.cpp"

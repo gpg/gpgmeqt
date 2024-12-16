@@ -104,4 +104,4 @@ QString SignArchiveJob::baseDirectory() const
     return d->m_baseDirectory;
 }
 
-#include "signarchivejob.moc"
+#include "moc_signarchivejob.cpp"

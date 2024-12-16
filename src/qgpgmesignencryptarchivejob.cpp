@@ -209,4 +209,4 @@ GpgME::Error QGpgMESignEncryptArchiveJobPrivate::startIt()
     return {};
 }
 
-#include "qgpgmesignencryptarchivejob.moc"
+#include "moc_qgpgmesignencryptarchivejob.cpp"

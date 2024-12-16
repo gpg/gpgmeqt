@@ -169,4 +169,4 @@ Error QGpgMEImportJob::startLater(const QByteArray &certData)
     return {};
 }
 
-#include "qgpgmeimportjob.moc"
+#include "moc_qgpgmeimportjob.cpp"

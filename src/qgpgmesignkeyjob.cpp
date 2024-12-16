@@ -239,4 +239,4 @@ void QGpgMESignKeyJob::setExpirationDate(const QDate &expiration)
     d->m_expiration = expiration;
 }
 
-#include "qgpgmesignkeyjob.moc"
+#include "moc_qgpgmesignkeyjob.cpp"

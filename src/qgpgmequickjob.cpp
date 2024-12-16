@@ -208,4 +208,4 @@ Error QGpgMEQuickJobPrivate::startSetKeyEnabled(const Key &key, bool enabled)
     return {};
 }
 
-#include "qgpgmequickjob.moc"
+#include "moc_qgpgmequickjob.cpp"

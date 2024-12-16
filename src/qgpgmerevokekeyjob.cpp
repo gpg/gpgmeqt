@@ -124,4 +124,4 @@ Error QGpgMERevokeKeyJob::exec(const GpgME::Key &key,
     return err;
 }
 
-#include "qgpgmerevokekeyjob.moc"
+#include "moc_qgpgmerevokekeyjob.cpp"

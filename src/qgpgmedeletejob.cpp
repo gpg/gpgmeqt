@@ -67,4 +67,4 @@ Error QGpgMEDeleteJob::start(const Key &key, bool allowSecretKeyDeletion)
     run(std::bind(&delete_key, std::placeholders::_1, key, allowSecretKeyDeletion));
     return Error();
 }
-#include "qgpgmedeletejob.moc"
+#include "moc_qgpgmedeletejob.cpp"

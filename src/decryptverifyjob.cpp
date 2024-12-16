@@ -83,4 +83,4 @@ QString DecryptVerifyJob::outputFile() const
     return d->m_outputFilePath;
 }
 
-#include "decryptverifyjob.moc"
+#include "moc_decryptverifyjob.cpp"

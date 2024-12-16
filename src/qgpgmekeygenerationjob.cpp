@@ -73,4 +73,4 @@ Error QGpgMEKeyGenerationJob::start(const QString &parameters)
     run(std::bind(&generate_key, std::placeholders::_1, parameters));
     return Error();
 }
-#include "qgpgmekeygenerationjob.moc"
+#include "moc_qgpgmekeygenerationjob.cpp"

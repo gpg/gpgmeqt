@@ -161,4 +161,4 @@ void QGpgMEKeyListJob::addMode(KeyListMode mode)
     context()->addKeyListMode(mode);
 }
 
-#include "qgpgmekeylistjob.moc"
+#include "moc_qgpgmekeylistjob.cpp"

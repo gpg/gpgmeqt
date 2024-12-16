@@ -93,4 +93,4 @@ Error QGpgMEAddExistingSubkeyJob::exec(const GpgME::Key &key, const GpgME::Subke
     return std::get<0>(r);
 }
 
-#include "qgpgmeaddexistingsubkeyjob.moc"
+#include "moc_qgpgmeaddexistingsubkeyjob.cpp"

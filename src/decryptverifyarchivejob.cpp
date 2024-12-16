@@ -92,4 +92,4 @@ QString DecryptVerifyArchiveJob::outputDirectory() const
     return d->m_outputDirectory;
 }
 
-#include "decryptverifyarchivejob.moc"
+#include "moc_decryptverifyarchivejob.cpp"

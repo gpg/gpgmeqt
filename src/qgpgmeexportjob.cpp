@@ -112,4 +112,4 @@ GpgME::Error ExportJob::exec(const QStringList &, QByteArray &)
     return Error();
 }
 
-#include "qgpgmeexportjob.moc"
+#include "moc_qgpgmeexportjob.cpp"

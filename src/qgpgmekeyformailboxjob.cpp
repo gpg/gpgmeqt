@@ -139,4 +139,4 @@ KeyListResult QGpgMEKeyForMailboxJob::exec(const QString &mailbox, bool canEncry
     return std::get<0>(r);
 }
 
-#include "qgpgmekeyformailboxjob.moc"
+#include "moc_qgpgmekeyformailboxjob.cpp"

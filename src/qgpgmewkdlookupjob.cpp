@@ -182,4 +182,4 @@ WKDLookupResult QGpgMEWKDLookupJob::exec(const QString &email)
     return std::get<0>(r);
 }
 
-#include "qgpgmewkdlookupjob.moc"
+#include "moc_qgpgmewkdlookupjob.cpp"

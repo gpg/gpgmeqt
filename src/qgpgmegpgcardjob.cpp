@@ -128,4 +128,4 @@ Error QGpgMEGpgCardJob::exec(const QStringList &cmds, QString &std_out, QString 
     return exitCode == 0 ? Error() : Error(make_error(GPG_ERR_GENERAL));
 }
 
-#include "qgpgmegpgcardjob.moc"
+#include "moc_qgpgmegpgcardjob.cpp"

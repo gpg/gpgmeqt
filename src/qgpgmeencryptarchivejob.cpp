@@ -189,4 +189,4 @@ GpgME::Error QGpgMEEncryptArchiveJobPrivate::startIt()
     return {};
 }
 
-#include "qgpgmeencryptarchivejob.moc"
+#include "moc_qgpgmeencryptarchivejob.cpp"

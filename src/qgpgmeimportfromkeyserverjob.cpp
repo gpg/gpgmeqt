@@ -77,4 +77,4 @@ GpgME::ImportResult QGpgME::QGpgMEImportFromKeyserverJob::exec(const std::vector
     return std::get<0>(r);
 }
 
-#include "qgpgmeimportfromkeyserverjob.moc"
+#include "moc_qgpgmeimportfromkeyserverjob.cpp"

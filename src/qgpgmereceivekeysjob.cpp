@@ -70,4 +70,4 @@ GpgME::ImportResult QGpgME::QGpgMEReceiveKeysJob::exec(const QStringList &keyIds
     return std::get<0>(r);
 }
 
-#include "qgpgmereceivekeysjob.moc"
+#include "moc_qgpgmereceivekeysjob.cpp"

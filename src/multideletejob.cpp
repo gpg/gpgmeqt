@@ -120,4 +120,4 @@ GpgME::Error QGpgME::MultiDeleteJob::startAJob()
     return mJob->start(*mIt, mAllowSecretKeyDeletion);
 }
 
-#include "multideletejob.moc"
+#include "moc_multideletejob.cpp"

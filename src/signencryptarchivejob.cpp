@@ -128,4 +128,4 @@ QString SignEncryptArchiveJob::baseDirectory() const
     return d->m_baseDirectory;
 }
 
-#include "signencryptarchivejob.moc"
+#include "moc_signencryptarchivejob.cpp"
