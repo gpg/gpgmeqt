@@ -56,6 +56,8 @@ include(G10CompilerSettings)
 include(FeatureSummary)
 include(GNUInstallDirs)
 
+set(CMAKE_AUTOMOC ON)
+
 find_package(LibGpgError ${GPG_ERROR_REQUIRED_VERSION})
 set_package_properties(LibGpgError PROPERTIES TYPE REQUIRED)
 find_package(Gpgme ${GPGME_REQUIRED_VERSION})

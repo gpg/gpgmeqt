@@ -28,7 +28,6 @@ endif()
 
 set(targetname QGpgme)
 if (${QT_MAJOR_VERSION} EQUAL "6")
-    get_property(QtCore_MOC_EXECUTABLE TARGET Qt6::moc PROPERTY LOCATION)
     set(targetname "${targetname}Qt6")
 endif()
 
@@ -223,27 +222,6 @@ foreach(header ${qgpgme_CAMELCASE_HEADERS})
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/QGpgME/${header} "#include \"qgpgme/${header_lc}.h\"\n")
     list(APPEND qgpgme_HEADERS ${header_lc}.h)
 endforeach()
-
-set(qgpgme_MOC)
-foreach(header ${qgpgme_HEADERS} ${qgpgme_PRIVATE_HEADERS})
-    get_filename_component(absolute_path ${header} ABSOLUTE)
-    get_filename_component(file_name ${header} NAME_WLE)
-
-    if (${QT_MAJOR_VERSION} EQUAL "6")
-        add_custom_command(
-            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${file_name}.moc
-            COMMAND ${QtCore_MOC_EXECUTABLE} ${absolute_path} -o ${CMAKE_CURRENT_BINARY_DIR}/${file_name}.moc
-        )
-    else()
-        add_custom_command(
-            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${file_name}.moc
-            COMMAND ${QT_MOC_EXECUTABLE} ${absolute_path} -o ${CMAKE_CURRENT_BINARY_DIR}/${file_name}.moc
-        )
-    endif()
-
-    list(APPEND qgpgme_MOC "${CMAKE_CURRENT_BINARY_DIR}/${file_name}.moc")
-endforeach()
-target_sources(${targetname} PRIVATE ${qgpgme_MOC})
 
 target_link_libraries(${targetname} PUBLIC Gpgmepp Gpgme::Gpgme LibGpgError::LibGpgError Qt${QT_MAJOR_VERSION}::Core)
 
