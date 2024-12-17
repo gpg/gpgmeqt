@@ -20,7 +20,6 @@
 # along with this program; if not, see <https://gnu.org/licenses/>.
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-add_compile_definitions(BUILDING_QGPGME)
 add_compile_definitions(GPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_GPGME)
 if(WIN32)
   add_compile_definitions(GPG_ERR_ENABLE_GETTEXT_MACROS=1)
@@ -113,7 +112,6 @@ set(qgpgme_PRIVATE_HEADERS
     job_p.h
     listallkeysjob_p.h
     protocol_p.h
-    qgpgme_export.h
     qgpgmeaddexistingsubkeyjob.h
     qgpgmeadduseridjob.h
     qgpgmebackend.h
@@ -227,6 +225,11 @@ target_sources(${targetname} PRIVATE
     ${qgpgme_HEADERS}
 )
 
+include(GenerateExportHeader)
+generate_export_header(${targetname}
+    BASE_NAME qgpgme
+)
+
 target_link_libraries(${targetname} PUBLIC Gpgmepp Gpgme::Gpgme LibGpgError::LibGpgError Qt${QT_MAJOR_VERSION}::Core)
 
 string(TOLOWER targetname targetname_lowercase)
@@ -268,7 +271,7 @@ endif()
 
 install(FILES ${qgpgme_HEADERS}
               ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_version.h
-              ${CMAKE_CURRENT_SOURCE_DIR}/qgpgme_export.h
+              ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_export.h
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qgpgme-qt${QT_MAJOR_VERSION}/qgpgme)
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/QGpgME
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qgpgme-qt${QT_MAJOR_VERSION})
