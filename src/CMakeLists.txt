@@ -245,13 +245,6 @@ foreach(header ${qgpgme_HEADERS} ${qgpgme_PRIVATE_HEADERS})
 endforeach()
 target_sources(${targetname} PRIVATE ${qgpgme_MOC})
 
-target_include_directories(${targetname}
-    PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-)
-
 target_link_libraries(${targetname} PUBLIC Gpgmepp Gpgme::Gpgme LibGpgError::LibGpgError Qt${QT_MAJOR_VERSION}::Core)
 
 string(TOLOWER targetname targetname_lowercase)

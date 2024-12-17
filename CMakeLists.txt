@@ -49,22 +49,10 @@ set(QT6_REQUIRED_VERSION "6.5.0")
 option(QGPGME_BUILD_QT5 "Build for Qt5" ON)
 option(QGPGME_BUILD_QT6 "Build for Qt6" ON)
 
-set(PACKAGE_STRING "${CMAKE_PROJECT_NAME} ${FULL_VERSION}")
-set(PACKAGE_VERSION "${FULL_VERSION}")
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Default to hidden visibility for symbols
-set(CMAKE_C_VISIBILITY_PRESET hidden)
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-shadow")
-endif()
-
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
+include(G10CMakeSettings)
+include(G10CompilerSettings)
 include(FeatureSummary)
 include(GNUInstallDirs)
 
