@@ -216,12 +216,16 @@ set(qgpgme_CAMELCASE_HEADERS
     WKSPublishJob
 )
 
-set(qgpgme_HEADERS)
-foreach(header ${qgpgme_CAMELCASE_HEADERS})
-    string(TOLOWER ${header} header_lc)
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/QGpgME/${header} "#include \"qgpgme/${header_lc}.h\"\n")
-    list(APPEND qgpgme_HEADERS ${header_lc}.h)
-endforeach()
+ecm_generate_headers(dummy
+    HEADER_NAMES
+    ${qgpgme_CAMELCASE_HEADERS}
+    REQUIRED_HEADERS qgpgme_HEADERS
+    PREFIX QGpgME
+)
+
+target_sources(${targetname} PRIVATE
+    ${qgpgme_HEADERS}
+)
 
 target_link_libraries(${targetname} PUBLIC Gpgmepp Gpgme::Gpgme LibGpgError::LibGpgError Qt${QT_MAJOR_VERSION}::Core)
 
