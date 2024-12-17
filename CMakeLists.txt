@@ -54,6 +54,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_P
 include(G10CMakeSettings)
 include(G10CompilerSettings)
 include(ECMGenerateHeaders)
+include(ECMUninstallTarget)
 include(FeatureSummary)
 include(GNUInstallDirs)
 
