@@ -1,3 +1,0 @@
-# autogen.sh configuration for QGpgME                       -*- sh -*-
-
-final_info="mkdir build && cd build && ../configure --enable-maintainer-mode && make"
