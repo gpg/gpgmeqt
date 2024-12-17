@@ -47,6 +47,7 @@
 #include <QObject>
 #include <QDir>
 #include <QSignalSpy>
+#include <QStandardPaths>
 
 #include <gpgme++/context.h>
 #include <gpgme++/engineinfo.h>
@@ -58,8 +59,18 @@ using namespace QGpgME;
 void QGpgMETest::initTestCase()
 {
     GpgME::initializeLibrary();
-    const QString gpgHome = qgetenv("GNUPGHOME");
-    QVERIFY2(!gpgHome.isEmpty(), "GNUPGHOME environment variable is not set.");
+
+    mGnupgHomeTemplate = QTest::qExtractTestData(QStringLiteral("/fixture"));
+    QVERIFY2(mGnupgHomeTemplate, "Failed to extract test data");
+
+    qputenv("GNUPGHOME", mGnupgHomeTemplate->path().toLocal8Bit());
+    const QString gpg = QStandardPaths::findExecutable("gpg");
+    int exitCode = QProcess::execute(gpg, {QStringLiteral("--no-permission-warning"), QStringLiteral("--import"), mGnupgHomeTemplate->filePath(QStringLiteral("pubdemo.asc"))});
+    QCOMPARE(exitCode, 0);
+    exitCode = QProcess::execute(gpg, {QStringLiteral("--no-permission-warning"), QStringLiteral("--passphrase"), QStringLiteral("abc"), QStringLiteral("--import"), mGnupgHomeTemplate->filePath(QStringLiteral("secdemo.asc"))});
+    QCOMPARE(exitCode, 0);
+    exitCode = QProcess::execute(QStandardPaths::findExecutable("gpgconf"), {QStringLiteral("--kill"), QStringLiteral("all")});
+    QCOMPARE(exitCode, 0);
 }
 
 void QGpgMETest::cleanupTestCase()

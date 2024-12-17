@@ -125,6 +125,7 @@ public Q_SLOTS:
 
 private:
     GpgME::TestPassphraseProvider mPassphraseProvider;
+    QSharedPointer<QTemporaryDir> mGnupgHomeTemplate;
 };
 
 /* Timeout, in milliseconds, for use with QSignalSpy to wait on

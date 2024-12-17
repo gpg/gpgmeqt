@@ -1,12 +1,5 @@
-# Common CMake settings for g10 Code; based on KDECMakeSettings.cmake
-#
-# Copyright 2014 Alex Merry <alex.merry@kde.org>
-# Copyright 2013 Aleix Pol <aleixpol@kde.org>
-# Copyright 2012-2013 Stephen Kelly <steveire@gmail.com>
-# Copyright 2007 Matthias Kretz <kretz@kde.org>
-# Copyright 2006-2007 Laurent Montel <montel@kde.org>
-# Copyright 2006-2013 Alex Neundorf <neundorf@kde.org>
-# Copyright 2025 g10 Code GmbH
+# Copyright 2012 Stephen Kelly <steveire@gmail.com>
+# Copyright 2012 Alex Neundorf <neundorf@kde.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -33,30 +26,39 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-################ Testing setup ####################################
+#[=======================================================================[.rst:
+ECMMarkAsTest
+-------------
 
-option(BUILD_TESTING "Build the testing tree" ON)
-if(BUILD_TESTING)
-    enable_testing()
+Marks a target as only being required for tests.
+
+::
+
+  ecm_mark_as_test(<target1> [<target2> [...]])
+
+This will cause the specified targets to not be built unless either
+``BUILD_TESTING`` is set to ``ON`` or the user invokes the ``buildtests`` target.
+
+``BUILD_TESTING`` is created as a cache variable by the CTest module and by the
+:kde-module:`KDECMakeSettings` module.
+
+Since pre-1.0.0.
+#]=======================================================================]
+
+if (NOT BUILD_TESTING)
+  if(NOT TARGET buildtests)
+    add_custom_target(buildtests)
+  endif()
 endif()
 
-
-
-################ Build-related settings ###########################
-
-# Always include srcdir and builddir in include path
-# This saves typing ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} in about every subdir
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-# put the include dirs which are in the source or build tree
-# before all other include dirs, so the headers in the sources
-# are preferred over the already installed ones
-set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
-
-# Add the src and build dir to the BUILD_INTERFACE include directories
-# of all targets. Similar to CMAKE_INCLUDE_CURRENT_DIR, but transitive.
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
-
-# When a shared library changes, but its includes do not, don't relink
-# all dependencies. It is not needed.
-set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
+function(ecm_mark_as_test)
+  if (NOT BUILD_TESTING)
+    foreach(_target ${ARGN})
+      set_target_properties(${_target}
+                              PROPERTIES
+                              EXCLUDE_FROM_ALL TRUE
+                           )
+      add_dependencies(buildtests ${_target})
+    endforeach()
+  endif()
+endfunction()
