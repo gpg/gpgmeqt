@@ -239,34 +239,32 @@ set_target_properties(${targetname} PROPERTIES
     SOVERSION "${LIBQGPGME_SOVERSION}"
 )
 
-set(resolved_includedir "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/qgpgme-qt${QT_MAJOR_VERSION}")
-set(resolved_libdir "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
-set(resolved_bindir "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}")
-set(libsuffix "${CMAKE_SHARED_LIBRARY_SUFFIX}")
+target_include_directories(${targetname} INTERFACE "$<INSTALL_INTERFACE:include/qgpgme-qt${QT_MAJOR_VERSION}>")
 
 if (${QT_MAJOR_VERSION} EQUAL 6)
     set(config_suffix Qt6)
 endif()
 
-if (MSVC)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/QGpgme${config_suffix}Config-msvc.cmake.in.in
-                   ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}Config.cmake @ONLY)
-elseif (WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/QGpgme${config_suffix}Config-w32.cmake.in.in
-                   ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}Config.cmake @ONLY)
-else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/QGpgme${config_suffix}Config.cmake.in.in
-                   ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}Config.cmake @ONLY)
-endif()
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/QGpgme${config_suffix}ConfigVersion.cmake.in
-               ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}ConfigVersion.cmake @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/qgpgme_version.h.in
-               ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_version.h)
+include(ECMSetupVersion)
+ecm_setup_version(PROJECT
+                  VARIABLE_PREFIX QGPGME
+                  SOVERSION "${LIBQGPGME_SOVERSION}"
+                  VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/qgpgme_version.h"
+                  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}ConfigVersion.cmake"
+                  COMPATIBILITY AnyNewerVersion
+)
+
+include(CMakePackageConfigHelpers)
+set(QGPGME_TARGETS_CMAKE_FILE QGpgme${config_suffix}Targets.cmake)
+configure_package_config_file(QGpgmeConfig.cmake.in
+                              ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}Config.cmake
+                              INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/QGpgme${config_suffix}
+)
 
 if (MSVC)
-    install(TARGETS ${targetname} DESTINATION ${resolved_bindir})
+    install(TARGETS ${targetname} EXPORT ${targetname}Targets DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}")
 else()
-    install(TARGETS ${targetname})
+    install(TARGETS ${targetname} EXPORT ${targetname}Targets)
 endif()
 
 install(FILES ${qgpgme_HEADERS}
@@ -276,6 +274,8 @@ install(FILES ${qgpgme_HEADERS}
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/QGpgME
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qgpgme-qt${QT_MAJOR_VERSION})
 
+set(CMAKECONFIG_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/QGpgme${config_suffix})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}ConfigVersion.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}Config.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/QGpgme${config_suffix})
+        DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+install(EXPORT ${targetname}Targets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE QGpgme${config_suffix}Targets.cmake)

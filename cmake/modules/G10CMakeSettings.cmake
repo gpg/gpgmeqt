@@ -60,3 +60,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 # When a shared library changes, but its includes do not, don't relink
 # all dependencies. It is not needed.
 set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
+
+# Add the SOVERSION target property to the filename of generated DLL filenames
+if (WIN32 AND NOT MSVC)
+    # Official variable for enabling versioned DLL filenames; since cmake 3.27
+    set(CMAKE_DLL_NAME_WITH_SOVERSION ON)
+    # Undocumented variable which has the same effect (used internally for Cygwin)
+    set(CMAKE_SHARED_LIBRARY_NAME_WITH_VERSION ON)
+endif()
