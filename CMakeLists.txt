@@ -53,6 +53,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_P
 
 include(G10CMakeSettings)
 include(G10CompilerSettings)
+include(G10GetFullVersion)
 include(ECMGenerateHeaders)
 include(ECMUninstallTarget)
 include(FeatureSummary)
@@ -67,6 +68,24 @@ find_package(Gpgme ${GPGME_REQUIRED_VERSION})
 set_package_properties(Gpgme PROPERTIES TYPE REQUIRED)
 find_package(Gpgmepp ${GPGMEPP_REQUIRED_VERSION} CONFIG)
 set_package_properties(Gpgmepp PROPERTIES DESCRIPTION "GpgME++ library" URL "https://www.gnupg.org" TYPE REQUIRED)
+
+g10_get_full_version(TAG_PREFIX gpgmeqt)
+
+# create the VERSION file
+find_package(Git QUIET)
+if (GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    # get the current commit ID
+    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --verify HEAD
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                    OUTPUT_VARIABLE commit_id
+    )
+    string(STRIP "${commit_id}" commit_id) # strip trailing whitespace
+    file(WRITE "${CMAKE_BINARY_DIR}/VERSION" "${G10_FULL_VERSION}\n${commit_id}\n")
+elseif(EXISTS "${CMAKE_SOURCE_DIR}/VERSION")
+    configure_file("${CMAKE_SOURCE_DIR}/VERSION" "VERSION" COPYONLY)
+else()
+    file(WRITE "${CMAKE_BINARY_DIR}/VERSION" "${G10_FULL_VERSION}\nunknown\n")
+endif()
 
 if(QGPGME_BUILD_QT5)
     set(QT_MAJOR_VERSION 5)
