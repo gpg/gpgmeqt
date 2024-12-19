@@ -52,6 +52,8 @@ option(QGPGME_BUILD_QT6 "Build for Qt6" ON)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 include(G10CMakeSettings)
+
+include(G10AddDistTargets)
 include(G10CompilerSettings)
 include(G10GetFullVersion)
 include(ECMGenerateHeaders)
@@ -86,6 +88,15 @@ elseif(EXISTS "${CMAKE_SOURCE_DIR}/VERSION")
 else()
     file(WRITE "${CMAKE_BINARY_DIR}/VERSION" "${G10_FULL_VERSION}\nunknown\n")
 endif()
+
+set(EXTRA_DIST
+    "${CMAKE_BINARY_DIR}/VERSION"
+)
+g10_add_dist_targets(
+    VERSION "${G10_FULL_VERSION}"
+    ARCHIVE_FORMAT "tar.xz"
+    EXTRA_FILES ${EXTRA_DIST}
+)
 
 if(QGPGME_BUILD_QT5)
     set(QT_MAJOR_VERSION 5)
