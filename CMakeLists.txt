@@ -55,6 +55,7 @@ include(G10CMakeSettings)
 
 include(G10AddDistTargets)
 include(G10AddGenChangeLogTarget)
+include(G10AddReleaseTargets)
 include(G10CompilerSettings)
 include(G10GetFullVersion)
 include(ECMGenerateHeaders)
@@ -106,6 +107,12 @@ g10_add_dist_targets(
     EXTRA_FILES ${EXTRA_DIST}
 )
 add_dependencies(dist gen-ChangeLog)
+
+g10_add_release_targets(
+    VERSION "${G10_FULL_VERSION}"
+    ARCHIVE_FORMAT "tar.xz"
+    RELEASE_ARCHIVE_SUFFIX "gpgme"
+)
 
 if(QGPGME_BUILD_QT5)
     set(QT_MAJOR_VERSION 5)
