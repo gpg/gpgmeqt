@@ -73,6 +73,10 @@ set_package_properties(Gpgme PROPERTIES TYPE REQUIRED)
 find_package(Gpgmepp ${GPGMEPP_REQUIRED_VERSION} CONFIG)
 set_package_properties(Gpgmepp PROPERTIES DESCRIPTION "GpgME++ library" URL "https://www.gnupg.org" TYPE REQUIRED)
 
+# Check for tools for building the Qt binding docs
+find_package(Doxygen OPTIONAL_COMPONENTS dot)
+set_package_properties(Doxygen PROPERTIES DESCRIPTION "Used for building the documentation")
+
 g10_get_full_version(TAG_PREFIX gpgmeqt)
 
 # create the VERSION file
@@ -130,6 +134,10 @@ if(QGPGME_BUILD_QT6)
     if(BUILD_TESTING)
         add_subdirectory(tests 6/tests)
     endif()
+endif()
+
+if(DOXYGEN_FOUND)
+    add_subdirectory(doc)
 endif()
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
