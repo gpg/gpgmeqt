@@ -95,28 +95,30 @@ else()
     file(WRITE "${CMAKE_BINARY_DIR}/VERSION" "${G10_FULL_VERSION}\nunknown\n")
 endif()
 
-# start ChangeLog at import from KDE in gpgme repo
-g10_add_gen_changelog_target(
-    SINCE "2016-03-08T00:00:00"
-    FOOTER "${CMAKE_SOURCE_DIR}/build-aux/git-log-footer"
-)
+if(UNIX)
+    # start ChangeLog at import from KDE in gpgme repo
+    g10_add_gen_changelog_target(
+        SINCE "2016-03-08T00:00:00"
+        FOOTER "${CMAKE_SOURCE_DIR}/build-aux/git-log-footer"
+    )
 
-set(EXTRA_DIST
-    "${CMAKE_BINARY_DIR}/ChangeLog"
-    "${CMAKE_BINARY_DIR}/VERSION"
-)
-g10_add_dist_targets(
-    VERSION "${G10_FULL_VERSION}"
-    ARCHIVE_FORMAT "tar.xz"
-    EXTRA_FILES ${EXTRA_DIST}
-)
-add_dependencies(dist gen-ChangeLog)
+    set(EXTRA_DIST
+        "${CMAKE_BINARY_DIR}/ChangeLog"
+        "${CMAKE_BINARY_DIR}/VERSION"
+    )
+    g10_add_dist_targets(
+        VERSION "${G10_FULL_VERSION}"
+        ARCHIVE_FORMAT "tar.xz"
+        EXTRA_FILES ${EXTRA_DIST}
+    )
+    add_dependencies(dist gen-ChangeLog)
 
-g10_add_release_targets(
-    VERSION "${G10_FULL_VERSION}"
-    ARCHIVE_FORMAT "tar.xz"
-    RELEASE_ARCHIVE_SUFFIX "gpgme"
-)
+    g10_add_release_targets(
+        VERSION "${G10_FULL_VERSION}"
+        ARCHIVE_FORMAT "tar.xz"
+        RELEASE_ARCHIVE_SUFFIX "gpgme"
+    )
+endif()
 
 if(QGPGME_BUILD_QT5)
     set(QT_MAJOR_VERSION 5)
