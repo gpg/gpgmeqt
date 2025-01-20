@@ -120,6 +120,9 @@ if(UNIX)
     )
 endif()
 
+include(G10GitHooks)
+g10_configure_git_hooks()
+
 if(QGPGME_BUILD_QT5)
     set(QT_MAJOR_VERSION 5)
     find_package(Qt5 ${QT5_REQUIRED_VERSION} REQUIRED COMPONENTS Core)
