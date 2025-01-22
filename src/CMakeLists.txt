@@ -232,7 +232,7 @@ generate_export_header(${targetname}
 
 target_link_libraries(${targetname} PUBLIC Gpgmepp Gpgme::Gpgme LibGpgError::LibGpgError Qt${QT_MAJOR_VERSION}::Core)
 
-string(TOLOWER targetname targetname_lowercase)
+string(TOLOWER ${targetname} targetname_lowercase)
 set_target_properties(${targetname} PROPERTIES
     OUTPUT_NAME "${targetname_lowercase}"
     VERSION "${LIBQGPGME_SOVERSION}.${LIBQGPGME_LT_AGE}.${LIBQGPGME_LT_REVISION}"
