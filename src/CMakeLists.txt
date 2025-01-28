@@ -279,3 +279,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}ConfigVersion.cm
               ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}Config.cmake
         DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 install(EXPORT ${targetname}Targets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE QGpgme${config_suffix}Targets.cmake)
+install(FILES ${CMAKE_SOURCE_DIR}/cmake/modules/FindGpgme.cmake
+              ${CMAKE_SOURCE_DIR}/cmake/modules/FindLibGpgError.cmake
+        DESTINATION ${CMAKECONFIG_INSTALL_DIR})
