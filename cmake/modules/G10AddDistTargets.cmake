@@ -94,8 +94,10 @@ function(G10_ADD_DIST_TARGETS)
         set(g10_dist_archive_format "${archive_format}")
         set(g10_dist_git_archive_extra_arguments "${extra_arguments}")
         configure_file("${CMAKE_SOURCE_DIR}/cmake/modules/g10_dist.sh.in" "g10_dist.sh" @ONLY)
-        file(CHMOD "g10_dist.sh"
-            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        execute_process(
+            COMMAND chmod +x g10_dist.sh
+            WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+        )
         add_custom_target(dist
             COMMENT "Packaging HEAD of sources as ${g10_dist_archive_name}.${g10_dist_archive_format}..."
             COMMAND "${CMAKE_BINARY_DIR}/g10_dist.sh"
@@ -107,8 +109,10 @@ function(G10_ADD_DIST_TARGETS)
         set(g10_distcheck_archive_name "${PROJECT_NAME}-${version}")
         set(g10_distcheck_archive_format "${archive_format}")
         configure_file("${CMAKE_SOURCE_DIR}/cmake/modules/g10_distcheck.sh.in" "g10_distcheck.sh" @ONLY)
-        file(CHMOD "g10_distcheck.sh"
-            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        execute_process(
+            COMMAND chmod +x g10_distcheck.sh
+            WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+        )
         add_custom_target(distcheck
             COMMAND "${CMAKE_BINARY_DIR}/g10_distcheck.sh"
             WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"

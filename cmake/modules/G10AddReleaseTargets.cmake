@@ -102,8 +102,10 @@ function(G10_ADD_RELEASE_TARGETS)
 
     if(NOT TARGET gen-swdb)
         configure_file("${CMAKE_SOURCE_DIR}/cmake/modules/g10_generate_swdb.sh.in" "g10_generate_swdb.sh" @ONLY)
-        file(CHMOD "g10_generate_swdb.sh"
-            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        execute_process(
+            COMMAND chmod +x g10_generate_swdb.sh
+            WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+        )
         add_custom_target(gen-swdb
             COMMENT "Generating SWDB entries as ${release_name}.swdb..."
             COMMAND "${CMAKE_BINARY_DIR}/g10_generate_swdb.sh"
@@ -113,8 +115,10 @@ function(G10_ADD_RELEASE_TARGETS)
 
     if(NOT TARGET release)
         configure_file("${CMAKE_SOURCE_DIR}/cmake/modules/g10_release.sh.in" "g10_release.sh" @ONLY)
-        file(CHMOD "g10_release.sh"
-            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        execute_process(
+            COMMAND chmod +x g10_release.sh
+            WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+        )
         add_custom_target(release
             COMMAND "${CMAKE_BINARY_DIR}/g10_release.sh"
             WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
@@ -123,8 +127,10 @@ function(G10_ADD_RELEASE_TARGETS)
 
     if(NOT TARGET sign-release)
         configure_file("${CMAKE_SOURCE_DIR}/cmake/modules/g10_sign-release.sh.in" "g10_sign-release.sh" @ONLY)
-        file(CHMOD "g10_sign-release.sh"
-            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        execute_process(
+            COMMAND chmod +x g10_sign-release.sh
+            WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+        )
         add_custom_target(sign-release
             COMMAND "${CMAKE_BINARY_DIR}/g10_sign-release.sh"
             WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"

@@ -96,14 +96,12 @@ function(G10_CONFIGURE_GIT_HOOKS)
             "    and .git/hooks/pre-commit.sample out of the way.")
         execute_process(COMMAND cp -p "${git_hooks_dir}/pre-commit.sample" "${git_hooks_dir}/pre-commit"
             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
-        file(CHMOD "${git_hooks_dir}/pre-commit"
-            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        execute_process(COMMAND chmod +x "${git_hooks_dir}/pre-commit")
     endif()
     if(EXISTS "${CMAKE_SOURCE_DIR}/build-aux/git-hooks/commit-msg" AND NOT EXISTS "${git_hooks_dir}/commit-msg")
         message(STATUS "*** Activating commit log message check hook. ***")
         file(COPY "${CMAKE_SOURCE_DIR}/build-aux/git-hooks/commit-msg"
             DESTINATION "${git_hooks_dir}")
-        file(CHMOD "${git_hooks_dir}/commit-msg"
-            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        execute_process(COMMAND chmod +x "${git_hooks_dir}/commit-msg")
     endif()
 endfunction()
