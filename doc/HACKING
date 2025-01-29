@@ -90,7 +90,7 @@
 ** Coding standards
 
   Please follow the KDE Coding styles. See:
-  https://techbase.kde.org/Policies/Frameworks_Coding_Style
+  https://community.kde.org/Policies/Frameworks_Coding_Style
   If you are in doubt consult the existing code as an example.  Do no
   re-indent code without a need.  If you really need to do it, use a
   separate commit for such a change.

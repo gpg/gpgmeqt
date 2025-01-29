@@ -100,7 +100,7 @@ Hacking
 -------
 QGpgME comes from a KDE background. As such it does not use
 GNU Coding styles but KDE Coding styles. See:
-https://techbase.kde.org/Policies/Frameworks_Coding_Style
+https://community.kde.org/Policies/Frameworks_Coding_Style
 
 License
 -------
