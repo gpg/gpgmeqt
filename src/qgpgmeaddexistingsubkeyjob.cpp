@@ -40,6 +40,9 @@
 #include "dataprovider.h"
 
 #include <QDateTime>
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+#include <QTimeZone>
+#endif
 
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
@@ -64,8 +67,13 @@ static QGpgMEAddExistingSubkeyJob::result_type add_subkey(Context *ctx, const Ke
     std::unique_ptr<GpgAddExistingSubkeyEditInteractor> interactor{new GpgAddExistingSubkeyEditInteractor{subkey.keyGrip()}};
 
     if (!subkey.neverExpires()) {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+        const auto expiry = QDateTime::fromSecsSinceEpoch(uint_least32_t(subkey.expirationTime()),
+                                                          QTimeZone::utc()).toString(u"yyyyMMdd'T'hhmmss").toStdString();
+#else
         const auto expiry = QDateTime::fromSecsSinceEpoch(uint_least32_t(subkey.expirationTime()),
                                                           Qt::UTC).toString(u"yyyyMMdd'T'hhmmss").toStdString();
+#endif
         interactor->setExpiry(expiry);
     }
 
