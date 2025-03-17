@@ -5,6 +5,8 @@
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
     Copyright (c) 2016 by Bundesamt für Sicherheit in der Informationstechnik
     Software engineering by Intevation GmbH
+    Copyright (c) 2024 g10 Code GmbH
+    Software engineering by Ingo Klöcker <dev@ingo-kloecker.de>
 
     QGpgME is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -65,8 +67,7 @@ public:
     /** @return the value in rfc-2253-escaped form */
     static QString escape(const QString &value);
 
-    /** @return the DN in a reordered form, according to the settings in
-        the [DN] group of the application's config file */
+    /** @return the DN in a reordered form, according to the set order */
     QString prettyDN() const;
     /** @return the DN in the original form */
     QString dn() const;
@@ -75,6 +76,11 @@ public:
        Uses \a sep as separator (default: ,)
     */
     QString dn(const QString &sep) const;
+
+    /** @return the non-empty attributes formatted as \c{NAME=value} and reordered
+     *  according to the set order.
+     */
+    QStringList prettyAttributes() const;
 
     QString operator[](const QString &attr) const;
 

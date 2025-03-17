@@ -8,6 +8,12 @@ Noteworthy changes in version 2.0.0 (unreleased)
    qgpgme/ now. The camel-case headers are still included with the prefix
    QGpgME/.
 
+ * Added function returning the ordered list of attributes of a DN.
+
+ * Interface changes relative to the 1.24 branch of gpgme:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ DN::prettyAttributes                    NEW.
+
 
 Noteworthy changes in earlier versions can be found in the NEWS file of
 gpgme.

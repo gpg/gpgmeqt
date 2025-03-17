@@ -5,6 +5,8 @@
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
     Copyright (c) 2016 by Bundesamt für Sicherheit in der Informationstechnik
     Software engineering by Intevation GmbH
+    Copyright (c) 2024 g10 Code GmbH
+    Software engineering by Ingo Klöcker <dev@ingo-kloecker.de>
 
     QGpgME is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -326,15 +328,23 @@ static QString dn_escape(const QString &s)
     return result;
 }
 
+static QStringList
+listAttributes(const QVector<QGpgME::DN::Attribute> &dn)
+{
+    QStringList result;
+    result.reserve(dn.size());
+    for (const auto &attribute : dn) {
+        if (!attribute.name().isEmpty() && !attribute.value().isEmpty()) {
+            result.push_back(attribute.name().trimmed() + QLatin1Char('=') + dn_escape(attribute.value().trimmed()));
+        }
+    }
+    return result;
+}
+
 static QString
 serialise(const QVector<QGpgME::DN::Attribute> &dn, const QString &sep)
 {
-    QStringList result;
-    for (QVector<QGpgME::DN::Attribute>::const_iterator it = dn.begin(); it != dn.end(); ++it)
-        if (!(*it).name().isEmpty() && !(*it).value().isEmpty()) {
-            result.push_back((*it).name().trimmed() + QLatin1Char('=') + dn_escape((*it).value().trimmed()));
-        }
-    return result.join(sep);
+    return listAttributes(dn).join(sep);
 }
 
 static QGpgME::DN::Attribute::List
@@ -448,6 +458,18 @@ QString QGpgME::DN::dn() const
 QString QGpgME::DN::dn(const QString &sep) const
 {
     return d ? serialise(d->attributes, sep) : QString();
+}
+
+QStringList QGpgME::DN::prettyAttributes() const
+{
+    if (!d) {
+        return {};
+    }
+
+    if (d->reorderedAttributes.empty()) {
+        d->reorderedAttributes = reorder_dn(d->attributes, d->order);
+    }
+    return listAttributes(d->reorderedAttributes);
 }
 
 // static
