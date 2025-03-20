@@ -47,27 +47,31 @@
 
 #include <gpg-error.h>
 
+#include <optional>
+#include <string_view>
 #include <vector>
+
+using namespace std::literals;
 
 static const std::vector<std::pair<std::string_view, std::string_view>> &oidmap()
 {
     static const std::vector<std::pair<std::string_view, std::string_view>> oidmap_ = {
         // clang-format off
-    // keep them ordered by oid:
-    { "SP", "ST" }, // hack to show the Sphinx-required/desired SP for
-    // StateOrProvince, otherwise known as ST or even S
-    {"NameDistinguisher", "0.2.262.1.10.7.20"   },
-    {"EMAIL",             "1.2.840.113549.1.9.1"},
-    {"CN",                "2.5.4.3"             },
-    {"SN",                "2.5.4.4"             },
-    {"SerialNumber",      "2.5.4.5"             },
-    {"T",                 "2.5.4.12"            },
-    {"D",                 "2.5.4.13"            },
-    {"BC",                "2.5.4.15"            },
-    {"ADDR",              "2.5.4.16"            },
-    {"PC",                "2.5.4.17"            },
-    {"GN",                "2.5.4.42"            },
-    {"Pseudo",            "2.5.4.65"            },
+        { "SP",               "ST" }, // hack to show the Sphinx-required/desired SP for
+        // StateOrProvince, otherwise known as ST or even S
+        // keep them ordered by oid:
+        {"NameDistinguisher", "0.2.262.1.10.7.20"   },
+        {"EMAIL",             "1.2.840.113549.1.9.1"},
+        {"CN",                "2.5.4.3"             },
+        {"SN",                "2.5.4.4"             },
+        {"SerialNumber",      "2.5.4.5"             },
+        {"T",                 "2.5.4.12"            },
+        {"D",                 "2.5.4.13"            },
+        {"BC",                "2.5.4.15"            },
+        {"ADDR",              "2.5.4.16"            },
+        {"PC",                "2.5.4.17"            },
+        {"GN",                "2.5.4.42"            },
+        {"Pseudo",            "2.5.4.65"            },
         // clang-format on
     };
     return oidmap_;
@@ -118,7 +122,7 @@ namespace detail
 static std::string_view removeLeadingSpaces(std::string_view view)
 {
     auto pos = view.find_first_not_of(' ');
-    if (pos > view.size()) {
+    if (pos == std::string_view::npos) {
         return {};
     }
     return view.substr(pos);
@@ -127,7 +131,7 @@ static std::string_view removeLeadingSpaces(std::string_view view)
 static std::string_view removeTrailingSpaces(std::string_view view)
 {
     auto pos = view.find_last_not_of(' ');
-    if (pos > view.size()) {
+    if (pos == std::string_view::npos) {
         return {};
     }
     return view.substr(0, pos + 1);
@@ -148,22 +152,23 @@ static unsigned char xtoi(unsigned char first, unsigned char second)
 {
     return 16 * xtoi(first) + xtoi(second);
 }
+
 // Parses a hex string into actual content
 static std::optional<std::string> parseHexString(std::string_view view)
 {
-    auto size = view.size();
+    const auto size = view.size();
     if (size == 0 || (size % 2 == 1)) {
-        return std::nullopt;
+        return {};
     }
     // It is only supposed to be called with actual hex strings
     // but this is just to be extra sure
-    auto endHex = view.find_first_not_of("1234567890abcdefABCDEF");
+    auto endHex = view.find_first_not_of("1234567890abcdefABCDEF"sv);
     if (endHex != std::string_view::npos) {
         return {};
     }
     std::string result;
     result.reserve(size / 2);
-    for (size_t i = 0; i < (view.size() - 1); i += 2) {
+    for (size_t i = 0; i < (size - 1); i += 2) {
         result.push_back(xtoi(view[i], view[i + 1]));
     }
     return result;
@@ -171,7 +176,7 @@ static std::optional<std::string> parseHexString(std::string_view view)
 
 static std::string_view attributeNameForOID(std::string_view oid)
 {
-    if (oid.substr(0, 4) == std::string_view {"OID."} || oid.substr(0, 4) == std::string_view {"oid."}) { // c++20 has starts_with. we don't have that yet.
+    if (oid.substr(0, 4) == "OID."sv || oid.substr(0, 4) == "oid."sv) { // c++20 has starts_with. we don't have that yet.
         oid.remove_prefix(4);
     }
     for (const auto &m : oidmap()) {
@@ -182,9 +187,9 @@ static std::string_view attributeNameForOID(std::string_view oid)
     return {};
 }
 
-/* Parse a DN and return an array-ized one.  This is not a validating
-   parser and it does not support any old-stylish syntax; gpgme is
-   expected to return only rfc2253 compatible strings. */
+/* Parse a DN attribute key/value pair and return the remaining unparsed string and the
+   parsed attribute. This is not a validating parser and it does not support any old-stylish
+   syntax; gpgme is expected to return only rfc2253 compatible strings. */
 static std::pair<std::optional<std::string_view>, std::pair<std::string, std::string>> parse_dn_part(std::string_view stringv)
 {
     std::pair<std::string, std::string> dnPair;
@@ -209,15 +214,12 @@ static std::pair<std::optional<std::string_view>, std::pair<std::string, std::st
     if (stringv.front() == '#') {
         /* hexstring */
         stringv.remove_prefix(1);
-        auto endHex = stringv.find_first_not_of("1234567890abcdefABCDEF");
-        if (!endHex || (endHex % 2 == 1)) {
-            return {}; /* empty or odd number of digits */
-        }
+        auto endHex = stringv.find_first_not_of("1234567890abcdefABCDEF"sv);
         auto value = parseHexString(stringv.substr(0, endHex));
         if (!value.has_value()) {
             return {};
         }
-        stringv = stringv.substr(endHex);
+        stringv.remove_prefix(endHex);
         dnPair.second = value.value();
     } else if (stringv.front() == '"') {
         stringv.remove_prefix(1);
@@ -234,7 +236,7 @@ static std::pair<std::optional<std::string_view>, std::pair<std::string, std::st
                     stringv.remove_prefix(2);
                 } else {
                     // it is a bit unclear in rfc2253 if escaped hex chars should
-                    // be decoded inside quotes. Let's just forward the verbatim
+                    // be decoded inside quotes. Let's just forward them verbatim
                     // for now
                     value.push_back(stringv.front());
                     value.push_back(stringv[1]);
@@ -264,7 +266,7 @@ static std::pair<std::optional<std::string_view>, std::pair<std::string, std::st
         bool lastAddedEscapedSpace = false;
         while (!stringv.empty() && !stop) {
             switch (stringv.front()) {
-            case '\\': //_escaping
+            case '\\': // escaping
             {
                 stringv.remove_prefix(1);
                 if (stringv.empty()) {
@@ -319,7 +321,7 @@ static std::pair<std::optional<std::string_view>, std::pair<std::string, std::st
             case '#':
             case ';': {
                 stop = true;
-                break; //
+                break;
             }
             default:
                 lastAddedEscapedSpace = false;
@@ -330,7 +332,7 @@ static std::pair<std::optional<std::string_view>, std::pair<std::string, std::st
         if (lastAddedEscapedSpace) {
             dnPair.second = value;
         } else {
-            dnPair.second = std::string {removeTrailingSpaces(value)};
+            dnPair.second = std::string{removeTrailingSpaces(value)};
         }
     }
     return {stringv, dnPair};
@@ -356,12 +358,11 @@ static Result parseString(std::string_view string)
             return {};
         }
 
-        string = partResult.value();
         if (dnPair.first.size() && dnPair.second.size()) {
             result.emplace_back(std::move(dnPair));
         }
 
-        string = detail::removeLeadingSpaces(string);
+        string = detail::removeLeadingSpaces(partResult.value());
         if (string.empty()) {
             break;
         }
@@ -380,11 +381,12 @@ static Result parseString(std::string_view string)
 }
 
 QGpgME::DN::AttributeList parse_dn(std::string_view view) {
-    auto parsed = parseString(view);
+    const auto parsed = parseString(view);
     QGpgME::DN::AttributeList list;
     list.reserve(parsed.size());
-    for (auto& item : parsed) {
-        list.append(QGpgME::DN::Attribute(QString::fromStdString(item.first), QString::fromStdString(item.second)));
+    for (auto &item : parsed) {
+        list.append(QGpgME::DN::Attribute(QString::fromStdString(item.first),
+                                          QString::fromStdString(item.second)));
     }
     return  list;
 }
