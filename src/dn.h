@@ -38,6 +38,7 @@
 
 #include "qgpgme_export.h"
 
+#include <QMetaType>
 #include <QString>
 #include <QStringList>
 
@@ -140,4 +141,7 @@ private:
     QString mValue;
 };
 } // namespace QGpgME
+
+Q_DECLARE_METATYPE(QGpgME::DN::Attribute);
+
 #endif // QGPGME_DN_H

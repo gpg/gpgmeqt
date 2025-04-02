@@ -66,9 +66,7 @@ _g10_add_test(t-various.cpp)
 _g10_add_test(t-verify.cpp)
 _g10_add_test(t-wkdlookup.cpp)
 
-if (${QT_MAJOR_VERSION} EQUAL "6")
 _g10_add_test(t-dn.cpp)
-endif()
 
 # disabled test:
 # _g10_add_test(t-wkspublish.cpp)

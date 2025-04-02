@@ -161,6 +161,10 @@ set(qgpgme_PRIVATE_HEADERS
     wkdrefreshjob_p.h
 )
 
+if (${QT_MAJOR_VERSION} EQUAL "5")
+    list(APPEND qgpgme_PRIVATE_HEADERS qt6compat_p.h)
+endif()
+
 # the public headers
 set(qgpgme_CAMELCASE_HEADERS
     AbstractImportJob

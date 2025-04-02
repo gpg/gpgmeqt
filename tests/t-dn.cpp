@@ -1,5 +1,5 @@
 /*
-    dn.cpp
+    t-dn.cpp
 
     This file is part of qgpgme, the Qt API binding for gpgme
     Copyright (c) 2023-2025 g10 Code GmbH
@@ -31,15 +31,20 @@
     your version.
 */
 #include "dn.h"
+
+#include <qt6compat_p.h>
+
 #include <QString>
-
-bool operator==(const QGpgME::DN::Attribute& first, const QGpgME::DN::Attribute& second) {
-    return std::tie(first.name(), first.value()) == std::tie(second.name(), second.value());
-}
-
 #include <QTest>
 
 using namespace Qt::Literals::StringLiterals;
+
+namespace QGpgME {
+bool operator==(const QGpgME::DN::Attribute &first, const QGpgME::DN::Attribute &second) {
+    return std::tie(first.name(), first.value()) == std::tie(second.name(), second.value());
+}
+}
+
 class TestDistinguishedNameParser : public QObject
 {
     Q_OBJECT
