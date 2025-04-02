@@ -53,7 +53,7 @@
 #include <string>
 #include <functional>
 #include <cassert>
-#include <functional>
+#include <utility>
 
 using namespace QGpgME;
 using namespace GpgME;
@@ -127,7 +127,7 @@ QGpgMENewCryptoConfigComponent *QGpgMENewCryptoConfig::component(const QString &
 
 void QGpgMENewCryptoConfig::sync(bool runtime)
 {
-    for (const std::shared_ptr<QGpgMENewCryptoConfigComponent> &c : qAsConst(m_componentsByName)) {
+    for (const std::shared_ptr<QGpgMENewCryptoConfigComponent> &c : std::as_const(m_componentsByName)) {
         c->sync(runtime);
     }
 }
