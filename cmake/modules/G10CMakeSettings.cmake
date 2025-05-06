@@ -33,6 +33,13 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
+################# RPATH handling ##################################
+
+if (UNIX)
+    # Append the linker search paths to the RPATH for installed targets
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif (UNIX)
+
 ################ Testing setup ####################################
 
 option(BUILD_TESTING "Build the testing tree" ON)
