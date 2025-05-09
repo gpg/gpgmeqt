@@ -204,8 +204,9 @@ static QGpgMEEncryptJob::result_type encrypt_to_filename(Context *ctx,
 
 Error QGpgMEEncryptJob::start(const std::vector<Key> &recipients, const QByteArray &plainText, bool alwaysTrust)
 {
-    run(std::bind(&encrypt_qba, std::placeholders::_1, recipients, plainText,
-                  alwaysTrust ? Context::AlwaysTrust : Context::None, mOutputIsBase64Encoded, inputEncoding(), fileName()));
+    const auto flags = static_cast<Context::EncryptionFlags>((alwaysTrust ? Context::AlwaysTrust : Context::None) | (encryptionFlags() & ~Context::EncryptFile));
+
+    run(std::bind(&encrypt_qba, std::placeholders::_1, recipients, plainText, flags , mOutputIsBase64Encoded, inputEncoding(), fileName()));
     return Error();
 }
 
@@ -233,12 +234,16 @@ EncryptionResult QGpgMEEncryptJob::exec(const std::vector<Key> &recipients, cons
 
 void QGpgMEEncryptJob::start(const std::vector<Key> &recipients, const std::shared_ptr<QIODevice> &plainText, const std::shared_ptr<QIODevice> &cipherText, bool alwaysTrust)
 {
-    return start(recipients, plainText, cipherText, alwaysTrust ? Context::AlwaysTrust : Context::None);
+    const auto flags = static_cast<Context::EncryptionFlags>((alwaysTrust ? Context::AlwaysTrust : Context::None) | (encryptionFlags() & ~Context::EncryptFile));
+
+    return start(recipients, plainText, cipherText, flags);
 }
 
 EncryptionResult QGpgMEEncryptJob::exec(const std::vector<Key> &recipients, const QByteArray &plainText, bool alwaysTrust, QByteArray &cipherText)
 {
-    return exec(recipients, plainText, alwaysTrust ? Context::AlwaysTrust : Context::None, cipherText);
+    const auto flags = static_cast<Context::EncryptionFlags>((alwaysTrust ? Context::AlwaysTrust : Context::None) | (encryptionFlags() & ~Context::EncryptFile));
+
+    return exec(recipients, plainText, flags, cipherText);
 }
 
 GpgME::Error QGpgMEEncryptJobPrivate::startIt()

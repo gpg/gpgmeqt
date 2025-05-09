@@ -223,7 +223,9 @@ static QGpgMESignEncryptJob::result_type sign_encrypt_to_filename(Context *ctx,
 
 Error QGpgMESignEncryptJob::start(const std::vector<Key> &signers, const std::vector<Key> &recipients, const QByteArray &plainText, bool alwaysTrust)
 {
-    run(std::bind(&sign_encrypt_qba, std::placeholders::_1, signers, recipients, plainText, alwaysTrust ? Context::AlwaysTrust : Context::None, mOutputIsBase64Encoded, fileName()));
+    const auto flags = static_cast<Context::EncryptionFlags>((alwaysTrust ? Context::AlwaysTrust : Context::None) | (encryptionFlags() & ~Context::EncryptFile));
+
+    run(std::bind(&sign_encrypt_qba, std::placeholders::_1, signers, recipients, plainText, flags, mOutputIsBase64Encoded, fileName()));
     return Error();
 }
 
@@ -235,7 +237,9 @@ void QGpgMESignEncryptJob::start(const std::vector<Key> &signers, const std::vec
 
 void QGpgMESignEncryptJob::start(const std::vector<Key> &signers, const std::vector<Key> &recipients, const std::shared_ptr<QIODevice> &plainText, const std::shared_ptr<QIODevice> &cipherText, bool alwaysTrust)
 {
-    return start(signers, recipients, plainText, cipherText, alwaysTrust ? Context::AlwaysTrust : Context::None);
+    const auto flags = static_cast<Context::EncryptionFlags>((alwaysTrust ? Context::AlwaysTrust : Context::None) | (encryptionFlags() & ~Context::EncryptFile));
+
+    return start(signers, recipients, plainText, cipherText, flags);
 }
 
 std::pair<SigningResult, EncryptionResult> QGpgMESignEncryptJob::exec(const std::vector<Key> &signers, const std::vector<Key> &recipients, const QByteArray &plainText, const Context::EncryptionFlags eflags, QByteArray &cipherText)
@@ -247,7 +251,9 @@ std::pair<SigningResult, EncryptionResult> QGpgMESignEncryptJob::exec(const std:
 
 std::pair<SigningResult, EncryptionResult> QGpgMESignEncryptJob::exec(const std::vector<Key> &signers, const std::vector<Key> &recipients, const QByteArray &plainText, bool alwaysTrust, QByteArray &cipherText)
 {
-    return exec(signers, recipients, plainText, alwaysTrust ? Context::AlwaysTrust : Context::None, cipherText);
+    const auto flags = static_cast<Context::EncryptionFlags>((alwaysTrust ? Context::AlwaysTrust : Context::None) | (encryptionFlags() & ~Context::EncryptFile));
+
+    return exec(signers, recipients, plainText, flags, cipherText);
 }
 
 GpgME::Error QGpgMESignEncryptJobPrivate::startIt()
