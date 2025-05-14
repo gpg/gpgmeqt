@@ -43,6 +43,43 @@ QuickJob::QuickJob(QObject *parent)
 
 QuickJob::~QuickJob() = default;
 
+GpgME::Error QuickJob::startCreate(const QString &uid,
+                            const QByteArray &algo,
+                            const QDateTime &expires,
+                            GpgME::Context::CreationFlags flags)
+{
+    auto d = jobPrivate<QuickJobPrivate>(this);
+    return d->startCreate(uid, algo, expires, flags);
+}
+
+void QuickJob::startCreate(const QString &uid,
+                                    const char *algo,
+                                    const QDateTime &expires,
+                                    const GpgME::Key &key,
+                                    unsigned int flags)
+{
+    Q_UNUSED(key);
+    (void) startCreate(uid, QByteArray{algo}, expires, static_cast<GpgME::Context::CreationFlags>(flags));
+}
+
+GpgME::Error QuickJob::startAddSubkey(const GpgME::Key &key,
+                            const QByteArray &algo,
+                            const QDateTime &expires,
+                            GpgME::Context::CreationFlags flags)
+{
+    auto d = jobPrivate<QuickJobPrivate>(this);
+    return d->startAddSubkey(key, algo, expires, flags);
+}
+
+void QuickJob::startAddSubkey(const GpgME::Key &key,
+                                        const char *algo,
+                                        const QDateTime &expires,
+                                        unsigned int flags)
+{
+    (void) startAddSubkey(key, QByteArray{algo}, expires,  static_cast<GpgME::Context::CreationFlags>(flags));
+}
+
+
 GpgME::Error QuickJob::startSetKeyEnabled(const GpgME::Key &key, bool enabled)
 {
     auto d = jobPrivate<QuickJobPrivate>(this);

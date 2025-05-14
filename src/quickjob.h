@@ -39,6 +39,7 @@
 
 #include <QDateTime>
 
+#include <gpgme++/context.h>
 #include <gpgme++/key.h>
 
 class QString;
@@ -53,14 +54,18 @@ class QGPGME_EXPORT QuickJob : public Job
     Q_OBJECT
 public:
     explicit QuickJob(QObject *parent = nullptr);
-    ~QuickJob();
+    ~QuickJob() override;
 
     /** Start --quick-gen-key */
-    virtual void startCreate(const QString &uid,
-                             const char *algo,
-                             const QDateTime &expires = QDateTime(),
-                             const GpgME::Key &key = GpgME::Key(),
-                             unsigned int flags = 0) = 0;
+    GpgME::Error startCreate(const QString &uid,
+                             const QByteArray &algo = {},
+                             const QDateTime &expires = {},
+                             GpgME::Context::CreationFlags flags = GpgME::Context::CreateUseDefaults);
+    QGPGME_DEPRECATED void startCreate(const QString &uid,
+                                       const char *algo,
+                                       const QDateTime &expires = QDateTime(),
+                                       const GpgME::Key &key = GpgME::Key(),
+                                       unsigned int flags = 0);
 
     /** Start --quick-adduid */
     virtual void startAddUid(const GpgME::Key &key, const QString &uid) = 0;
@@ -69,9 +74,14 @@ public:
     virtual void startRevUid(const GpgME::Key &key, const QString &uid) = 0;
 
     /** Start --quick-add-key */
-    virtual void startAddSubkey(const GpgME::Key &key, const char *algo,
-                                const QDateTime &expires = QDateTime(),
-                                unsigned int flags = 0) = 0;
+    GpgME::Error startAddSubkey(const GpgME::Key &key,
+                                const QByteArray &algo = {},
+                                const QDateTime &expires = {},
+                                GpgME::Context::CreationFlags flags = GpgME::Context::CreateUseDefaults);
+    QGPGME_DEPRECATED void startAddSubkey(const GpgME::Key &key,
+                                          const char *algo,
+                                          const QDateTime &expires = QDateTime(),
+                                          unsigned int flags = 0);
 
     /**
        Starts the operation to revoke the signatures made with the key \a signingKey on the

@@ -43,6 +43,16 @@ namespace QGpgME
 
 struct QuickJobPrivate : public JobPrivate
 {
+    virtual GpgME::Error startCreate(const QString &uid,
+                                     const QByteArray &algo,
+                                     const QDateTime &expires,
+                                     GpgME::Context::CreationFlags flags) = 0;
+
+    virtual GpgME::Error startAddSubkey(const GpgME::Key &key,
+                                        const QByteArray &algo,
+                                        const QDateTime &expires,
+                                        GpgME::Context::CreationFlags flags) = 0;
+
     virtual GpgME::Error startSetKeyEnabled(const GpgME::Key &key, bool enabled) = 0;
 };
 

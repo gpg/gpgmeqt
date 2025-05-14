@@ -57,18 +57,10 @@ public Q_SLOTS:
 #endif
 public:
     explicit QGpgMEQuickJob(GpgME::Context *context);
-    ~QGpgMEQuickJob();
+    ~QGpgMEQuickJob() override;
 
-    void startCreate(const QString &uid,
-                     const char *algo,
-                     const QDateTime &expires = QDateTime(),
-                     const GpgME::Key &key = GpgME::Key(),
-                     unsigned int flags = 0) override;
     void startAddUid(const GpgME::Key &key, const QString &uid) override;
     void startRevUid(const GpgME::Key &key, const QString &uid) override;
-    void startAddSubkey(const GpgME::Key &key, const char *algo,
-                        const QDateTime &expires = QDateTime(),
-                        unsigned int flags = 0) override;
     void startRevokeSignature(const GpgME::Key &key, const GpgME::Key &signingKey,
                               const std::vector<GpgME::UserID> &userIds = std::vector<GpgME::UserID>()) override;
     void startAddAdsk(const GpgME::Key &key, const char *adsk) override;

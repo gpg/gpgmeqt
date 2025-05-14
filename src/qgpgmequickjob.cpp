@@ -43,6 +43,7 @@
 
 #include <gpgme++/context.h>
 #include <gpgme++/key.h>
+#include <gpgme++/keygenerationresult.h>
 
 
 using namespace QGpgME;
@@ -76,6 +77,16 @@ private:
         q->run();
     }
 
+    GpgME::Error startCreate(const QString &uid,
+                             const QByteArray &algo,
+                             const QDateTime &expires,
+                             GpgME::Context::CreationFlags flags) override;
+
+    GpgME::Error startAddSubkey(const GpgME::Key &key,
+                                const QByteArray &algo,
+                                const QDateTime &expires,
+                                GpgME::Context::CreationFlags flags) override;
+
     GpgME::Error startSetKeyEnabled(const GpgME::Key &key, bool enable) override;
 };
 
@@ -92,32 +103,28 @@ QGpgMEQuickJob::~QGpgMEQuickJob() = default;
 
 static QGpgMEQuickJob::result_type createWorker(GpgME::Context *ctx,
                                                 const QString &uid,
-                                                const char *algo,
+                                                const QByteArray &algo,
                                                 const QDateTime &expires,
-                                                const GpgME::Key &key,
-                                                unsigned int flags)
+                                                GpgME::Context::CreationFlags flags)
 {
-    auto err = ctx->createKey(uid.toUtf8().constData(),
-                              algo,
-                              0,
-                              expires.isValid() ? (unsigned long) (expires.toMSecsSinceEpoch() / 1000
-                                  - QDateTime::currentSecsSinceEpoch()) : 0,
-                              key,
-                              flags);
-    return std::make_tuple(err, QString(), Error());
+    const unsigned long expiration = expires.isValid()
+        ? expires.toMSecsSinceEpoch() / 1000 - QDateTime::currentSecsSinceEpoch()
+        : 0;
+    const auto result = ctx->createKey(uid.toStdString(), algo.toStdString(), expiration, flags);
+    return std::make_tuple(result.error(), QString(), Error());
 }
 
 static QGpgMEQuickJob::result_type addSubkeyWorker(GpgME::Context *ctx,
-                                                    const GpgME::Key &key,
-                                                    const char *algo,
-                                                    const QDateTime &expires,
-                                                    unsigned int flags)
+                                                   const GpgME::Key &key,
+                                                   const QByteArray &algo,
+                                                   const QDateTime &expires,
+                                                   GpgME::Context::CreationFlags flags)
 {
-    auto err = ctx->createSubkey(key, algo,  0,
-                                 expires.isValid() ? (unsigned long) (expires.toMSecsSinceEpoch() / 1000
-                                     - QDateTime::currentSecsSinceEpoch()): 0,
-                                 flags);
-    return std::make_tuple(err, QString(), Error());
+    const unsigned long expiration = expires.isValid()
+        ? expires.toMSecsSinceEpoch() / 1000 - QDateTime::currentSecsSinceEpoch()
+        : 0;
+    const auto result = ctx->createSubkey(key, algo.toStdString(), expiration, flags);
+    return std::make_tuple(result.error(), QString(), Error());
 }
 
 static QGpgMEQuickJob::result_type addUidWorker(GpgME::Context *ctx,
@@ -151,14 +158,16 @@ static QGpgMEQuickJob::result_type addAdskWorker(Context *ctx, const Key &key, c
     return std::make_tuple(err, QString(), Error());
 }
 
-void QGpgMEQuickJob::startCreate(const QString &uid,
-                 const char *algo,
-                 const QDateTime &expires,
-                 const GpgME::Key &key,
-                 unsigned int flags)
+Error QGpgMEQuickJobPrivate::startCreate(const QString &uid,
+                                 const QByteArray &algo,
+                                 const QDateTime &expires,
+                                 GpgME::Context::CreationFlags flags)
 {
-    run(std::bind(&createWorker, std::placeholders::_1, uid, algo,
-                  expires, key, flags));
+    q->run([=](Context *ctx) {
+        return createWorker(ctx, uid, algo, expires, flags);
+    });
+
+    return {};
 }
 
 void QGpgMEQuickJob::startAddUid(const GpgME::Key &key, const QString &uid)
@@ -171,12 +180,20 @@ void QGpgMEQuickJob::startRevUid(const GpgME::Key &key, const QString &uid)
     run(std::bind(&revUidWorker, std::placeholders::_1, key, uid));
 }
 
-void QGpgMEQuickJob::startAddSubkey(const GpgME::Key &key, const char *algo,
+Error QGpgMEQuickJobPrivate::startAddSubkey(const GpgME::Key &key,
+                                    const QByteArray &algo,
                                     const QDateTime &expires,
-                                    unsigned int flags)
+                                    GpgME::Context::CreationFlags flags)
 {
-    run(std::bind(&addSubkeyWorker, std::placeholders::_1, key, algo,
-                  expires, flags));
+    if (key.isNull()) {
+        return Error::fromCode(GPG_ERR_INV_VALUE);
+    }
+
+    q->run([=](Context *ctx) {
+        return addSubkeyWorker(ctx, key, algo, expires, flags);
+    });
+
+    return {};
 }
 
 void QGpgMEQuickJob::startRevokeSignature(const Key &key, const Key &signingKey, const std::vector<UserID> &userIds)
