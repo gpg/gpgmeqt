@@ -80,9 +80,7 @@ QString QGpgME::QGpgMEBackend::displayName() const
 QGpgME::CryptoConfig *QGpgME::QGpgMEBackend::config() const
 {
     if (!mCryptoConfig) {
-        if (GpgME::hasFeature(GpgME::GpgConfEngineFeature, 0)) {
-            mCryptoConfig = new QGpgMENewCryptoConfig;
-        }
+        mCryptoConfig = new QGpgMENewCryptoConfig;
     }
     return mCryptoConfig;
 }

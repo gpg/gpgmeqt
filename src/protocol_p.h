@@ -356,9 +356,6 @@ public:
 
     QGpgME::ChangePasswdJob *changePasswdJob() const override
     {
-        if (!GpgME::hasFeature(GpgME::PasswdFeature, 0)) {
-            return nullptr;
-        }
         GpgME::Context *context = GpgME::Context::createForProtocol(mProtocol);
         if (!context) {
             return nullptr;
