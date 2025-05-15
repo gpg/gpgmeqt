@@ -44,11 +44,13 @@
 namespace QGpgME
 {
 
+class QGpgMEDecryptVerifyArchiveJobPrivate;
+
 class QGpgMEDecryptVerifyArchiveJob
 #ifdef Q_MOC_RUN
     : public DecryptVerifyArchiveJob
 #else
-    : public _detail::ThreadedJobMixin<DecryptVerifyArchiveJob, std::tuple<GpgME::DecryptionResult, GpgME::VerificationResult, QString, GpgME::Error>>
+    : public _detail::ThreadedJobMixin<DecryptVerifyArchiveJob, QGpgMEDecryptVerifyArchiveJobPrivate, std::tuple<GpgME::DecryptionResult, GpgME::VerificationResult, QString, GpgME::Error>>
 #endif
 {
     Q_OBJECT
@@ -61,6 +63,9 @@ public:
     ~QGpgMEDecryptVerifyArchiveJob() = default;
 
     GpgME::Error start(const std::shared_ptr<QIODevice> &cipherText) override;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMEDecryptVerifyArchiveJob)
 };
 
 }

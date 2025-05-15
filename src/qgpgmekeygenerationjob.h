@@ -48,7 +48,7 @@ class QGpgMEKeyGenerationJob
 #ifdef Q_MOC_RUN
     : public KeyGenerationJob
 #else
-    : public _detail::ThreadedJobMixin<KeyGenerationJob, std::tuple<GpgME::KeyGenerationResult, QByteArray, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<KeyGenerationJob, void, std::tuple<GpgME::KeyGenerationResult, QByteArray, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

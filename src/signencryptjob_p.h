@@ -41,8 +41,9 @@
 namespace QGpgME
 {
 
-struct SignEncryptJobPrivate : public JobPrivate
+class SignEncryptJobPrivate : public JobPrivate
 {
+public:
     // used by start() functions
     QString m_fileName;
 

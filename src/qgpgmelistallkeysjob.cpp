@@ -61,18 +61,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMEListAllKeysJobPrivate : public ListAllKeysJobPrivate
 {
-    QGpgMEListAllKeysJob *q = nullptr;
-
 public:
-    QGpgMEListAllKeysJobPrivate(QGpgMEListAllKeysJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMEListAllKeysJob)
+
+    QGpgMEListAllKeysJobPrivate() = default;
 
     ~QGpgMEListAllKeysJobPrivate() override = default;
 
@@ -85,6 +82,7 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMEListAllKeysJob);
         q->run();
     }
 };
@@ -94,7 +92,6 @@ private:
 QGpgMEListAllKeysJob::QGpgMEListAllKeysJob(Context *context)
     : mixin_type(context)
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMEListAllKeysJobPrivate>{new QGpgMEListAllKeysJobPrivate{this}});
     lateInitialization();
 }
 

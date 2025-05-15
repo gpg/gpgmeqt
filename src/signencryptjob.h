@@ -61,6 +61,8 @@ class EncryptionResult;
 namespace QGpgME
 {
 
+class SignEncryptJobPrivate;
+
 /**
    @short An abstract base class for asynchronous combined signing and encrypting
 
@@ -87,7 +89,7 @@ class QGPGME_EXPORT SignEncryptJob : public Job
 {
     Q_OBJECT
 protected:
-    explicit SignEncryptJob(QObject *parent);
+    explicit SignEncryptJob(std::unique_ptr<SignEncryptJobPrivate>, QObject *parent);
 public:
     ~SignEncryptJob() override;
 
@@ -206,6 +208,9 @@ Q_SIGNALS:
                 const GpgME::EncryptionResult &encryptionresult,
                 const QByteArray &cipherText, const QString &auditLogAsHtml = QString(),
                 const GpgME::Error &auditLogError = GpgME::Error());
+
+private:
+    Q_DECLARE_PRIVATE(SignEncryptJob)
 };
 
 }

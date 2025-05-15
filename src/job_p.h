@@ -38,41 +38,23 @@
 
 #include "qgpgme_debug.h"
 
-#include <memory>
-
-namespace QGpgME
-{
-
 // Base class for pimpl classes for Job subclasses
-class JobPrivate
+class QGpgME::JobPrivate
 {
+    friend class ::QGpgME::Job;
+
 public:
-    virtual ~JobPrivate() {}
+    Q_DECLARE_PUBLIC(Job)
+
+    JobPrivate() = default;
+    virtual ~JobPrivate() = default;
 
     virtual GpgME::Error startIt() = 0;
 
     virtual void startNow() = 0;
+
+    Job *q_ptr = nullptr;
 };
-
-// Setter and getters for the externally stored pimpl instances of jobs
-// BCI: Add a real d-pointer to Job
-void setJobPrivate(const Job *job, std::unique_ptr<JobPrivate> d);
-
-const JobPrivate *getJobPrivate(const Job *job);
-
-JobPrivate *getJobPrivate(Job *job);
-
-template <typename T>
-static const T *jobPrivate(const Job *job) {
-    auto d = getJobPrivate(job);
-    return dynamic_cast<const T *>(d);
-}
-
-template <typename T>
-static T *jobPrivate(Job *job) {
-    auto d = getJobPrivate(job);
-    return dynamic_cast<T *>(d);
-}
 
 // Helper for the archive job classes
 template<class JobClass>
@@ -91,8 +73,6 @@ void emitArchiveProgressSignals(JobClass *job, const QString &what, int type, in
     default:
         qCDebug(QGPGME_LOG) << job << __func__ << "Received progress for gpgtar with unknown type" << char(type);
     };
-}
-
 }
 
 #endif // __QGPGME_JOB_P_H__

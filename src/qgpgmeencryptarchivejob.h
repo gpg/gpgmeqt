@@ -43,11 +43,13 @@
 namespace QGpgME
 {
 
+class QGpgMEEncryptArchiveJobPrivate;
+
 class QGpgMEEncryptArchiveJob
 #ifdef Q_MOC_RUN
     : public EncryptArchiveJob
 #else
-    : public _detail::ThreadedJobMixin<EncryptArchiveJob, std::tuple<GpgME::EncryptionResult, QString, GpgME::Error>>
+    : public _detail::ThreadedJobMixin<EncryptArchiveJob, QGpgMEEncryptArchiveJobPrivate, std::tuple<GpgME::EncryptionResult, QString, GpgME::Error>>
 #endif
 {
     Q_OBJECT
@@ -63,6 +65,9 @@ public:
                        const std::vector<QString> &paths,
                        const std::shared_ptr<QIODevice> &cipherText,
                        const GpgME::Context::EncryptionFlags flags) override;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMEEncryptArchiveJob)
 };
 
 }

@@ -42,11 +42,13 @@
 namespace QGpgME
 {
 
+class QGpgMEChangeExpiryJobPrivate;
+
 class QGpgMEChangeExpiryJob
 #ifdef Q_MOC_RUN
     : public ChangeExpiryJob
 #else
-    : public _detail::ThreadedJobMixin<ChangeExpiryJob>
+    : public _detail::ThreadedJobMixin<ChangeExpiryJob, QGpgMEChangeExpiryJobPrivate>
 #endif
 {
     Q_OBJECT
@@ -65,6 +67,8 @@ public:
     GpgME::Error start(const GpgME::Key &key, const QDateTime &expiry,
                        const std::vector<GpgME::Subkey> &subkeys) override;
 
+private:
+    Q_DECLARE_PRIVATE(QGpgMEChangeExpiryJob)
 };
 
 }

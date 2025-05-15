@@ -46,7 +46,7 @@ class QGpgMEDownloadJob
 #ifdef Q_MOC_RUN
     : public DownloadJob
 #else
-    : public _detail::ThreadedJobMixin<DownloadJob, std::tuple<GpgME::Error, QByteArray, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<DownloadJob, void, std::tuple<GpgME::Error, QByteArray, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

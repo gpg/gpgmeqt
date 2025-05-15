@@ -105,6 +105,7 @@ target_sources(${targetname} PRIVATE
 )
 
 set(qgpgme_PRIVATE_HEADERS
+    abstractimportjob_p.h
     changeexpiryjob_p.h
     cleaner.h
     decryptverifyarchivejob_p.h

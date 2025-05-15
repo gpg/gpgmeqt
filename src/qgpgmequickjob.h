@@ -40,6 +40,8 @@
 namespace QGpgME
 {
 
+class QGpgMEQuickJobPrivate;
+
 /**
  * Interface to the modern key manipulation functions.
  */
@@ -47,7 +49,7 @@ class QGpgMEQuickJob
 #ifdef Q_MOC_RUN
     : public QuickJob
 #else
-    : public _detail::ThreadedJobMixin<QuickJob>
+    : public _detail::ThreadedJobMixin<QuickJob, QGpgMEQuickJobPrivate>
 #endif
 {
     Q_OBJECT
@@ -64,6 +66,9 @@ public:
     void startRevokeSignature(const GpgME::Key &key, const GpgME::Key &signingKey,
                               const std::vector<GpgME::UserID> &userIds = std::vector<GpgME::UserID>()) override;
     void startAddAdsk(const GpgME::Key &key, const char *adsk) override;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMEQuickJob)
 };
 
 }

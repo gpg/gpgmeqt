@@ -42,8 +42,8 @@
 
 using namespace QGpgME;
 
-DecryptVerifyArchiveJob::DecryptVerifyArchiveJob(QObject *parent)
-    : Job{parent}
+DecryptVerifyArchiveJob::DecryptVerifyArchiveJob(std::unique_ptr<DecryptVerifyArchiveJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -58,37 +58,37 @@ bool DecryptVerifyArchiveJob::isSupported()
 
 void DecryptVerifyArchiveJob::setProcessAllSignatures (bool processAll)
 {
-    auto d = jobPrivate<DecryptVerifyArchiveJobPrivate>(this);
+    Q_D(DecryptVerifyArchiveJob);
     d->m_processAllSignatures = processAll;
 }
 
 bool DecryptVerifyArchiveJob::processAllSignatures() const
 {
-    auto d = jobPrivate<DecryptVerifyArchiveJobPrivate>(this);
+    Q_D(const DecryptVerifyArchiveJob);
     return d->m_processAllSignatures;
 }
 
 void DecryptVerifyArchiveJob::setInputFile(const QString &path)
 {
-    auto d = jobPrivate<DecryptVerifyArchiveJobPrivate>(this);
+    Q_D(DecryptVerifyArchiveJob);
     d->m_inputFilePath = path;
 }
 
 QString DecryptVerifyArchiveJob::inputFile() const
 {
-    auto d = jobPrivate<DecryptVerifyArchiveJobPrivate>(this);
+    Q_D(const DecryptVerifyArchiveJob);
     return d->m_inputFilePath;
 }
 
 void DecryptVerifyArchiveJob::setOutputDirectory(const QString &outputDirectory)
 {
-    auto d = jobPrivate<DecryptVerifyArchiveJobPrivate>(this);
+    Q_D(DecryptVerifyArchiveJob);
     d->m_outputDirectory = outputDirectory;
 }
 
 QString DecryptVerifyArchiveJob::outputDirectory() const
 {
-    auto d = jobPrivate<DecryptVerifyArchiveJobPrivate>(this);
+    Q_D(const DecryptVerifyArchiveJob);
     return d->m_outputDirectory;
 }
 

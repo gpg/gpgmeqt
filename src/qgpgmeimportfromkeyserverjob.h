@@ -48,7 +48,7 @@ class QGpgMEImportFromKeyserverJob
 #ifdef Q_MOC_RUN
     : public ImportFromKeyserverJob
 #else
-    : public _detail::ThreadedJobMixin<ImportFromKeyserverJob, std::tuple<GpgME::ImportResult, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<ImportFromKeyserverJob, void, std::tuple<GpgME::ImportResult, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

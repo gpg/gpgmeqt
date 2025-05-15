@@ -42,11 +42,13 @@
 namespace QGpgME
 {
 
+class QGpgMEWKDRefreshJobPrivate;
+
 class QGpgMEWKDRefreshJob
 #ifdef Q_MOC_RUN
     : public WKDRefreshJob
 #else
-    : public _detail::ThreadedJobMixin<WKDRefreshJob, std::tuple<GpgME::ImportResult, QString, GpgME::Error>>
+    : public _detail::ThreadedJobMixin<WKDRefreshJob, QGpgMEWKDRefreshJobPrivate, std::tuple<GpgME::ImportResult, QString, GpgME::Error>>
 #endif
 {
     Q_OBJECT
@@ -57,6 +59,9 @@ public Q_SLOTS:
 public:
     explicit QGpgMEWKDRefreshJob(GpgME::Context *context);
     ~QGpgMEWKDRefreshJob() override;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMEWKDRefreshJob)
 };
 
 }

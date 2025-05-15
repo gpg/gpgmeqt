@@ -54,18 +54,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMEVerifyDetachedJobPrivate : public VerifyDetachedJobPrivate
 {
-    QGpgMEVerifyDetachedJob *q = nullptr;
-
 public:
-    QGpgMEVerifyDetachedJobPrivate(QGpgMEVerifyDetachedJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMEVerifyDetachedJob)
+
+    QGpgMEVerifyDetachedJobPrivate() = default;
 
     ~QGpgMEVerifyDetachedJobPrivate() override = default;
 
@@ -74,6 +71,7 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMEVerifyDetachedJob);
         q->run();
     }
 };
@@ -83,7 +81,6 @@ private:
 QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob(Context *context)
     : mixin_type(context)
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMEVerifyDetachedJobPrivate>{new QGpgMEVerifyDetachedJobPrivate{this}});
     lateInitialization();
 }
 
@@ -191,6 +188,7 @@ GpgME::Error QGpgMEVerifyDetachedJobPrivate::startIt()
         return Error::fromCode(GPG_ERR_INV_VALUE);
     }
 
+    Q_Q(QGpgMEVerifyDetachedJob);
     q->run([=](Context *ctx) {
         return verify_from_filename(ctx, m_signatureFilePath, m_signedFilePath, m_processAllSignatures);
     });

@@ -51,6 +51,8 @@ class ImportResult;
 namespace QGpgME
 {
 
+class ImportJobPrivate;
+
 /**
    @short An abstract base class for asynchronous importers
 
@@ -68,7 +70,7 @@ class QGPGME_EXPORT ImportJob : public AbstractImportJob
 {
     Q_OBJECT
 protected:
-    explicit ImportJob(QObject *parent);
+    explicit ImportJob(std::unique_ptr<ImportJobPrivate>, QObject *parent);
 public:
     ~ImportJob() override;
 
@@ -91,6 +93,9 @@ public:
     virtual GpgME::ImportResult exec(const QByteArray &keyData) = 0;
 
     virtual GpgME::Error startLater(const QByteArray &keyData) = 0;
+
+private:
+    Q_DECLARE_PRIVATE(ImportJob)
 };
 
 }

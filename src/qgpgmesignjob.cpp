@@ -54,18 +54,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMESignJobPrivate : public SignJobPrivate
 {
-    QGpgMESignJob *q = nullptr;
-
 public:
-    QGpgMESignJobPrivate(QGpgMESignJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMESignJob)
+
+    QGpgMESignJobPrivate() = default;
 
     ~QGpgMESignJobPrivate() override = default;
 
@@ -74,6 +71,7 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMESignJob);
         q->run();
     }
 };
@@ -84,7 +82,6 @@ QGpgMESignJob::QGpgMESignJob(Context *context)
     : mixin_type(context),
       mOutputIsBase64Encoded(false)
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMESignJobPrivate>{new QGpgMESignJobPrivate{this}});
     lateInitialization();
 }
 
@@ -270,6 +267,7 @@ GpgME::Error QGpgMESignJobPrivate::startIt()
         return Error::fromCode(GPG_ERR_INV_VALUE);
     }
 
+    Q_Q(QGpgMESignJob);
     q->run([=](Context *ctx) {
         return sign_to_filename(ctx, m_signers, m_inputFilePath, m_outputFilePath, m_signingFlags, m_appendSignature);
     });

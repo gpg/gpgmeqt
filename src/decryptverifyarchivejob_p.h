@@ -39,8 +39,9 @@
 namespace QGpgME
 {
 
-struct DecryptVerifyArchiveJobPrivate : public JobPrivate
+class DecryptVerifyArchiveJobPrivate : public JobPrivate
 {
+public:
     QString m_inputFilePath;
     QString m_outputDirectory;
     bool m_processAllSignatures = false;

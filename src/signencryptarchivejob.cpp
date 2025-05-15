@@ -42,8 +42,8 @@
 
 using namespace QGpgME;
 
-SignEncryptArchiveJob::SignEncryptArchiveJob(QObject *parent)
-    : Job{parent}
+SignEncryptArchiveJob::SignEncryptArchiveJob(std::unique_ptr<SignEncryptArchiveJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -58,73 +58,73 @@ bool SignEncryptArchiveJob::isSupported()
 
 void SignEncryptArchiveJob::setSigners(const std::vector<GpgME::Key> &signers)
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(SignEncryptArchiveJob);
     d->m_signers = signers;
 }
 
 std::vector<GpgME::Key> SignEncryptArchiveJob::signers() const
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(const SignEncryptArchiveJob);
     return d->m_signers;
 }
 
 void SignEncryptArchiveJob::setRecipients(const std::vector<GpgME::Key> &recipients)
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(SignEncryptArchiveJob);
     d->m_recipients = recipients;
 }
 
 std::vector<GpgME::Key> SignEncryptArchiveJob::recipients() const
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(const SignEncryptArchiveJob);
     return d->m_recipients;
 }
 
 void SignEncryptArchiveJob::setInputPaths(const std::vector<QString> &paths)
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(SignEncryptArchiveJob);
     d->m_inputPaths = paths;
 }
 
 std::vector<QString> SignEncryptArchiveJob::inputPaths() const
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(const SignEncryptArchiveJob);
     return d->m_inputPaths;
 }
 
 void SignEncryptArchiveJob::setOutputFile(const QString &path)
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(SignEncryptArchiveJob);
     d->m_outputFilePath = path;
 }
 
 QString SignEncryptArchiveJob::outputFile() const
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(const SignEncryptArchiveJob);
     return d->m_outputFilePath;
 }
 
 void SignEncryptArchiveJob::setEncryptionFlags(GpgME::Context::EncryptionFlags flags)
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(SignEncryptArchiveJob);
     d->m_encryptionFlags = static_cast<GpgME::Context::EncryptionFlags>(flags | GpgME::Context::EncryptArchive);
 }
 
 GpgME::Context::EncryptionFlags SignEncryptArchiveJob::encryptionFlags() const
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(const SignEncryptArchiveJob);
     return d->m_encryptionFlags;
 }
 
 void SignEncryptArchiveJob::setBaseDirectory(const QString &baseDirectory)
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(SignEncryptArchiveJob);
     d->m_baseDirectory = baseDirectory;
 }
 
 QString SignEncryptArchiveJob::baseDirectory() const
 {
-    auto d = jobPrivate<SignEncryptArchiveJobPrivate>(this);
+    Q_D(const SignEncryptArchiveJob);
     return d->m_baseDirectory;
 }
 

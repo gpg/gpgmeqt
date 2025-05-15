@@ -53,6 +53,8 @@ class KeyListResult;
 namespace QGpgME
 {
 
+class ListAllKeysJobPrivate;
+
 /**
    @short An abstract base class for asynchronously listing all keys
 
@@ -80,7 +82,7 @@ public:
     Q_DECLARE_FLAGS(Options, Option)
 
 protected:
-    explicit ListAllKeysJob(QObject *parent);
+    explicit ListAllKeysJob(std::unique_ptr<ListAllKeysJobPrivate>, QObject *parent);
 
 public:
     ~ListAllKeysJob();
@@ -107,6 +109,9 @@ public:
 
 Q_SIGNALS:
     void result(const GpgME::KeyListResult &result, const std::vector<GpgME::Key> &pub = std::vector<GpgME::Key>(), const std::vector<GpgME::Key> &sec = std::vector<GpgME::Key>(), const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+
+private:
+    Q_DECLARE_PRIVATE(ListAllKeysJob)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ListAllKeysJob::Options)

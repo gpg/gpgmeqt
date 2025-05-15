@@ -49,18 +49,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMEWKDRefreshJobPrivate : public WKDRefreshJobPrivate
 {
-    QGpgMEWKDRefreshJob *q = nullptr;
-
 public:
-    QGpgMEWKDRefreshJobPrivate(QGpgMEWKDRefreshJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMEWKDRefreshJob)
+
+    QGpgMEWKDRefreshJobPrivate() = default;
 
     ~QGpgMEWKDRefreshJobPrivate() override = default;
 
@@ -69,9 +66,12 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMEWKDRefreshJob);
         q->run();
     }
 };
+
+}
 
 static QStringList toEmailAddressesOriginatingFromWKD(const std::vector<GpgME::Key> &keys)
 {
@@ -103,12 +103,9 @@ static QStringList toEmailAddresses(const std::vector<GpgME::UserID> &userIds)
     return emails;
 }
 
-}
-
 QGpgMEWKDRefreshJob::QGpgMEWKDRefreshJob(Context *context)
     : mixin_type{context}
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMEWKDRefreshJobPrivate>{new QGpgMEWKDRefreshJobPrivate{this}});
     lateInitialization();
 }
 
@@ -149,6 +146,7 @@ GpgME::Error QGpgMEWKDRefreshJobPrivate::startIt()
     std::sort(emails.begin(), emails.end());
     emails.erase(std::unique(emails.begin(), emails.end()), emails.end());
 
+    Q_Q(QGpgMEWKDRefreshJob);
     q->run([emails](Context *ctx) {
         return locate_external_keys(ctx, emails);
     });

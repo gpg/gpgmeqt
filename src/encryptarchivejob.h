@@ -46,6 +46,8 @@ class Key;
 namespace QGpgME
 {
 
+class EncryptArchiveJobPrivate;
+
 /**
  * Abstract base class for job for creating encrypted archives
  */
@@ -53,7 +55,7 @@ class QGPGME_EXPORT EncryptArchiveJob : public Job
 {
     Q_OBJECT
 protected:
-    explicit EncryptArchiveJob(QObject *parent);
+    explicit EncryptArchiveJob(std::unique_ptr<EncryptArchiveJobPrivate>, QObject *parent);
 public:
     ~EncryptArchiveJob() override;
 
@@ -144,6 +146,9 @@ Q_SIGNALS:
     void result(const GpgME::EncryptionResult &result,
                 const QString &auditLogAsHtml = {},
                 const GpgME::Error &auditLogError = {});
+
+private:
+    Q_DECLARE_PRIVATE(EncryptArchiveJob)
 };
 
 }

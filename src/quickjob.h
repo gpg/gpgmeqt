@@ -44,7 +44,10 @@
 
 class QString;
 
-namespace QGpgME{
+namespace QGpgME
+{
+
+class QuickJobPrivate;
 
 /**
  * Interface to the modern key manipulation functions.
@@ -53,7 +56,7 @@ class QGPGME_EXPORT QuickJob : public Job
 {
     Q_OBJECT
 public:
-    explicit QuickJob(QObject *parent = nullptr);
+    explicit QuickJob(std::unique_ptr<QuickJobPrivate>, QObject *parent = nullptr);
     ~QuickJob() override;
 
     /** Start --quick-gen-key */
@@ -105,6 +108,9 @@ public:
 Q_SIGNALS:
     void result(const GpgME::Error &error,
                 const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+
+private:
+    Q_DECLARE_PRIVATE(QuickJob)
 };
 
 }

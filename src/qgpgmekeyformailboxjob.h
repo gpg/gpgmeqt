@@ -49,7 +49,7 @@ class QGpgMEKeyForMailboxJob
 #ifdef Q_MOC_RUN
     : public KeyForMailboxJob
 #else
-    : public _detail::ThreadedJobMixin<KeyForMailboxJob, std::tuple<GpgME::KeyListResult, GpgME::Key, GpgME::UserID, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<KeyForMailboxJob, void, std::tuple<GpgME::KeyListResult, GpgME::Key, GpgME::UserID, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

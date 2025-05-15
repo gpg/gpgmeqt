@@ -43,8 +43,8 @@
 using namespace GpgME;
 using namespace QGpgME;
 
-ImportJob::ImportJob(QObject *parent)
-    : AbstractImportJob{parent}
+ImportJob::ImportJob(std::unique_ptr<ImportJobPrivate> dd, QObject *parent)
+    : AbstractImportJob{std::move(dd), parent}
 {
 }
 
@@ -52,44 +52,44 @@ ImportJob::~ImportJob() = default;
 
 void QGpgME::ImportJob::setImportFilter(const QString &filter)
 {
-    const auto d = jobPrivate<ImportJobPrivate>(this);
+    Q_D(ImportJob);
     d->m_importFilter = filter;
 }
 
 QString QGpgME::ImportJob::importFilter() const
 {
-    const auto d = jobPrivate<ImportJobPrivate>(this);
+    Q_D(const ImportJob);
     return d->m_importFilter;
 }
 
 void QGpgME::ImportJob::setImportOptions(const QStringList &options)
 {
-    const auto d = jobPrivate<ImportJobPrivate>(this);
+    Q_D(ImportJob);
     d->m_importOptions = options;
 }
 
 QStringList QGpgME::ImportJob::importOptions() const
 {
-    const auto d = jobPrivate<ImportJobPrivate>(this);
+    Q_D(const ImportJob);
     return d->m_importOptions;
 }
 
 void ImportJob::setKeyOrigin(GpgME::Key::Origin origin, const QString &url)
 {
-    const auto d = jobPrivate<ImportJobPrivate>(this);
+    Q_D(ImportJob);
     d->m_keyOrigin = origin;
     d->m_keyOriginUrl = url;
 }
 
 GpgME::Key::Origin ImportJob::keyOrigin() const
 {
-    const auto d = jobPrivate<ImportJobPrivate>(this);
+    Q_D(const ImportJob);
     return d->m_keyOrigin;
 }
 
 QString ImportJob::keyOriginUrl() const
 {
-    const auto d = jobPrivate<ImportJobPrivate>(this);
+    Q_D(const ImportJob);
     return d->m_keyOriginUrl;
 }
 

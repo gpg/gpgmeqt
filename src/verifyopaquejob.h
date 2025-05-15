@@ -51,6 +51,8 @@ class VerificationResult;
 namespace QGpgME
 {
 
+class VerifyOpaqueJobPrivate;
+
 /**
    @short An abstract base class for asynchronous verification of opaque signatures
 
@@ -76,7 +78,7 @@ class QGPGME_EXPORT VerifyOpaqueJob : public Job
 {
     Q_OBJECT
 protected:
-    explicit VerifyOpaqueJob(QObject *parent);
+    explicit VerifyOpaqueJob(std::unique_ptr<VerifyOpaqueJobPrivate>, QObject *parent);
 public:
     ~VerifyOpaqueJob() override;
 
@@ -135,6 +137,9 @@ public:
 
 Q_SIGNALS:
     void result(const GpgME::VerificationResult &result, const QByteArray &plainText, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+
+private:
+    Q_DECLARE_PRIVATE(VerifyOpaqueJob)
 };
 
 }

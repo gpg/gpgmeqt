@@ -47,7 +47,7 @@ class QGpgMEReceiveKeysJob
 #ifdef Q_MOC_RUN
     : public ReceiveKeysJob
 #else
-    : public _detail::ThreadedJobMixin<ReceiveKeysJob, std::tuple<GpgME::ImportResult, QString, GpgME::Error>>
+    : public _detail::ThreadedJobMixin<ReceiveKeysJob, void, std::tuple<GpgME::ImportResult, QString, GpgME::Error>>
 #endif
 {
     Q_OBJECT

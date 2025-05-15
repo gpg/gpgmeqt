@@ -40,8 +40,8 @@
 
 using namespace QGpgME;
 
-VerifyDetachedJob::VerifyDetachedJob(QObject *parent)
-    : Job{parent}
+VerifyDetachedJob::VerifyDetachedJob(std::unique_ptr<VerifyDetachedJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -49,37 +49,37 @@ VerifyDetachedJob::~VerifyDetachedJob() = default;
 
 void VerifyDetachedJob::setProcessAllSignatures (bool processAll)
 {
-    auto d = jobPrivate<VerifyDetachedJobPrivate>(this);
+    Q_D(VerifyDetachedJob);
     d->m_processAllSignatures = processAll;
 }
 
 bool VerifyDetachedJob::processAllSignatures() const
 {
-    auto d = jobPrivate<VerifyDetachedJobPrivate>(this);
+    Q_D(const VerifyDetachedJob);
     return d->m_processAllSignatures;
 }
 
 void VerifyDetachedJob::setSignatureFile(const QString &path)
 {
-    auto d = jobPrivate<VerifyDetachedJobPrivate>(this);
+    Q_D(VerifyDetachedJob);
     d->m_signatureFilePath = path;
 }
 
 QString VerifyDetachedJob::signatureFile() const
 {
-    auto d = jobPrivate<VerifyDetachedJobPrivate>(this);
+    Q_D(const VerifyDetachedJob);
     return d->m_signatureFilePath;
 }
 
 void VerifyDetachedJob::setSignedFile(const QString &path)
 {
-    auto d = jobPrivate<VerifyDetachedJobPrivate>(this);
+    Q_D(VerifyDetachedJob);
     d->m_signedFilePath = path;
 }
 
 QString VerifyDetachedJob::signedFile() const
 {
-    auto d = jobPrivate<VerifyDetachedJobPrivate>(this);
+    Q_D(const VerifyDetachedJob);
     return d->m_signedFilePath;
 }
 

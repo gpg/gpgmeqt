@@ -49,7 +49,7 @@ class QGpgMEWKSPublishJob
 #ifdef Q_MOC_RUN
     : public WKSPublishJob
 #else
-    : public _detail::ThreadedJobMixin<WKSPublishJob, std::tuple<GpgME::Error, QByteArray, QByteArray, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<WKSPublishJob, void, std::tuple<GpgME::Error, QByteArray, QByteArray, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

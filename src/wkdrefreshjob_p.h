@@ -34,15 +34,16 @@
 #ifndef __QGPGME_WKDREFRESHJOB_P_H__
 #define __QGPGME_WKDREFRESHJOB_P_H__
 
-#include "job_p.h"
+#include "abstractimportjob_p.h"
 
 #include <gpgme++/key.h>
 
 namespace QGpgME
 {
 
-struct WKDRefreshJobPrivate : public JobPrivate
+class WKDRefreshJobPrivate : public AbstractImportJobPrivate
 {
+public:
     std::vector<GpgME::Key> m_keys;
     std::vector<GpgME::UserID> m_userIds;
 };

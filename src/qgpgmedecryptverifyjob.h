@@ -45,11 +45,13 @@
 namespace QGpgME
 {
 
+class QGpgMEDecryptVerifyJobPrivate;
+
 class QGpgMEDecryptVerifyJob
 #ifdef Q_MOC_RUN
     : public DecryptVerifyJob
 #else
-    : public _detail::ThreadedJobMixin<DecryptVerifyJob, std::tuple<GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<DecryptVerifyJob, QGpgMEDecryptVerifyJobPrivate, std::tuple<GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT
@@ -70,6 +72,9 @@ public:
     /* from DecryptVerifyJob */
     std::pair<GpgME::DecryptionResult, GpgME::VerificationResult>
     exec(const QByteArray &cipherText, QByteArray &plainText) override;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMEDecryptVerifyJob)
 };
 
 }

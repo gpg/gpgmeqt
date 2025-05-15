@@ -58,7 +58,6 @@
 #include "wkdlookupjob.h"
 #include "wkspublishjob.h"
 #include "tofupolicyjob.h"
-#include "threadedjobmixin.h"
 #include "gpgcardjob.h"
 #include "revokekeyjob.h"
 #include "setprimaryuseridjob.h"
@@ -68,42 +67,25 @@
 
 #include <gpg-error.h>
 
-#include <unordered_map>
-
-namespace
-{
-typedef std::unordered_map<const QGpgME::Job*, std::unique_ptr<QGpgME::JobPrivate>> JobPrivateHash;
-Q_GLOBAL_STATIC(JobPrivateHash, d_func)
-}
-
-void QGpgME::setJobPrivate(const Job *job, std::unique_ptr<JobPrivate> d)
-{
-    auto &ref = d_func()->operator[](job);
-    ref = std::move(d);
-}
-
-const QGpgME::JobPrivate *QGpgME::getJobPrivate(const Job *job)
-{
-    return d_func()->operator[](job).get();
-}
-
-QGpgME::JobPrivate *QGpgME::getJobPrivate(Job *job)
-{
-    return d_func()->operator[](job).get();
-}
-
-QGpgME::Job::Job(QObject *parent)
+QGpgME::Job::Job(std::unique_ptr<JobPrivate> dd, QObject *parent)
     : QObject(parent)
+    , d_ptr{std::move(dd)}
 {
+    if (d_ptr) {
+        d_ptr->q_ptr = this;
+    }
+
     if (QCoreApplication *app = QCoreApplication::instance()) {
         connect(app, &QCoreApplication::aboutToQuit, this, &Job::slotCancel);
     }
 }
 
-QGpgME::Job::~Job()
+QGpgME::Job::Job(QObject *parent)
+    : Job{{}, parent}
 {
-    ::d_func()->erase(this);
 }
+
+QGpgME::Job::~Job() = default;
 
 QString QGpgME::Job::auditLogAsHtml() const
 {
@@ -132,23 +114,21 @@ GpgME::Context *QGpgME::Job::context(QGpgME::Job *job)
 
 GpgME::Error QGpgME::Job::startIt()
 {
-    auto d = getJobPrivate(this);
+    Q_D(Job);
     Q_ASSERT(d && "This Job class has no JobPrivate class");
     return d->startIt();
 }
 
 void QGpgME::Job::startNow()
 {
-    auto d = getJobPrivate(this);
+    Q_D(Job);
     Q_ASSERT(d && "This Job class has no JobPrivate class");
     d->startNow();
 }
 
-#define make_job_subclass_ext(x,y)                \
-    QGpgME::x::x( QObject * parent ) : y( parent ) {} \
+#define make_job_subclass(x)                       \
+    QGpgME::x::x(QObject *parent) : Job{parent} {} \
     QGpgME::x::~x() {}
-
-#define make_job_subclass(x) make_job_subclass_ext(x,Job)
 
 make_job_subclass(KeyListJob)
 make_job_subclass(DecryptJob)

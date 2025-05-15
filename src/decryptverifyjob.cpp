@@ -40,8 +40,8 @@
 
 using namespace QGpgME;
 
-DecryptVerifyJob::DecryptVerifyJob(QObject *parent)
-    : Job{parent}
+DecryptVerifyJob::DecryptVerifyJob(std::unique_ptr<DecryptVerifyJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -49,37 +49,37 @@ DecryptVerifyJob::~DecryptVerifyJob() = default;
 
 void DecryptVerifyJob::setProcessAllSignatures (bool processAll)
 {
-    auto d = jobPrivate<DecryptVerifyJobPrivate>(this);
+    Q_D(DecryptVerifyJob);
     d->m_processAllSignatures = processAll;
 }
 
 bool DecryptVerifyJob::processAllSignatures() const
 {
-    auto d = jobPrivate<DecryptVerifyJobPrivate>(this);
+    Q_D(const DecryptVerifyJob);
     return d->m_processAllSignatures;
 }
 
 void DecryptVerifyJob::setInputFile(const QString &path)
 {
-    auto d = jobPrivate<DecryptVerifyJobPrivate>(this);
+    Q_D(DecryptVerifyJob);
     d->m_inputFilePath = path;
 }
 
 QString DecryptVerifyJob::inputFile() const
 {
-    auto d = jobPrivate<DecryptVerifyJobPrivate>(this);
+    Q_D(const DecryptVerifyJob);
     return d->m_inputFilePath;
 }
 
 void DecryptVerifyJob::setOutputFile(const QString &path)
 {
-    auto d = jobPrivate<DecryptVerifyJobPrivate>(this);
+    Q_D(DecryptVerifyJob);
     d->m_outputFilePath = path;
 }
 
 QString DecryptVerifyJob::outputFile() const
 {
-    auto d = jobPrivate<DecryptVerifyJobPrivate>(this);
+    Q_D(const DecryptVerifyJob);
     return d->m_outputFilePath;
 }
 

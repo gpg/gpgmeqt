@@ -49,18 +49,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMEQuickJobPrivate : public QuickJobPrivate
 {
-    QGpgMEQuickJob *q = nullptr;
-
 public:
-    QGpgMEQuickJobPrivate(QGpgMEQuickJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMEQuickJob)
+
+    QGpgMEQuickJobPrivate() = default;
 
     ~QGpgMEQuickJobPrivate() override = default;
 
@@ -74,6 +71,7 @@ private:
     void startNow() override
     {
         Q_ASSERT(!"Not supported by this Job class.");
+        Q_Q(QGpgMEQuickJob);
         q->run();
     }
 
@@ -95,7 +93,6 @@ private:
 QGpgMEQuickJob::QGpgMEQuickJob(Context *context)
     : mixin_type(context)
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMEQuickJobPrivate>{new QGpgMEQuickJobPrivate{this}});
     lateInitialization();
 }
 
@@ -163,6 +160,7 @@ Error QGpgMEQuickJobPrivate::startCreate(const QString &uid,
                                  const QDateTime &expires,
                                  GpgME::Context::CreationFlags flags)
 {
+    Q_Q(QGpgMEQuickJob);
     q->run([=](Context *ctx) {
         return createWorker(ctx, uid, algo, expires, flags);
     });
@@ -189,6 +187,7 @@ Error QGpgMEQuickJobPrivate::startAddSubkey(const GpgME::Key &key,
         return Error::fromCode(GPG_ERR_INV_VALUE);
     }
 
+    Q_Q(QGpgMEQuickJob);
     q->run([=](Context *ctx) {
         return addSubkeyWorker(ctx, key, algo, expires, flags);
     });
@@ -218,6 +217,7 @@ Error QGpgMEQuickJobPrivate::startSetKeyEnabled(const Key &key, bool enabled)
         return Error::fromCode(GPG_ERR_INV_VALUE);
     }
 
+    Q_Q(QGpgMEQuickJob);
     q->run([=](Context *ctx) {
         return set_key_enabled(ctx, key, enabled);
     });

@@ -43,8 +43,8 @@
 using namespace GpgME;
 using namespace QGpgME;
 
-ChangeExpiryJob::ChangeExpiryJob(QObject *parent)
-    : Job{parent}
+ChangeExpiryJob::ChangeExpiryJob(std::unique_ptr<ChangeExpiryJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -52,13 +52,13 @@ ChangeExpiryJob::~ChangeExpiryJob() = default;
 
 void ChangeExpiryJob::setOptions(ChangeExpiryJob::Options options)
 {
-    auto d = jobPrivate<ChangeExpiryJobPrivate>(this);
+    Q_D(ChangeExpiryJob);
     d->m_options = options;
 }
 
 ChangeExpiryJob::Options ChangeExpiryJob::options() const
 {
-    auto d = jobPrivate<ChangeExpiryJobPrivate>(this);
+    Q_D(const ChangeExpiryJob);
     return d->m_options;
 }
 

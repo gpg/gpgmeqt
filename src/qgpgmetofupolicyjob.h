@@ -45,7 +45,7 @@ class QGpgMETofuPolicyJob
 #ifdef Q_MOC_RUN
     : public TofuPolicyJob
 #else
-    : public _detail::ThreadedJobMixin<TofuPolicyJob, std::tuple<GpgME::Error, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<TofuPolicyJob, void, std::tuple<GpgME::Error, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

@@ -44,11 +44,13 @@
 namespace QGpgME
 {
 
+class QGpgMEVerifyDetachedJobPrivate;
+
 class QGpgMEVerifyDetachedJob
 #ifdef Q_MOC_RUN
     : public VerifyDetachedJob
 #else
-    : public _detail::ThreadedJobMixin<VerifyDetachedJob, std::tuple<GpgME::VerificationResult, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<VerifyDetachedJob, QGpgMEVerifyDetachedJobPrivate, std::tuple<GpgME::VerificationResult, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT
@@ -69,6 +71,9 @@ public:
     /* from VerifyDetachedJob */
     GpgME::VerificationResult exec(const QByteArray &signature,
                                    const QByteArray &signedData) override;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMEVerifyDetachedJob)
 };
 
 }

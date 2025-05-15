@@ -43,11 +43,13 @@
 namespace QGpgME
 {
 
+class QGpgMESignArchiveJobPrivate;
+
 class QGpgMESignArchiveJob
 #ifdef Q_MOC_RUN
     : public SignArchiveJob
 #else
-    : public _detail::ThreadedJobMixin<SignArchiveJob, std::tuple<GpgME::SigningResult, QString, GpgME::Error>>
+    : public _detail::ThreadedJobMixin<SignArchiveJob, QGpgMESignArchiveJobPrivate, std::tuple<GpgME::SigningResult, QString, GpgME::Error>>
 #endif
 {
     Q_OBJECT
@@ -62,6 +64,9 @@ public:
     GpgME::Error start(const std::vector<GpgME::Key> &signers,
                        const std::vector<QString> &paths,
                        const std::shared_ptr<QIODevice> &output) override;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMESignArchiveJob)
 };
 
 }

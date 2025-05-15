@@ -42,7 +42,7 @@ class QGpgMEGpgCardJob
 #ifdef Q_MOC_RUN
     : public GpgCardJob
 #else
-    : public _detail::ThreadedJobMixin<GpgCardJob, std::tuple<QString, QString, int, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<GpgCardJob, void, std::tuple<QString, QString, int, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

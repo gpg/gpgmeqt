@@ -55,6 +55,8 @@ class SigningResult;
 namespace QGpgME
 {
 
+class SignJobPrivate;
+
 /**
    @short An abstract base class for asynchronous signing
 
@@ -81,7 +83,7 @@ class QGPGME_EXPORT SignJob : public Job
 {
     Q_OBJECT
 protected:
-    explicit SignJob(QObject *parent);
+    explicit SignJob(std::unique_ptr<SignJobPrivate>, QObject *parent);
 public:
     ~SignJob() override;
 
@@ -169,6 +171,9 @@ public:
 
 Q_SIGNALS:
     void result(const GpgME::SigningResult &result, const QByteArray &signature, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+
+private:
+    Q_DECLARE_PRIVATE(SignJob)
 };
 
 }

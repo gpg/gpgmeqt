@@ -56,18 +56,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMEEncryptJobPrivate : public EncryptJobPrivate
 {
-    QGpgMEEncryptJob *q = nullptr;
-
 public:
-    QGpgMEEncryptJobPrivate(QGpgMEEncryptJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMEEncryptJob)
+
+    QGpgMEEncryptJobPrivate() = default;
 
     ~QGpgMEEncryptJobPrivate() override = default;
 
@@ -76,6 +73,7 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMEEncryptJob);
         q->run();
     }
 };
@@ -86,7 +84,6 @@ QGpgMEEncryptJob::QGpgMEEncryptJob(Context *context)
     : mixin_type(context),
       mOutputIsBase64Encoded(false)
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMEEncryptJobPrivate>{new QGpgMEEncryptJobPrivate{this}});
     lateInitialization();
 }
 
@@ -252,6 +249,7 @@ GpgME::Error QGpgMEEncryptJobPrivate::startIt()
         return Error::fromCode(GPG_ERR_INV_VALUE);
     }
 
+    Q_Q(QGpgMEEncryptJob);
     q->run([=](Context *ctx) {
         return encrypt_to_filename(ctx, m_recipients, m_inputFilePath, m_outputFilePath, m_encryptionFlags);
     });

@@ -48,7 +48,7 @@ class QGpgMEExportJob
 #ifdef Q_MOC_RUN
     : public ExportJob
 #else
-    : public _detail::ThreadedJobMixin<ExportJob, std::tuple<GpgME::Error, QByteArray, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<ExportJob, void, std::tuple<GpgME::Error, QByteArray, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

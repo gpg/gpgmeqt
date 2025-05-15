@@ -48,7 +48,7 @@ class QGpgMEDecryptJob
 #ifdef Q_MOC_RUN
     : public DecryptJob
 #else
-    : public _detail::ThreadedJobMixin<DecryptJob, std::tuple<GpgME::DecryptionResult, QByteArray, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<DecryptJob, void, std::tuple<GpgME::DecryptionResult, QByteArray, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

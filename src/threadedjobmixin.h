@@ -121,11 +121,11 @@ private:
     T_result m_result;
 };
 
-template <typename T_base, typename T_result = std::tuple<GpgME::Error, QString, GpgME::Error> >
+template <typename T_base, typename T_private = void, typename T_result = std::tuple<GpgME::Error, QString, GpgME::Error>>
 class ThreadedJobMixin : public T_base, public GpgME::ProgressProvider
 {
 public:
-    typedef ThreadedJobMixin<T_base, T_result> mixin_type;
+    typedef ThreadedJobMixin<T_base, T_private, T_result> mixin_type;
     typedef T_result result_type;
 
     void run()
@@ -154,6 +154,17 @@ protected:
                   >::value,
                   "Last result type not a GpgME::Error");
 
+    // Constructor used if a private class is specified (i.e. T_private is not void)
+    template<typename T_private_ = T_private,
+             std::enable_if_t<!std::is_void_v<T_private_>, bool> = true>
+    explicit ThreadedJobMixin(GpgME::Context *ctx)
+        : T_base(std::make_unique<T_private>(), nullptr), m_ctx(ctx), m_thread(), m_auditLog(), m_auditLogError()
+    {
+    }
+
+    // Constructor used if no private class is specified (i.e. T_private is void)
+    template<typename T_private_ = T_private,
+             std::enable_if_t<std::is_void_v<T_private_>, bool> = true>
     explicit ThreadedJobMixin(GpgME::Context *ctx)
         : T_base(nullptr), m_ctx(ctx), m_thread(), m_auditLog(), m_auditLogError()
     {

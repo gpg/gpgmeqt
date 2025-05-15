@@ -48,11 +48,13 @@
 namespace QGpgME
 {
 
+class QGpgMESignEncryptJobPrivate;
+
 class QGpgMESignEncryptJob
 #ifdef Q_MOC_RUN
     : public SignEncryptJob
 #else
-    : public _detail::ThreadedJobMixin<SignEncryptJob, std::tuple<GpgME::SigningResult, GpgME::EncryptionResult, QByteArray, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<SignEncryptJob, QGpgMESignEncryptJobPrivate, std::tuple<GpgME::SigningResult, GpgME::EncryptionResult, QByteArray, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT
@@ -99,6 +101,9 @@ public:
 
 private:
     bool mOutputIsBase64Encoded;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMESignEncryptJob)
 };
 
 }

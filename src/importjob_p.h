@@ -34,15 +34,16 @@
 #ifndef __QGPGME_IMPORTJOB_P_H__
 #define __QGPGME_IMPORTJOB_P_H__
 
-#include "job_p.h"
+#include "abstractimportjob_p.h"
 
 #include <gpgme++/key.h>
 
 namespace QGpgME
 {
 
-struct ImportJobPrivate : public JobPrivate
+class ImportJobPrivate : public AbstractImportJobPrivate
 {
+public:
     QString m_importFilter;
     QStringList m_importOptions;
     GpgME::Key::Origin m_keyOrigin = GpgME::Key::OriginUnknown;

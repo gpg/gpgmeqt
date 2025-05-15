@@ -46,6 +46,8 @@ class Key;
 namespace QGpgME
 {
 
+class SignEncryptArchiveJobPrivate;
+
 /**
  * Abstract base class for job for creating encrypted signed archives
  */
@@ -53,7 +55,7 @@ class QGPGME_EXPORT SignEncryptArchiveJob : public Job
 {
     Q_OBJECT
 protected:
-    explicit SignEncryptArchiveJob(QObject *parent);
+    explicit SignEncryptArchiveJob(std::unique_ptr<SignEncryptArchiveJobPrivate>, QObject *parent);
 public:
     ~SignEncryptArchiveJob() override;
 
@@ -158,6 +160,9 @@ Q_SIGNALS:
                 const GpgME::EncryptionResult &encryptionResult,
                 const QString &auditLogAsHtml = {},
                 const GpgME::Error &auditLogError = {});
+
+private:
+    Q_DECLARE_PRIVATE(SignEncryptArchiveJob)
 };
 
 }

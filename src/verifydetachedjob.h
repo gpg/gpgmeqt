@@ -51,6 +51,8 @@ class VerificationResult;
 namespace QGpgME
 {
 
+class VerifyDetachedJobPrivate;
+
 /**
    @short An abstract base class for asynchronous verification of detached signatures
 
@@ -74,7 +76,7 @@ class QGPGME_EXPORT VerifyDetachedJob : public Job
 {
     Q_OBJECT
 protected:
-    explicit VerifyDetachedJob(QObject *parent);
+    explicit VerifyDetachedJob(std::unique_ptr<VerifyDetachedJobPrivate>, QObject *parent);
 public:
     ~VerifyDetachedJob() override;
 
@@ -123,6 +125,9 @@ public:
 
 Q_SIGNALS:
     void result(const GpgME::VerificationResult &result, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+
+private:
+    Q_DECLARE_PRIVATE(VerifyDetachedJob)
 };
 
 }

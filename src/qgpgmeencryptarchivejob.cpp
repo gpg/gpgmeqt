@@ -53,18 +53,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMEEncryptArchiveJobPrivate : public EncryptArchiveJobPrivate
 {
-    QGpgMEEncryptArchiveJob *q = nullptr;
-
 public:
-    QGpgMEEncryptArchiveJobPrivate(QGpgMEEncryptArchiveJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMEEncryptArchiveJob)
+
+    QGpgMEEncryptArchiveJobPrivate() = default;
 
     ~QGpgMEEncryptArchiveJobPrivate() override = default;
 
@@ -73,6 +70,7 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMEEncryptArchiveJob);
         q->run();
     }
 };
@@ -82,7 +80,6 @@ private:
 QGpgMEEncryptArchiveJob::QGpgMEEncryptArchiveJob(Context *context)
     : mixin_type{context}
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMEEncryptArchiveJobPrivate>{new QGpgMEEncryptArchiveJobPrivate{this}});
     lateInitialization();
     connect(this, &Job::rawProgress, this, [this](const QString &what, int type, int current, int total) {
         emitArchiveProgressSignals(this, what, type, current, total);
@@ -182,6 +179,7 @@ GpgME::Error QGpgMEEncryptArchiveJobPrivate::startIt()
         return Error::fromCode(GPG_ERR_INV_VALUE);
     }
 
+    Q_Q(QGpgMEEncryptArchiveJob);
     q->run([=](Context *ctx) {
         return encrypt_to_filename(ctx, m_recipients, m_inputPaths, m_outputFilePath, m_encryptionFlags, m_baseDirectory);
     });

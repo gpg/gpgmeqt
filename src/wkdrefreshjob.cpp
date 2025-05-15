@@ -40,8 +40,8 @@
 
 using namespace QGpgME;
 
-WKDRefreshJob::WKDRefreshJob(QObject *parent)
-    : AbstractImportJob{parent}
+WKDRefreshJob::WKDRefreshJob(std::unique_ptr<WKDRefreshJobPrivate> dd, QObject *parent)
+    : AbstractImportJob{std::move(dd), parent}
 {
 }
 
@@ -49,14 +49,14 @@ WKDRefreshJob::~WKDRefreshJob() = default;
 
 GpgME::Error WKDRefreshJob::start(const std::vector<GpgME::Key> &keys)
 {
-    auto d = jobPrivate<WKDRefreshJobPrivate>(this);
+    Q_D(WKDRefreshJob);
     d->m_keys = keys;
     return d->startIt();
 }
 
 GpgME::Error WKDRefreshJob::start(const std::vector<GpgME::UserID> &userIDs)
 {
-    auto d = jobPrivate<WKDRefreshJobPrivate>(this);
+    Q_D(WKDRefreshJob);
     d->m_userIds = userIDs;
     return d->startIt();
 }

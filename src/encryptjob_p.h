@@ -42,8 +42,9 @@
 namespace QGpgME
 {
 
-struct EncryptJobPrivate : public JobPrivate
+class EncryptJobPrivate : public JobPrivate
 {
+public:
     // used by start() functions
     QString m_fileName;
     GpgME::Data::Encoding m_inputEncoding;

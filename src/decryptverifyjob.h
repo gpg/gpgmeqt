@@ -52,6 +52,8 @@ class VerificationResult;
 namespace QGpgME
 {
 
+class DecryptVerifyJobPrivate;
+
 /**
    @short An abstract base class for asynchronous combined decrypters and verifiers
 
@@ -77,7 +79,7 @@ class QGPGME_EXPORT DecryptVerifyJob : public Job
 {
     Q_OBJECT
 protected:
-    explicit DecryptVerifyJob(QObject *parent);
+    explicit DecryptVerifyJob(std::unique_ptr<DecryptVerifyJobPrivate>, QObject *parent);
 public:
     ~DecryptVerifyJob() override;
 
@@ -139,6 +141,9 @@ Q_SIGNALS:
                 const GpgME::VerificationResult &verificationresult,
                 const QByteArray &plainText, const QString &auditLogAsHtml = QString(),
                 const GpgME::Error &auditLogError = GpgME::Error());
+
+private:
+    Q_DECLARE_PRIVATE(DecryptVerifyJob)
 };
 
 }

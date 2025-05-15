@@ -41,8 +41,9 @@
 namespace QGpgME
 {
 
-struct ListAllKeysJobPrivate : public JobPrivate
+class ListAllKeysJobPrivate : public JobPrivate
 {
+public:
     ListAllKeysJob::Options m_options = ListAllKeysJob::Default;
 };
 

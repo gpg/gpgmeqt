@@ -40,8 +40,8 @@
 
 using namespace QGpgME;
 
-VerifyOpaqueJob::VerifyOpaqueJob(QObject *parent)
-    : Job{parent}
+VerifyOpaqueJob::VerifyOpaqueJob(std::unique_ptr<VerifyOpaqueJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -49,37 +49,37 @@ VerifyOpaqueJob::~VerifyOpaqueJob() = default;
 
 void VerifyOpaqueJob::setProcessAllSignatures (bool processAll)
 {
-    auto d = jobPrivate<VerifyOpaqueJobPrivate>(this);
+    Q_D(VerifyOpaqueJob);
     d->m_processAllSignatures = processAll;
 }
 
 bool VerifyOpaqueJob::processAllSignatures() const
 {
-    auto d = jobPrivate<VerifyOpaqueJobPrivate>(this);
+    Q_D(const VerifyOpaqueJob);
     return d->m_processAllSignatures;
 }
 
 void VerifyOpaqueJob::setInputFile(const QString &path)
 {
-    auto d = jobPrivate<VerifyOpaqueJobPrivate>(this);
+    Q_D(VerifyOpaqueJob);
     d->m_inputFilePath = path;
 }
 
 QString VerifyOpaqueJob::inputFile() const
 {
-    auto d = jobPrivate<VerifyOpaqueJobPrivate>(this);
+    Q_D(const VerifyOpaqueJob);
     return d->m_inputFilePath;
 }
 
 void VerifyOpaqueJob::setOutputFile(const QString &path)
 {
-    auto d = jobPrivate<VerifyOpaqueJobPrivate>(this);
+    Q_D(VerifyOpaqueJob);
     d->m_outputFilePath = path;
 }
 
 QString VerifyOpaqueJob::outputFile() const
 {
-    auto d = jobPrivate<VerifyOpaqueJobPrivate>(this);
+    Q_D(const VerifyOpaqueJob);
     return d->m_outputFilePath;
 }
 

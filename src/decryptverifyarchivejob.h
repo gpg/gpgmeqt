@@ -46,6 +46,8 @@ class Key;
 namespace QGpgME
 {
 
+class DecryptVerifyArchiveJobPrivate;
+
 /**
  * Abstract base class for job for decrypting encrypted (signed) archives
  */
@@ -53,7 +55,7 @@ class QGPGME_EXPORT DecryptVerifyArchiveJob : public Job
 {
     Q_OBJECT
 protected:
-    explicit DecryptVerifyArchiveJob(QObject *parent);
+    explicit DecryptVerifyArchiveJob(std::unique_ptr<DecryptVerifyArchiveJobPrivate>, QObject *parent);
 public:
     ~DecryptVerifyArchiveJob() override;
 
@@ -123,6 +125,9 @@ Q_SIGNALS:
                 const GpgME::VerificationResult &verificationResult,
                 const QString &auditLogAsHtml = {},
                 const GpgME::Error &auditLogError = {});
+
+private:
+    Q_DECLARE_PRIVATE(DecryptVerifyArchiveJob)
 };
 
 }

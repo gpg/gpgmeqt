@@ -53,18 +53,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMESignArchiveJobPrivate : public SignArchiveJobPrivate
 {
-    QGpgMESignArchiveJob *q = nullptr;
-
 public:
-    QGpgMESignArchiveJobPrivate(QGpgMESignArchiveJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMESignArchiveJob)
+
+    QGpgMESignArchiveJobPrivate() = default;
 
     ~QGpgMESignArchiveJobPrivate() override = default;
 
@@ -73,6 +70,7 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMESignArchiveJob);
         q->run();
     }
 };
@@ -82,7 +80,6 @@ private:
 QGpgMESignArchiveJob::QGpgMESignArchiveJob(Context *context)
     : mixin_type{context}
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMESignArchiveJobPrivate>{new QGpgMESignArchiveJobPrivate{this}});
     lateInitialization();
     connect(this, &Job::rawProgress, this, [this](const QString &what, int type, int current, int total) {
         emitArchiveProgressSignals(this, what, type, current, total);
@@ -186,6 +183,7 @@ GpgME::Error QGpgMESignArchiveJobPrivate::startIt()
         return Error::fromCode(GPG_ERR_INV_VALUE);
     }
 
+    Q_Q(QGpgMESignArchiveJob);
     q->run([=](Context *ctx) {
         return sign_to_filename(ctx, m_signers, m_inputPaths, m_outputFilePath, m_baseDirectory);
     });

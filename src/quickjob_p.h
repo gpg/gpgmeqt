@@ -41,8 +41,9 @@
 namespace QGpgME
 {
 
-struct QuickJobPrivate : public JobPrivate
+class QuickJobPrivate : public JobPrivate
 {
+public:
     virtual GpgME::Error startCreate(const QString &uid,
                                      const QByteArray &algo,
                                      const QDateTime &expires,

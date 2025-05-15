@@ -46,7 +46,7 @@ class QGpgMEWKDLookupJob
 #ifdef Q_MOC_RUN
     : public WKDLookupJob
 #else
-    : public _detail::ThreadedJobMixin<WKDLookupJob, std::tuple<WKDLookupResult, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<WKDLookupJob, void, std::tuple<WKDLookupResult, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT

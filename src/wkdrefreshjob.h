@@ -49,6 +49,8 @@ class UserID;
 namespace QGpgME
 {
 
+class WKDRefreshJobPrivate;
+
 /**
  * This job refreshes OpenPGP keys via WKD.
  */
@@ -56,7 +58,7 @@ class QGPGME_EXPORT WKDRefreshJob : public AbstractImportJob
 {
     Q_OBJECT
 protected:
-    explicit WKDRefreshJob(QObject *parent);
+    explicit WKDRefreshJob(std::unique_ptr<WKDRefreshJobPrivate>, QObject *parent);
 public:
     ~WKDRefreshJob() override;
 
@@ -73,6 +75,9 @@ public:
      * All user IDs are used for the WKD lookup. Revoked user IDs are ignored.
      */
     GpgME::Error start(const std::vector<GpgME::UserID> &userIDs);
+
+private:
+    Q_DECLARE_PRIVATE(WKDRefreshJob)
 };
 
 }

@@ -50,18 +50,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMEChangeExpiryJobPrivate : public ChangeExpiryJobPrivate
 {
-    QGpgMEChangeExpiryJob *q = nullptr;
-
 public:
-    QGpgMEChangeExpiryJobPrivate(QGpgMEChangeExpiryJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMEChangeExpiryJob)
+
+    QGpgMEChangeExpiryJobPrivate() = default;
 
     ~QGpgMEChangeExpiryJobPrivate() override = default;
 
@@ -74,6 +71,7 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMEChangeExpiryJob);
         q->run();
     }
 };
@@ -83,7 +81,6 @@ private:
 QGpgMEChangeExpiryJob::QGpgMEChangeExpiryJob(Context *context)
     : mixin_type(context)
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMEChangeExpiryJobPrivate>{new QGpgMEChangeExpiryJobPrivate{this}});
     lateInitialization();
 }
 

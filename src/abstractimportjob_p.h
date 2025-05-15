@@ -1,8 +1,8 @@
 /*
-    encryptarchivejob_p.h
+    abstractimportjob_p.h
 
     This file is part of qgpgme, the Qt API binding for gpgme
-    Copyright (c) 2023 g10 Code GmbH
+    Copyright (c) 2025 g10 Code GmbH
     Software engineering by Ingo Klöcker <dev@ingo-kloecker.de>
 
     QGpgME is free software; you can redistribute it and/or
@@ -31,24 +31,18 @@
     your version.
 */
 
-#ifndef __QGPGME_ENCRYPTARCHIVEJOB_P_H__
-#define __QGPGME_ENCRYPTARCHIVEJOB_P_H__
+#ifndef __QGPGME_ABSTRACTIMPORTJOB_P_H__
+#define __QGPGME_ABSTRACTIMPORTJOB_P_H__
 
 #include "job_p.h"
 
 namespace QGpgME
 {
 
-class EncryptArchiveJobPrivate : public JobPrivate
+class AbstractImportJobPrivate : public JobPrivate
 {
-public:
-    std::vector<GpgME::Key> m_recipients;
-    std::vector<QString> m_inputPaths;
-    QString m_outputFilePath;
-    QString m_baseDirectory;
-    GpgME::Context::EncryptionFlags m_encryptionFlags = GpgME::Context::EncryptArchive;
 };
 
 }
 
-#endif // __QGPGME_ENCRYPTARCHIVEJOB_P_H__
+#endif // __QGPGME_ABSTRACTIMPORTJOB_P_H__

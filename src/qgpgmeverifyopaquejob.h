@@ -44,11 +44,13 @@
 namespace QGpgME
 {
 
+class QGpgMEVerifyOpaqueJobPrivate;
+
 class QGpgMEVerifyOpaqueJob
 #ifdef Q_MOC_RUN
     : public VerifyOpaqueJob
 #else
-    : public _detail::ThreadedJobMixin<VerifyOpaqueJob, std::tuple<GpgME::VerificationResult, QByteArray, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<VerifyOpaqueJob, QGpgMEVerifyOpaqueJobPrivate, std::tuple<GpgME::VerificationResult, QByteArray, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT
@@ -68,6 +70,9 @@ public:
 
     /* form VerifyOpaqueJob */
     GpgME::VerificationResult exec(const QByteArray &signedData, QByteArray &plainData) override;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMEVerifyOpaqueJob)
 };
 
 }

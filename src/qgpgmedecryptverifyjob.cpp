@@ -59,18 +59,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMEDecryptVerifyJobPrivate : public DecryptVerifyJobPrivate
 {
-    QGpgMEDecryptVerifyJob *q = nullptr;
-
 public:
-    QGpgMEDecryptVerifyJobPrivate(QGpgMEDecryptVerifyJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMEDecryptVerifyJob)
+
+    QGpgMEDecryptVerifyJobPrivate() = default;
 
     ~QGpgMEDecryptVerifyJobPrivate() override = default;
 
@@ -79,6 +76,7 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMEDecryptVerifyJob);
         q->run();
     }
 };
@@ -88,7 +86,6 @@ private:
 QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob(Context *context)
     : mixin_type(context)
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMEDecryptVerifyJobPrivate>{new QGpgMEDecryptVerifyJobPrivate{this}});
     lateInitialization();
 }
 
@@ -218,6 +215,7 @@ GpgME::Error QGpgMEDecryptVerifyJobPrivate::startIt()
         return Error::fromCode(GPG_ERR_INV_VALUE);
     }
 
+    Q_Q(QGpgMEDecryptVerifyJob);
     q->run([=](Context *ctx) {
         return decrypt_verify_from_filename(ctx, m_inputFilePath, m_outputFilePath, m_processAllSignatures);
     });

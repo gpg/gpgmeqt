@@ -40,8 +40,8 @@
 
 using namespace QGpgME;
 
-EncryptJob::EncryptJob(QObject *parent)
-    : Job{parent}
+EncryptJob::EncryptJob(std::unique_ptr<EncryptJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -49,73 +49,73 @@ EncryptJob::~EncryptJob() = default;
 
 void EncryptJob::setFileName(const QString &fileName)
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(EncryptJob);
     d->m_fileName = fileName;
 }
 
 QString EncryptJob::fileName() const
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(const EncryptJob);
     return d->m_fileName;
 }
 
 void EncryptJob::setInputEncoding(GpgME::Data::Encoding inputEncoding)
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(EncryptJob);
     d->m_inputEncoding = inputEncoding;
 }
 
 GpgME::Data::Encoding EncryptJob::inputEncoding() const
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(const EncryptJob);
     return d->m_inputEncoding;
 }
 
 void EncryptJob::setRecipients(const std::vector<GpgME::Key> &recipients)
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(EncryptJob);
     d->m_recipients = recipients;
 }
 
 std::vector<GpgME::Key> EncryptJob::recipients() const
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(const EncryptJob);
     return d->m_recipients;
 }
 
 void EncryptJob::setInputFile(const QString &path)
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(EncryptJob);
     d->m_inputFilePath = path;
 }
 
 QString EncryptJob::inputFile() const
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(const EncryptJob);
     return d->m_inputFilePath;
 }
 
 void EncryptJob::setOutputFile(const QString &path)
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(EncryptJob);
     d->m_outputFilePath = path;
 }
 
 QString EncryptJob::outputFile() const
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(const EncryptJob);
     return d->m_outputFilePath;
 }
 
 void EncryptJob::setEncryptionFlags(GpgME::Context::EncryptionFlags flags)
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(EncryptJob);
     d->m_encryptionFlags = static_cast<GpgME::Context::EncryptionFlags>(flags | GpgME::Context::EncryptFile);
 }
 
 GpgME::Context::EncryptionFlags EncryptJob::encryptionFlags() const
 {
-    auto d = jobPrivate<EncryptJobPrivate>(this);
+    Q_D(const EncryptJob);
     return d->m_encryptionFlags;
 }
 

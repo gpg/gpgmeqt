@@ -51,6 +51,8 @@ class QDateTime;
 namespace QGpgME
 {
 
+class ChangeExpiryJobPrivate;
+
 /**
    @short An abstract base class to change expiry asynchronously
 
@@ -76,7 +78,7 @@ public:
     Q_DECLARE_FLAGS(Options, Option)
 
 protected:
-    explicit ChangeExpiryJob(QObject *parent);
+    explicit ChangeExpiryJob(std::unique_ptr<ChangeExpiryJobPrivate>, QObject *parent);
 public:
     ~ChangeExpiryJob();
 
@@ -102,6 +104,9 @@ public:
 
 Q_SIGNALS:
     void result(const GpgME::Error &result, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+
+private:
+    Q_DECLARE_PRIVATE(ChangeExpiryJob)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ChangeExpiryJob::Options)

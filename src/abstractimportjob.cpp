@@ -32,8 +32,14 @@
 */
 
 #include "abstractimportjob.h"
+#include "abstractimportjob_p.h"
 
 using namespace QGpgME;
+
+AbstractImportJob::AbstractImportJob(std::unique_ptr<AbstractImportJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
+{
+}
 
 AbstractImportJob::AbstractImportJob(QObject *parent)
     : Job{parent}

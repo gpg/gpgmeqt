@@ -42,8 +42,8 @@
 
 using namespace QGpgME;
 
-SignArchiveJob::SignArchiveJob(QObject *parent)
-    : Job{parent}
+SignArchiveJob::SignArchiveJob(std::unique_ptr<SignArchiveJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -58,49 +58,49 @@ bool SignArchiveJob::isSupported()
 
 void SignArchiveJob::setSigners(const std::vector<GpgME::Key> &signers)
 {
-    auto d = jobPrivate<SignArchiveJobPrivate>(this);
+    Q_D(SignArchiveJob);
     d->m_signers = signers;
 }
 
 std::vector<GpgME::Key> SignArchiveJob::signers() const
 {
-    auto d = jobPrivate<SignArchiveJobPrivate>(this);
+    Q_D(const SignArchiveJob);
     return d->m_signers;
 }
 
 void SignArchiveJob::setInputPaths(const std::vector<QString> &paths)
 {
-    auto d = jobPrivate<SignArchiveJobPrivate>(this);
+    Q_D(SignArchiveJob);
     d->m_inputPaths = paths;
 }
 
 std::vector<QString> SignArchiveJob::inputPaths() const
 {
-    auto d = jobPrivate<SignArchiveJobPrivate>(this);
+    Q_D(const SignArchiveJob);
     return d->m_inputPaths;
 }
 
 void SignArchiveJob::setOutputFile(const QString &path)
 {
-    auto d = jobPrivate<SignArchiveJobPrivate>(this);
+    Q_D(SignArchiveJob);
     d->m_outputFilePath = path;
 }
 
 QString SignArchiveJob::outputFile() const
 {
-    auto d = jobPrivate<SignArchiveJobPrivate>(this);
+    Q_D(const SignArchiveJob);
     return d->m_outputFilePath;
 }
 
 void SignArchiveJob::setBaseDirectory(const QString &baseDirectory)
 {
-    auto d = jobPrivate<SignArchiveJobPrivate>(this);
+    Q_D(SignArchiveJob);
     d->m_baseDirectory = baseDirectory;
 }
 
 QString SignArchiveJob::baseDirectory() const
 {
-    auto d = jobPrivate<SignArchiveJobPrivate>(this);
+    Q_D(const SignArchiveJob);
     return d->m_baseDirectory;
 }
 

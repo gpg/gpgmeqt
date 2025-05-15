@@ -58,6 +58,8 @@ class EncryptionResult;
 namespace QGpgME
 {
 
+class EncryptJobPrivate;
+
 /**
    @short An abstract base class for asynchronous encrypters
 
@@ -84,7 +86,7 @@ class QGPGME_EXPORT EncryptJob : public Job
 {
     Q_OBJECT
 protected:
-    explicit EncryptJob(QObject *parent);
+    explicit EncryptJob(std::unique_ptr<EncryptJobPrivate>, QObject *parent);
 public:
     ~EncryptJob() override;
 
@@ -191,6 +193,9 @@ public:
                                          const GpgME::Context::EncryptionFlags flags, QByteArray &cipherText) = 0;
 Q_SIGNALS:
     void result(const GpgME::EncryptionResult &result, const QByteArray &cipherText, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+
+private:
+    Q_DECLARE_PRIVATE(EncryptJob)
 };
 
 }

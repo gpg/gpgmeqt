@@ -51,18 +51,15 @@
 using namespace QGpgME;
 using namespace GpgME;
 
-namespace
+namespace QGpgME
 {
 
 class QGpgMEImportJobPrivate : public ImportJobPrivate
 {
-    QGpgMEImportJob *q = nullptr;
-
 public:
-    QGpgMEImportJobPrivate(QGpgMEImportJob *qq)
-        : q{qq}
-    {
-    }
+    Q_DECLARE_PUBLIC(QGpgMEImportJob)
+
+    QGpgMEImportJobPrivate() = default;
 
     ~QGpgMEImportJobPrivate() override = default;
 
@@ -75,6 +72,7 @@ private:
 
     void startNow() override
     {
+        Q_Q(QGpgMEImportJob);
         q->run();
     }
 };
@@ -84,7 +82,6 @@ private:
 QGpgMEImportJob::QGpgMEImportJob(Context *context)
     : mixin_type(context)
 {
-    setJobPrivate(this, std::unique_ptr<QGpgMEImportJobPrivate>{new QGpgMEImportJobPrivate{this}});
     lateInitialization();
 }
 

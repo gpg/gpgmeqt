@@ -36,8 +36,8 @@
 
 using namespace QGpgME;
 
-QuickJob::QuickJob(QObject *parent)
-    : Job{parent}
+QuickJob::QuickJob(std::unique_ptr<QuickJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -48,7 +48,7 @@ GpgME::Error QuickJob::startCreate(const QString &uid,
                             const QDateTime &expires,
                             GpgME::Context::CreationFlags flags)
 {
-    auto d = jobPrivate<QuickJobPrivate>(this);
+    Q_D(QuickJob);
     return d->startCreate(uid, algo, expires, flags);
 }
 
@@ -67,7 +67,7 @@ GpgME::Error QuickJob::startAddSubkey(const GpgME::Key &key,
                             const QDateTime &expires,
                             GpgME::Context::CreationFlags flags)
 {
-    auto d = jobPrivate<QuickJobPrivate>(this);
+    Q_D(QuickJob);
     return d->startAddSubkey(key, algo, expires, flags);
 }
 
@@ -82,7 +82,7 @@ void QuickJob::startAddSubkey(const GpgME::Key &key,
 
 GpgME::Error QuickJob::startSetKeyEnabled(const GpgME::Key &key, bool enabled)
 {
-    auto d = jobPrivate<QuickJobPrivate>(this);
+    Q_D(QuickJob);
     return d->startSetKeyEnabled(key, enabled);
 }
 

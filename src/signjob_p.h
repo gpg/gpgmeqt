@@ -41,8 +41,9 @@
 namespace QGpgME
 {
 
-struct SignJobPrivate : public JobPrivate
+class SignJobPrivate : public JobPrivate
 {
+public:
     // used by startIt()
     std::vector<GpgME::Key> m_signers;
     QString m_inputFilePath;

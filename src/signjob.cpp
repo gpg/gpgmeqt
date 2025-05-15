@@ -40,8 +40,8 @@
 
 using namespace QGpgME;
 
-SignJob::SignJob(QObject *parent)
-    : Job{parent}
+SignJob::SignJob(std::unique_ptr<SignJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
@@ -49,61 +49,61 @@ SignJob::~SignJob() = default;
 
 void SignJob::setSigners(const std::vector<GpgME::Key> &signers)
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(SignJob);
     d->m_signers = signers;
 }
 
 std::vector<GpgME::Key> SignJob::signers() const
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(const SignJob);
     return d->m_signers;
 }
 
 void SignJob::setInputFile(const QString &path)
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(SignJob);
     d->m_inputFilePath = path;
 }
 
 QString SignJob::inputFile() const
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(const SignJob);
     return d->m_inputFilePath;
 }
 
 void SignJob::setOutputFile(const QString &path)
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(SignJob);
     d->m_outputFilePath = path;
 }
 
 QString SignJob::outputFile() const
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(const SignJob);
     return d->m_outputFilePath;
 }
 
 void SignJob::setSigningFlags(GpgME::SignatureMode flags)
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(SignJob);
     d->m_signingFlags = static_cast<GpgME::SignatureMode>(flags | GpgME::SignFile);
 }
 
 GpgME::SignatureMode SignJob::signingFlags() const
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(const SignJob);
     return d->m_signingFlags;
 }
 
 void SignJob::setAppendSignature(bool append)
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(SignJob);
     d->m_appendSignature = append;
 }
 
 bool SignJob::appendSignatureEnabled() const
 {
-    auto d = jobPrivate<SignJobPrivate>(this);
+    Q_D(const SignJob);
     return d->m_appendSignature;
 }
 

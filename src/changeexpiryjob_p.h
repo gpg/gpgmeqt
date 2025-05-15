@@ -41,8 +41,9 @@
 namespace QGpgME
 {
 
-struct ChangeExpiryJobPrivate : public JobPrivate
+class ChangeExpiryJobPrivate : public JobPrivate
 {
+public:
     ChangeExpiryJob::Options m_options = ChangeExpiryJob::Default;
 };
 

@@ -48,6 +48,8 @@ class QWidget;
 namespace QGpgME
 {
 
+class JobPrivate;
+
 /**
    @short An abstract base class for asynchronous crypto operations
 
@@ -69,6 +71,7 @@ class QGPGME_EXPORT Job : public QObject
 {
     Q_OBJECT
 protected:
+    Job(std::unique_ptr<JobPrivate>, QObject *parent);
     explicit Job(QObject *parent);
 public:
     ~Job();
@@ -144,6 +147,11 @@ Q_SIGNALS:
     QGPGME_DEPRECATED void progress(const QString &what, int current, int total);
 
     void done();
+
+protected:
+    const std::unique_ptr<JobPrivate> d_ptr;
+private:
+    Q_DECLARE_PRIVATE(Job)
 };
 
 extern QMap <Job *, GpgME::Context *> g_context_map;

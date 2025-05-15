@@ -45,11 +45,13 @@
 namespace QGpgME
 {
 
+class QGpgMEListAllKeysJobPrivate;
+
 class QGpgMEListAllKeysJob
 #ifdef Q_MOC_RUN
     : public ListAllKeysJob
 #else
-    : public _detail::ThreadedJobMixin<ListAllKeysJob, std::tuple<GpgME::KeyListResult, std::vector<GpgME::Key>, std::vector<GpgME::Key>, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<ListAllKeysJob, QGpgMEListAllKeysJobPrivate, std::tuple<GpgME::KeyListResult, std::vector<GpgME::Key>, std::vector<GpgME::Key>, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT
@@ -66,6 +68,9 @@ public:
 
     /* from ListAllKeysJob */
     GpgME::KeyListResult exec(std::vector<GpgME::Key> &pub, std::vector<GpgME::Key> &sec, bool mergeKeys) override;
+
+private:
+    Q_DECLARE_PRIVATE(QGpgMEListAllKeysJob)
 };
 
 }

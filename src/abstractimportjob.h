@@ -48,10 +48,13 @@ class ImportResult;
 namespace QGpgME
 {
 
+class AbstractImportJobPrivate;
+
 class QGPGME_EXPORT AbstractImportJob : public Job
 {
     Q_OBJECT
 protected:
+    explicit AbstractImportJob(std::unique_ptr<AbstractImportJobPrivate>, QObject *parent);
     explicit AbstractImportJob(QObject *parent);
 public:
     ~AbstractImportJob();

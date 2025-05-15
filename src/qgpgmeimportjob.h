@@ -46,11 +46,13 @@
 namespace QGpgME
 {
 
+class QGpgMEImportJobPrivate;
+
 class QGpgMEImportJob
 #ifdef Q_MOC_RUN
     : public ImportJob
 #else
-    : public _detail::ThreadedJobMixin<ImportJob, std::tuple<GpgME::ImportResult, QString, GpgME::Error> >
+    : public _detail::ThreadedJobMixin<ImportJob, QGpgMEImportJobPrivate, std::tuple<GpgME::ImportResult, QString, GpgME::Error> >
 #endif
 {
     Q_OBJECT
@@ -69,6 +71,8 @@ public:
     GpgME::ImportResult exec(const QByteArray &keyData) override;
 
     GpgME::Error startLater(const QByteArray &keyData) override;
+private:
+    Q_DECLARE_PRIVATE(QGpgMEImportJob)
 };
 
 }
