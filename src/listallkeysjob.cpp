@@ -40,6 +40,13 @@
 
 using namespace QGpgME;
 
+ListAllKeysJob::ListAllKeysJob(QObject *parent)
+    : Job{parent}
+{
+}
+
+ListAllKeysJob::~ListAllKeysJob() = default;
+
 void ListAllKeysJob::setOptions(ListAllKeysJob::Options options)
 {
     auto d = jobPrivate<ListAllKeysJobPrivate>(this);
@@ -51,3 +58,5 @@ ListAllKeysJob::Options ListAllKeysJob::options() const
     auto d = jobPrivate<ListAllKeysJobPrivate>(this);
     return d->m_options;
 }
+
+#include "moc_listallkeysjob.cpp"

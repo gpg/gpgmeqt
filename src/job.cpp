@@ -42,14 +42,10 @@
 #include "job_p.h"
 
 #include "keylistjob.h"
-#include "listallkeysjob.h"
 #include "decryptjob.h"
 #include "signkeyjob.h"
 #include "keygenerationjob.h"
-#include "importjob.h"
-#include "importfromkeyserverjob.h"
 #include "exportjob.h"
-#include "changeexpiryjob.h"
 #include "changeownertrustjob.h"
 #include "changepasswdjob.h"
 #include "downloadjob.h"
@@ -64,7 +60,6 @@
 #include "tofupolicyjob.h"
 #include "threadedjobmixin.h"
 #include "gpgcardjob.h"
-#include "receivekeysjob.h"
 #include "revokekeyjob.h"
 #include "setprimaryuseridjob.h"
 
@@ -156,16 +151,10 @@ void QGpgME::Job::startNow()
 #define make_job_subclass(x) make_job_subclass_ext(x,Job)
 
 make_job_subclass(KeyListJob)
-make_job_subclass(ListAllKeysJob)
 make_job_subclass(DecryptJob)
 make_job_subclass(SignKeyJob)
 make_job_subclass(KeyGenerationJob)
-make_job_subclass(AbstractImportJob)
-make_job_subclass_ext(ImportJob, AbstractImportJob)
-make_job_subclass_ext(ImportFromKeyserverJob, AbstractImportJob)
-make_job_subclass_ext(ReceiveKeysJob, AbstractImportJob)
 make_job_subclass(ExportJob)
-make_job_subclass(ChangeExpiryJob)
 make_job_subclass(ChangeOwnerTrustJob)
 make_job_subclass(ChangePasswdJob)
 make_job_subclass(DownloadJob)
@@ -187,15 +176,10 @@ make_job_subclass(SetPrimaryUserIDJob)
 #include "moc_job.cpp"
 
 #include "moc_keylistjob.cpp"
-#include "moc_listallkeysjob.cpp"
 #include "moc_decryptjob.cpp"
 #include "moc_signkeyjob.cpp"
 #include "moc_keygenerationjob.cpp"
-#include "moc_abstractimportjob.cpp"
-#include "moc_importjob.cpp"
-#include "moc_importfromkeyserverjob.cpp"
 #include "moc_exportjob.cpp"
-#include "moc_changeexpiryjob.cpp"
 #include "moc_changeownertrustjob.cpp"
 #include "moc_changepasswdjob.cpp"
 #include "moc_downloadjob.cpp"
@@ -209,6 +193,5 @@ make_job_subclass(SetPrimaryUserIDJob)
 #include "moc_wkspublishjob.cpp"
 #include "moc_tofupolicyjob.cpp"
 #include "moc_gpgcardjob.cpp"
-#include "moc_receivekeysjob.cpp"
 #include "moc_revokekeyjob.cpp"
 #include "moc_setprimaryuseridjob.cpp"

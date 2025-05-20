@@ -1,8 +1,8 @@
 /*
-    changeexpiryjob.cpp
+    importfromkeyserverjob.cpp
 
     This file is part of qgpgme, the Qt API binding for gpgme
-    Copyright (c) 2021 g10 Code GmbH
+    Copyright (c) 2025 g10 Code GmbH
     Software engineering by Ingo Klöcker <dev@ingo-kloecker.de>
 
     QGpgME is free software; you can redistribute it and/or
@@ -31,41 +31,15 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
- #include "config.h"
-#endif
+#include "importfromkeyserverjob.h"
 
-#include "changeexpiryjob.h"
-#include "changeexpiryjob_p.h"
-
-#include <gpgme++/context.h>
-
-using namespace GpgME;
 using namespace QGpgME;
 
-ChangeExpiryJob::ChangeExpiryJob(QObject *parent)
-    : Job{parent}
+ImportFromKeyserverJob::ImportFromKeyserverJob(QObject *parent)
+    : AbstractImportJob{parent}
 {
 }
 
-ChangeExpiryJob::~ChangeExpiryJob() = default;
+ImportFromKeyserverJob::~ImportFromKeyserverJob() = default;
 
-void ChangeExpiryJob::setOptions(ChangeExpiryJob::Options options)
-{
-    auto d = jobPrivate<ChangeExpiryJobPrivate>(this);
-    d->m_options = options;
-}
-
-ChangeExpiryJob::Options ChangeExpiryJob::options() const
-{
-    auto d = jobPrivate<ChangeExpiryJobPrivate>(this);
-    return d->m_options;
-}
-
-/* For ABI compat not pure virtual. */
-Error ChangeExpiryJob::start(const Key &, const QDateTime &, const std::vector<Subkey> &)
-{
-    return {};
-}
-
-#include "moc_changeexpiryjob.cpp"
+#include "moc_importfromkeyserverjob.cpp"

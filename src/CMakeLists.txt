@@ -33,6 +33,7 @@ endif()
 add_library(${targetname} SHARED)
 
 target_sources(${targetname} PRIVATE
+    abstractimportjob.cpp
     changeexpiryjob.cpp
     cleaner.cpp
     cryptoconfig.cpp
@@ -45,6 +46,7 @@ target_sources(${targetname} PRIVATE
     encryptarchivejob.cpp
     encryptjob.cpp
     filelistdataprovider.cpp
+    importfromkeyserverjob.cpp
     importjob.cpp
     job.cpp
     listallkeysjob.cpp
@@ -89,6 +91,7 @@ target_sources(${targetname} PRIVATE
     qgpgmewkdrefreshjob.cpp
     qgpgmewkspublishjob.cpp
     quickjob.cpp
+    receivekeysjob.cpp
     signarchivejob.cpp
     signencryptarchivejob.cpp
     signencryptjob.cpp

@@ -43,6 +43,13 @@
 using namespace GpgME;
 using namespace QGpgME;
 
+ImportJob::ImportJob(QObject *parent)
+    : AbstractImportJob{parent}
+{
+}
+
+ImportJob::~ImportJob() = default;
+
 void QGpgME::ImportJob::setImportFilter(const QString &filter)
 {
     const auto d = jobPrivate<ImportJobPrivate>(this);
@@ -85,3 +92,5 @@ QString ImportJob::keyOriginUrl() const
     const auto d = jobPrivate<ImportJobPrivate>(this);
     return d->m_keyOriginUrl;
 }
+
+#include "moc_importjob.cpp"
