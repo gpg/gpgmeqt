@@ -76,18 +76,18 @@ FileListDataProvider::FileListDataProvider(const std::vector<QString> &filenames
 
 FileListDataProvider::~FileListDataProvider() = default;
 
-ssize_t FileListDataProvider::read(void* buffer, size_t bufSize)
+gpgme_ssize_t FileListDataProvider::read(void* buffer, size_t bufSize)
 {
     return mProvider->read(buffer, bufSize);
 }
 
-ssize_t FileListDataProvider::write(const void *, size_t)
+gpgme_ssize_t FileListDataProvider::write(const void *, size_t)
 {
     Error::setSystemError(GPG_ERR_EBADF);
     return -1;
 }
 
-off_t FileListDataProvider::seek(off_t offset, int whence)
+gpgme_off_t FileListDataProvider::seek(gpgme_off_t offset, int whence)
 {
     return mProvider->seek(offset, whence);
 }

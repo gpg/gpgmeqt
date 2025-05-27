@@ -57,14 +57,24 @@ private:
     {
         return true;
     }
+#ifdef _WIN32
+    gpgme_ssize_t read(void *buffer, size_t bufSize) override;
+    gpgme_ssize_t write(const void *buffer, size_t bufSize) override;
+    gpgme_off_t seek(gpgme_off_t offset, int whence) override;
+#else
     ssize_t read(void *buffer, size_t bufSize) override;
     ssize_t write(const void *buffer, size_t bufSize) override;
     off_t seek(off_t offset, int whence) override;
+#endif
     void release() override;
 
 private:
     QByteArray mArray;
+#ifdef _WIN32
+    gpgme_off_t mOff;
+#else
     off_t mOff;
+#endif
 };
 
 class QGPGME_EXPORT QIODeviceDataProvider : public GpgME::DataProvider
@@ -82,9 +92,15 @@ private:
     // these shall only be accessed through the dataprovider
     // interface, where they're public:
     bool isSupported(Operation) const override;
+#ifdef _WIN32
+    gpgme_ssize_t read(void *buffer, size_t bufSize) override;
+    gpgme_ssize_t write(const void *buffer, size_t bufSize) override;
+    gpgme_off_t seek(gpgme_off_t offset, int whence) override;
+#else
     ssize_t read(void *buffer, size_t bufSize) override;
     ssize_t write(const void *buffer, size_t bufSize) override;
     off_t seek(off_t offset, int whence) override;
+#endif
     void release() override;
 
 private:

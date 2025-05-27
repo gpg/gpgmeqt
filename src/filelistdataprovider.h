@@ -61,9 +61,15 @@ private:
     {
         return op != Operation::Write;
     }
+#ifdef _WIN32
+    gpgme_ssize_t read(void *buffer, size_t bufSize) override;
+    gpgme_ssize_t write(const void *buffer, size_t bufSize) override;
+    gpgme_off_t seek(gpgme_off_t offset, int whence) override;
+#else
     ssize_t read(void *buffer, size_t bufSize) override;
     ssize_t write(const void *buffer, size_t bufSize) override;
     off_t seek(off_t offset, int whence) override;
+#endif
     void release() override;
 
 private:
