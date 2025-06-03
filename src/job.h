@@ -37,6 +37,7 @@
 
 #include "qgpgme_export.h"
 
+#include <memory>
 #include <QObject>
 #include <QString>
 #include <QMap>
