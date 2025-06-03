@@ -21,7 +21,7 @@
 
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-set(FULL_VERSION "2.0.0")
+set(FULL_VERSION "2.0.1")
 
 string(REGEX MATCH "^[0-9]+.[0-9]+.[0-9]+" cmake_compat_version ${FULL_VERSION})
 project(qgpgme VERSION ${cmake_compat_version})
