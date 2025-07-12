@@ -219,7 +219,11 @@ static std::pair<std::optional<std::string_view>, std::pair<std::string, std::st
         if (!value.has_value()) {
             return {};
         }
-        stringv.remove_prefix(endHex);
+        if (endHex == std::string_view::npos) {
+            stringv = {};
+        } else {
+            stringv.remove_prefix(endHex);
+        }
         dnPair.second = value.value();
     } else if (stringv.front() == '"') {
         stringv.remove_prefix(1);
