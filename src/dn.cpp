@@ -215,15 +215,14 @@ static std::pair<std::optional<std::string_view>, std::pair<std::string, std::st
         /* hexstring */
         stringv.remove_prefix(1);
         auto endHex = stringv.find_first_not_of("1234567890abcdefABCDEF"sv);
+        if (endHex == std::string_view::npos) {
+            endHex = stringv.size();
+        }
         auto value = parseHexString(stringv.substr(0, endHex));
         if (!value.has_value()) {
             return {};
         }
-        if (endHex == std::string_view::npos) {
-            stringv = {};
-        } else {
-            stringv.remove_prefix(endHex);
-        }
+        stringv.remove_prefix(endHex);
         dnPair.second = value.value();
     } else if (stringv.front() == '"') {
         stringv.remove_prefix(1);
