@@ -170,7 +170,8 @@ if (${QT_MAJOR_VERSION} EQUAL "5")
 endif()
 
 # the public headers
-set(qgpgme_CAMELCASE_HEADERS
+ecm_generate_headers(qgpgme_CAMELCASE_HEADERS
+    HEADER_NAMES
     AbstractImportJob
     AddExistingSubkeyJob
     AddUserIDJob
@@ -220,11 +221,6 @@ set(qgpgme_CAMELCASE_HEADERS
     WKDLookupResult
     WKDRefreshJob
     WKSPublishJob
-)
-
-ecm_generate_headers(dummy
-    HEADER_NAMES
-    ${qgpgme_CAMELCASE_HEADERS}
     REQUIRED_HEADERS qgpgme_HEADERS
     PREFIX QGpgME
 )
@@ -279,8 +275,8 @@ install(FILES ${qgpgme_HEADERS}
               ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_version.h
               ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_export.h
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qgpgme-qt${QT_MAJOR_VERSION}/qgpgme)
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/QGpgME
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qgpgme-qt${QT_MAJOR_VERSION})
+install(FILES ${qgpgme_CAMELCASE_HEADERS}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qgpgme-qt${QT_MAJOR_VERSION}/QGpgME)
 
 set(CMAKECONFIG_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/QGpgme${config_suffix})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/QGpgme${config_suffix}ConfigVersion.cmake
