@@ -41,6 +41,8 @@
 #include <gpgme++/context.h>
 #include <gpgme++/key.h>
 
+#include <gpgme.h>
+
 #include <cassert>
 
 using namespace QGpgME;
@@ -54,9 +56,9 @@ QGpgMEDeleteJob::QGpgMEDeleteJob(Context *context)
 
 QGpgMEDeleteJob::~QGpgMEDeleteJob() {}
 
-static QGpgMEDeleteJob::result_type delete_key(Context *ctx, const Key &key, bool allowSecretKeyDeletion)
+static QGpgMEDeleteJob::result_type delete_key(Context *ctx, const Key &key, int flags)
 {
-    const Error err = ctx->deleteKey(key, allowSecretKeyDeletion);
+    const Error err = ctx->deleteKey(key, flags);
     Error ae;
     const QString log = _detail::audit_log_as_html(ctx, ae);
     return std::make_tuple(err, log, ae);
@@ -64,7 +66,12 @@ static QGpgMEDeleteJob::result_type delete_key(Context *ctx, const Key &key, boo
 
 Error QGpgMEDeleteJob::start(const Key &key, bool allowSecretKeyDeletion)
 {
-    run(std::bind(&delete_key, std::placeholders::_1, key, allowSecretKeyDeletion));
+    return start(key, allowSecretKeyDeletion ? GPGME_DELETE_ALLOW_SECRET : 0);
+}
+
+Error QGpgMEDeleteJob::start(const Key &key, int flags)
+{
+    run(std::bind(&delete_key, std::placeholders::_1, key, flags));
     return Error();
 }
 #include "moc_qgpgmedeletejob.cpp"

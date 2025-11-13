@@ -74,6 +74,7 @@ public:
        be deleted if the secret key part is available, too.
     */
     virtual GpgME::Error start(const GpgME::Key &key, bool allowSecretKeyDeletion = false) = 0;
+    virtual GpgME::Error start(const GpgME::Key &key, int flags) = 0;
 
 Q_SIGNALS:
     void result(const GpgME::Error &result, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());

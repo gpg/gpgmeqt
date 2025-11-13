@@ -65,6 +65,7 @@ public:
 
     /* from DeleteJob */
     GpgME::Error start(const GpgME::Key &key, bool allowSecretKeyDeletion) override;
+    GpgME::Error start(const GpgME::Key &key, int flags) override;
 };
 
 }

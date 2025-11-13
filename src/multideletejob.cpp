@@ -61,8 +61,13 @@ QGpgME::MultiDeleteJob::~MultiDeleteJob()
 
 GpgME::Error QGpgME::MultiDeleteJob::start(const std::vector<GpgME::Key> &keys, bool allowSecretKeyDeletion)
 {
+    return start(keys, allowSecretKeyDeletion ? GPGME_DELETE_ALLOW_SECRET : 0);
+}
+
+GpgME::Error QGpgME::MultiDeleteJob::start(const std::vector<GpgME::Key> &keys, int flags)
+{
     mKeys = keys;
-    mAllowSecretKeyDeletion = allowSecretKeyDeletion;
+    mFlags = flags;
     mIt = mKeys.begin();
 
     const GpgME::Error err = startAJob();
@@ -117,7 +122,7 @@ GpgME::Error QGpgME::MultiDeleteJob::startAJob()
 
     connect(mJob.data(), &DeleteJob::result, this, &MultiDeleteJob::slotResult);
 
-    return mJob->start(*mIt, mAllowSecretKeyDeletion);
+    return mJob->start(*mIt, mFlags);
 }
 
 #include "moc_multideletejob.cpp"

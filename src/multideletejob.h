@@ -80,8 +80,10 @@ public:
        Starts the delete operation. \a keys is the list of keys to
        delete, \a allowSecretKeyDeletion specifies if a key may also
        be deleted if the secret key part is available, too.
+       If \a force is true, the backend will not ask for confirmation.
     */
     GpgME::Error start(const std::vector<GpgME::Key> &keys, bool allowSecretKeyDeletion = false);
+    GpgME::Error start(const std::vector<GpgME::Key> &keys, int flags);
 
     /* from Job */
     void slotCancel() override;
@@ -100,7 +102,7 @@ private:
     QPointer<DeleteJob> mJob;
     std::vector<GpgME::Key> mKeys;
     std::vector<GpgME::Key>::const_iterator mIt;
-    bool mAllowSecretKeyDeletion;
+    int mFlags;
 };
 
 }
