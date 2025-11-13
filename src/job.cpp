@@ -46,7 +46,6 @@
 #include "changeownertrustjob.h"
 #include "changepasswdjob.h"
 #include "decryptjob.h"
-#include "deletejob.h"
 #include "downloadjob.h"
 #include "exportjob.h"
 #include "gpgcardjob.h"
@@ -135,7 +134,6 @@ make_job_subclass(AddUserIDJob)
 make_job_subclass(ChangeOwnerTrustJob)
 make_job_subclass(ChangePasswdJob)
 make_job_subclass(DecryptJob)
-make_job_subclass(DeleteJob)
 make_job_subclass(DownloadJob)
 make_job_subclass(ExportJob)
 make_job_subclass(GpgCardJob)
@@ -160,7 +158,6 @@ make_job_subclass(WKSPublishJob)
 #include "moc_changeownertrustjob.cpp"
 #include "moc_changepasswdjob.cpp"
 #include "moc_decryptjob.cpp"
-#include "moc_deletejob.cpp"
 #include "moc_downloadjob.cpp"
 #include "moc_exportjob.cpp"
 #include "moc_gpgcardjob.cpp"

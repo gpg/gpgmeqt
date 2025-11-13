@@ -42,6 +42,7 @@ target_sources(${targetname} PRIVATE
     decryptverifyarchivejob.cpp
     decryptverifyjob.cpp
     defaultkeygenerationjob.cpp
+    deletejob.cpp
     dn.cpp
     encryptarchivejob.cpp
     encryptjob.cpp
@@ -110,6 +111,7 @@ set(qgpgme_PRIVATE_HEADERS
     cleaner.h
     decryptverifyarchivejob_p.h
     decryptverifyjob_p.h
+    deletejob_p.h
     encryptarchivejob_p.h
     encryptjob_p.h
     importjob_p.h
