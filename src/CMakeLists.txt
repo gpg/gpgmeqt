@@ -34,22 +34,33 @@ add_library(${targetname} SHARED)
 
 target_sources(${targetname} PRIVATE
     abstractimportjob.cpp
+    addexistingsubkeyjob.cpp
+    adduseridjob.cpp
     changeexpiryjob.cpp
+    changeownertrustjob.cpp
+    changepasswdjob.cpp
     cleaner.cpp
     cryptoconfig.cpp
     dataprovider.cpp
     debug.cpp
+    decryptjob.cpp
     decryptverifyarchivejob.cpp
     decryptverifyjob.cpp
     defaultkeygenerationjob.cpp
     deletejob.cpp
     dn.cpp
+    downloadjob.cpp
     encryptarchivejob.cpp
     encryptjob.cpp
+    exportjob.cpp
     filelistdataprovider.cpp
+    gpgcardjob.cpp
     importfromkeyserverjob.cpp
     importjob.cpp
     job.cpp
+    keyformailboxjob.cpp
+    keygenerationjob.cpp
+    keylistjob.cpp
     listallkeysjob.cpp
     multideletejob.cpp
     qgpgme_debug.cpp
@@ -93,16 +104,24 @@ target_sources(${targetname} PRIVATE
     qgpgmewkspublishjob.cpp
     quickjob.cpp
     receivekeysjob.cpp
+    refreshkeysjob.cpp
+    revokekeyjob.cpp
+    setprimaryuseridjob.cpp
     signarchivejob.cpp
     signencryptarchivejob.cpp
     signencryptjob.cpp
     signjob.cpp
+    signkeyjob.cpp
+    specialjob.cpp
     threadedjobmixin.cpp
+    tofupolicyjob.cpp
     util.cpp
     verifydetachedjob.cpp
     verifyopaquejob.cpp
+    wkdlookupjob.cpp
     wkdlookupresult.cpp
     wkdrefreshjob.cpp
+    wkspublishjob.cpp
 )
 
 set(qgpgme_PRIVATE_HEADERS
