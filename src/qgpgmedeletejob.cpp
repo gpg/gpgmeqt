@@ -97,7 +97,7 @@ Error QGpgMEDeleteJobPrivate::start(const Key &key, DeletionFlags flags)
 Error QGpgMEDeleteJob::start(const Key &key, bool allowSecretKeyDeletion)
 {
     Q_D(QGpgMEDeleteJob);
-    return d->start(key, allowSecretKeyDeletion ? DeletionFlags::AllowSecret : DeletionFlags::UseDefaults);
+    return d->start(key, allowSecretKeyDeletion ? DeletionFlags{DeletionFlag::AllowSecret} : DeletionFlags{});
 }
 
 #include "moc_qgpgmedeletejob.cpp"
