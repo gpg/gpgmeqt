@@ -83,7 +83,7 @@ public:
        delete, \a allowSecretKeyDeletion specifies if a key may also
        be deleted if the secret key part is available, too.
     */
-    GpgME::Error start(const std::vector<GpgME::Key> &keys, bool allowSecretKeyDeletion = false);
+    QGPGME_DEPRECATED GpgME::Error start(const std::vector<GpgME::Key> &keys, bool allowSecretKeyDeletion = false);
     GpgME::Error start(const std::vector<GpgME::Key> &keys, GpgME::DeletionFlags flags);
 
     /* from Job */

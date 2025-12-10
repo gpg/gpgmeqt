@@ -75,7 +75,7 @@ public:
        delete, \a allowSecretKeyDeletion specifies if a key may also
        be deleted if the secret key part is available, too.
     */
-    virtual GpgME::Error start(const GpgME::Key &key, bool allowSecretKeyDeletion = false) = 0;
+    QGPGME_DEPRECATED virtual GpgME::Error start(const GpgME::Key &key, bool allowSecretKeyDeletion = false) = 0;
     GpgME::Error start(const GpgME::Key &key, GpgME::DeletionFlags flags);
 
 Q_SIGNALS:
