@@ -1,11 +1,8 @@
 /*
-    qgpgmeexportjob.h
+    exportjob_p.h
 
     This file is part of qgpgme, the Qt API binding for gpgme
-    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
-    Copyright (c) 2016 by Bundesamt für Sicherheit in der Informationstechnik
-    Software engineering by Intevation GmbH
-    Copyright (c) 2022 by g10 Code GmbH
+    Copyright (c) 2026 g10 Code GmbH
     Software engineering by Ingo Klöcker <dev@ingo-kloecker.de>
 
     QGpgME is free software; you can redistribute it and/or
@@ -34,53 +31,20 @@
     your version.
 */
 
-#ifndef __QGPGME_QGPGMEEXPORTJOB_H__
-#define __QGPGME_QGPGMEEXPORTJOB_H__
+#ifndef __QGPGME_EXPORTJOB_P_H__
+#define __QGPGME_EXPORTJOB_P_H__
 
-#include "exportjob.h"
-
-#include "threadedjobmixin.h"
+#include "job_p.h"
 
 namespace QGpgME
 {
 
-class QGpgMEExportJobPrivate;
-
-class QGpgMEExportJob
-#ifdef Q_MOC_RUN
-    : public ExportJob
-#else
-    : public _detail::ThreadedJobMixin<ExportJob, QGpgMEExportJobPrivate, std::tuple<GpgME::Error, QByteArray, QString, GpgME::Error> >
-#endif
+class ExportJobPrivate : public JobPrivate
 {
-    Q_OBJECT
-#ifdef Q_MOC_RUN
-public Q_SLOTS:
-    void slotFinished();
-#endif
 public:
-    explicit QGpgMEExportJob(GpgME::Context *context);
-    // Creates an export job with forced export mode @p exportMode. The
-    // export mode flags set with @p exportMode cannot be overridden with
-    // setExportFlags.
-    explicit QGpgMEExportJob(GpgME::Context *context, unsigned int exportMode);
-    ~QGpgMEExportJob() override;
-
-    /* from ExportJob */
-    void setExportFlags(unsigned int flags) override;
-
-    /* from ExportJob */
-    GpgME::Error start(const QStringList &patterns) override;
-    GpgME::Error exec(const QStringList &patterns, QByteArray &data) override;
-
-private:
-    unsigned int m_exportMode;
-    unsigned int m_additionalExportModeFlags;
-
-private:
-    Q_DECLARE_PRIVATE(QGpgMEExportJob)
+    QString m_exportFilter;
 };
 
 }
 
-#endif // __QGPGME_QGPGMEEXPORTJOB_H__
+#endif // __QGPGME_EXPORTJOB_P_H__

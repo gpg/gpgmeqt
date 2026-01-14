@@ -32,15 +32,28 @@
 */
 
 #include "exportjob.h"
+#include "exportjob_p.h"
 
 using namespace QGpgME;
 
-ExportJob::ExportJob(QObject *parent)
-    : Job{parent}
+ExportJob::ExportJob(std::unique_ptr<ExportJobPrivate> dd, QObject *parent)
+    : Job{std::move(dd), parent}
 {
 }
 
 ExportJob::~ExportJob() = default;
+
+void ExportJob::setExportFilter(const QString &filter)
+{
+    Q_D(ExportJob);
+    d->m_exportFilter = filter;
+}
+
+QString ExportJob::exportFilter() const
+{
+    Q_D(const ExportJob);
+    return d->m_exportFilter;
+}
 
 void ExportJob::setExportFlags(unsigned int)
 {

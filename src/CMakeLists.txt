@@ -133,6 +133,7 @@ set(qgpgme_PRIVATE_HEADERS
     deletejob_p.h
     encryptarchivejob_p.h
     encryptjob_p.h
+    exportjob_p.h
     importjob_p.h
     job_p.h
     listallkeysjob_p.h
