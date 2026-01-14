@@ -42,4 +42,15 @@ ExportJob::ExportJob(QObject *parent)
 
 ExportJob::~ExportJob() = default;
 
+void ExportJob::setExportFlags(unsigned int)
+{
+    // empty dummy implementation
+}
+
+GpgME::Error ExportJob::exec(const QStringList &, QByteArray &)
+{
+    // empty dummy implementation
+    return {};
+}
+
 #include "moc_exportjob.cpp"
