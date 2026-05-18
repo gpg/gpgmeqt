@@ -1,6 +1,19 @@
-Noteworthy changes in version 2.0.1 (unreleased)
+Noteworthy changes in version 2.1.0 (unreleased)
 ------------------------------------------------
 
+ * Fixed assertion when parsing DNs that end with a hex string.
+   [rGPGMEQT150b23c1]
+
+ * Allow forcing the deletion of secret keys without confirmation. [T7538]
+
+ * Allow specifying an export filter when exporting keys. [T8033]
+
+ * Interface changes relative to the 2.0.0 release:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ DeleteJob::start              CHANGED: New overload; deprecate old one.
+ MultiDeleteJob::start         CHANGED: New overload; deprecate old one.
+ ExportJob::setExportFilter    NEW.
+ ExportJob::exportFilter       NEW.
 
 Noteworthy changes in version 2.0.0 (2025-06-03)
 ------------------------------------------------
