@@ -1,4 +1,4 @@
-Noteworthy changes in version 2.1.0 (unreleased)
+Noteworthy changes in version 2.1.0 (2026-05-18)  [C23/A8/R0]
 ------------------------------------------------
 
  * Fixed assertion when parsing DNs that end with a hex string.
@@ -15,7 +15,8 @@ Noteworthy changes in version 2.1.0 (unreleased)
  ExportJob::setExportFilter    NEW.
  ExportJob::exportFilter       NEW.
 
-Noteworthy changes in version 2.0.0 (2025-06-03)
+
+Noteworthy changes in version 2.0.0 (2025-06-03) [C22/A7/R0]
 ------------------------------------------------
 
  * First separate release of QGpgME.
