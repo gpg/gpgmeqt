@@ -1,6 +1,15 @@
 Noteworthy changes in version 2.1.1 (unreleased)  [C23/A8/R_]
 ------------------------------------------------
 
+ * Added job for querying Active Directory. [T6094]
+
+ * Interface changes relative to the 2.1.0 release:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ADQueryJob                    NEW.
+ ADQueryOption                 NEW.
+ ADQueryOptions                NEW.
+ ADQueryResult                 NEW.
+ Protocol::adQueryJob          NEW.
 
 
 Noteworthy changes in version 2.1.0 (2026-05-18)  [C23/A8/R0]

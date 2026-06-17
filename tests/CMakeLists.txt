@@ -79,6 +79,7 @@ macro(_g10_add_testprogram _source)
     target_link_libraries(${_name} ${qgpgme_library} Gpgmepp)
 endmacro()
 
+_g10_add_testprogram(run-adqueryjob.cpp)
 _g10_add_testprogram(run-decryptverifyarchivejob.cpp)
 _g10_add_testprogram(run-decryptverifyjob.cpp)
 _g10_add_testprogram(run-encryptarchivejob.cpp)
