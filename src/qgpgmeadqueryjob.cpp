@@ -38,7 +38,9 @@
 #include "qgpgmeadqueryjob.h"
 
 #include "adqueryjob_p.h"
+#include "cryptoconfig.h"
 #include "debug.h"
+#include "protocol.h"
 #include "qgpgme_debug.h"
 #include "qt6compat_p.h"
 #include "util.h"
@@ -91,8 +93,13 @@ QGpgMEADQueryJob::~QGpgMEADQueryJob() = default;
 
 static GpgME::Error startDirmngr(Context *assuanCtx)
 {
-    Error err;
+    // don't start dirmngr if it is disabled for gpg _and_ gpgsm
+    if (QGpgME::cryptoConfig()->entry("gpg", "disable-dirmngr")->boolValue()
+        && QGpgME::cryptoConfig()->entry("gpgsm", "disable-dirmngr")->boolValue()) {
+        return Error::fromCode(GPG_ERR_NO_DIRMNGR);
+    }
 
+    Error err;
     auto spawnCtx = std::unique_ptr<Context>{Context::createForEngine(SpawnEngine, &err)};
     if (err) {
         qCDebug(QGPGME_LOG) << "Error: Failed to get context for spawn engine (" << err << ")";
