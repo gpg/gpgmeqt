@@ -121,7 +121,7 @@ if(UNIX)
     g10_add_release_targets(
         VERSION "${G10_FULL_VERSION}"
         ARCHIVE_FORMAT "tar.xz"
-        RELEASE_ARCHIVE_SUFFIX "gpgme"
+        RELEASE_ARCHIVE_SUFFIX "qgpgme"
     )
 endif()
 
