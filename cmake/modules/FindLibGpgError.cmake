@@ -55,7 +55,11 @@ If ``LibGpgError_FOUND`` is TRUE, it will also define the following imported tar
 #]=======================================================================]
 
 find_package(PkgConfig QUIET)
-pkg_check_modules(PC_LibGpgError QUIET gpg-error)
+if(LibGpgError_FIND_VERSION)
+    pkg_check_modules(PC_LibGpgError QUIET "gpg-error>=${LibGpgError_FIND_VERSION}")
+else()
+    pkg_check_modules(PC_LibGpgError QUIET gpg-error)
+endif()
 
 set(LibGpgError_VERSION ${PC_LibGpgError_VERSION})
 set(LibGpgError_DEFINITIONS ${PC_LibGpgError_CFLAGS_OTHER})

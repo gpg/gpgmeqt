@@ -55,7 +55,16 @@ If ``Gpgme_FOUND`` is TRUE, it will also define the following imported target:
 #]=======================================================================]
 
 find_package(PkgConfig QUIET)
-pkg_check_modules(PC_Gpgme QUIET gpgme)
+# Pass the requested version to pkg-config. pkg_check_modules() caches a
+# successful result and only re-runs it when its arguments change, so an
+# unversioned query keeps reporting the version found when the build directory
+# was first configured, even after GpgME was upgraded. Including the
+# requirement makes it part of the cache key, and a failed check is not cached.
+if(Gpgme_FIND_VERSION)
+    pkg_check_modules(PC_Gpgme QUIET "gpgme>=${Gpgme_FIND_VERSION}")
+else()
+    pkg_check_modules(PC_Gpgme QUIET gpgme)
+endif()
 
 set(Gpgme_VERSION ${PC_Gpgme_VERSION})
 set(Gpgme_DEFINITIONS ${PC_Gpgme_CFLAGS_OTHER})
