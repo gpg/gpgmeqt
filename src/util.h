@@ -71,14 +71,17 @@ static inline std::vector<std::string_view> split(const std::string_view s, char
     std::vector<std::string_view> result;
     std::string_view::size_type start = 0;
     std::string_view::size_type end;
-    do {
+    while (start < s.size()) {
         end = s.find(delimiter, start);
         if (end == s.npos) {
             end = s.size();
         }
         result.emplace_back(std::addressof(s[start]), end - start);
         start = end + 1;
-    } while (end != s.size());
+    }
+    if (start == s.size()) {
+        result.emplace_back();
+    }
     return result;
 }
 
