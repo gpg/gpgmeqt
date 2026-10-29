@@ -45,11 +45,14 @@
 #include "qgpgme_debug.h"
 
 #include <gpgme++/context.h>
+#include <gpgme++/engineinfo.h>
 #include <gpgme++/key.h>
 
 #include <QByteArray>
+#include <QFile>
 #include <QMetaObject>
 #include <QProcess>
+#include <QStandardPaths>
 #include <QStringList>
 
 #include <gpg-error.h>
@@ -118,8 +121,8 @@ GpgME::Error QGpgMERefreshSMIMEKeysJob::startAProcess()
     mProcess = new QProcess(this);
     mProcess->setObjectName(QStringLiteral("gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks"));
 
-    // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
-    mProcess->setProgram(QStringLiteral("gpgsm"));
+    const QString gpgsmBinary = QString::fromLocal8Bit(GpgME::dirInfo("gpgsm-name"));
+    mProcess->setProgram(gpgsmBinary);
     QStringList arguments;
     arguments << QStringLiteral("-k")
               << QStringLiteral("--with-validation")
@@ -127,7 +130,7 @@ GpgME::Error QGpgMERefreshSMIMEKeysJob::startAProcess()
               << QStringLiteral("--enable-crl-checks");
     unsigned int commandLineLength = MAX_CMD_LENGTH;
     commandLineLength -=
-        strlen("gpgsm") + 1 + strlen("-k") + 1 +
+        gpgsmBinary.size() + 1 + strlen("-k") + 1 +
         strlen("--with-validation") + 1 + strlen("--force-crl-refresh") + 1 +
         strlen("--enable-crl-checks") + 1;
     while (!mPatternsToDo.empty()) {
@@ -158,6 +161,8 @@ GpgME::Error QGpgMERefreshSMIMEKeysJob::startAProcess()
     mProcess->start();
     if (!mProcess->waitForStarted()) {
         mError = GpgME::Error::fromCode(GPG_ERR_ENOENT, GPG_ERR_SOURCE_GPGSM);   // what else?
+        Q_EMIT done();
+        Q_EMIT result(mError);
         deleteLater();
         return mError;
     } else {
